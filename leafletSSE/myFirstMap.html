@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SSE Leaflet</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+	
+	
+	<!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" /><![endif]-->
+</head>
+<body>
+	<div id="map" style="width: 900px; height: 700px"></div>
+
+	<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+
+	<script>
+	
+		var lat = 40.001;
+		var lon = -104.01;
+		
+		var map = L.map('map').setView([lat, lon], 9);
+
+		L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
+			maxZoom: 18,
+			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
+		}).addTo(map);
+		
+		L.marker([lat,lon]).addTo(map).bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
+		
+		
+		// This where the SSE connection is set, and message response behaviour defined
+		var source = new EventSource('http://localhost:8000/events');
+		source.onmessage = function(e) {
+							var num = parseFloat(e.data);
+							num = (num / 10.0);
+							var lat = 40.001 + num;
+							var lon = -104.49 + (num * num);
+							var markerIn = L.marker([lat, lon]);
+							markerIn.addTo(map);
+							console.log("Lat = " + lat + " , lon  = " + lon + " + " + markerIn.getLatLng());
+						};
+		
+	</script>
+	
+</body>
+</html>
