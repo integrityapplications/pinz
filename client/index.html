@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html ng-app="leafletDemoApp">
+ <!-- based off article at http://briantford.com/blog/angular-d3.html -->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css"/>
+    <title>AngularJS + Leaflet.js</title>
+    <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
+    
+  </head>
+  <body ng-controller="AppCtrl">
+    <h1>Yahoo! GeoPlanet Airport Finder</h1>
+    Searching for airport {{airport}}...
+    <!-- Here's where our visualization will go -->
+    <form ng-submit="locateAirport()">
+      Airport Code: <input ng-model="airport"></input>
+      <input type="submit" value="Get Location">
+      Popup <input type="checkbox" ng-model="popup">
+    </form>
+    <!-- geoplanet-leaflet val="data"></geoplanet-leaflet-->
+    <div id="map" style="width: 900px; height: 480px"></div>
+
+  </body>
+  <script src="app.js"></script>
+</html>
