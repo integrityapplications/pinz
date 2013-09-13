@@ -4,10 +4,11 @@ var queryBuilder = require('./../queryBuilder');
 
 var time = {
 		start : "",
-		end: ""
+		end : ""
 }
 
 describe( 'queryBuilder.buildTimeQuery()' , function() {
+	
 	it('queryBuilder should return valid MongoDB query' , function() {
 		assert.equal("test" , queryBuilder.buildTimeQuery(time) );
 	});
@@ -19,6 +20,15 @@ describe( 'queryBuilder.buildTimeQuery()' , function() {
 			},
 			Error
 		);
-		
 	})
+	
+	it('expected member end not provided', function() {
+		assert.throws(
+			function() {
+				queryBuilder.buildTimeQuery({});
+			},
+			Error
+		);
+	})
+	
 });
