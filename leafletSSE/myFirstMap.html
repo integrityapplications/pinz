@@ -30,18 +30,30 @@
 		
 		L.marker([lat,lon]).addTo(map).bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
 		
+		var id = 0;
 		
-		// This where the SSE connection is set, and message response behaviour defined
-		var source = new EventSource('http://localhost:8000/events');
-		source.onmessage = function(e) {
-							var num = parseFloat(e.data);
+		setInterval(function() {
+			console.log('generate new marker');
+			var num = parseFloat(id++);
 							num = (num / 10.0);
 							var lat = 40.001 + num;
 							var lon = -104.49 + (num * num);
 							var markerIn = L.marker([lat, lon]);
 							markerIn.addTo(map);
 							console.log("Lat = " + lat + " , lon  = " + lon + " + " + markerIn.getLatLng());
-						};
+
+		}, 3000);
+		// This where the SSE connection is set, and message response behaviour defined
+		// var source = new EventSource('http://localhost:8000/events');
+		// source.onmessage = function(e) {
+		// 					var num = parseFloat(e.data);
+		// 					num = (num / 10.0);
+		// 					var lat = 40.001 + num;
+		// 					var lon = -104.49 + (num * num);
+		// 					var markerIn = L.marker([lat, lon]);
+		// 					markerIn.addTo(map);
+		// 					console.log("Lat = " + lat + " , lon  = " + lon + " + " + markerIn.getLatLng());
+		// 				};
 		
 	</script>
 	
