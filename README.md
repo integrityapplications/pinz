@@ -1,4 +1,4 @@
 pinz
 ====
 
-geospatial visualization of near real-time data in a browser
+Geospatial visualisation of near real-time data in a browser.
