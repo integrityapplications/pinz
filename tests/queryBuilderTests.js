@@ -12,18 +12,25 @@ describe( 'queryBuilder.buildTimeQuery()' , function() {
 	it('expected member start not provided', function() {
 		assert.throws(
 			function() {
-				queryBuilder.buildTimeQuery({ "end" : "" });
+				queryBuilder.buildTimeQuery({ "end" : "2013-09-12T00:00:00" });
 			},
 			Error
 		);
 	})
 	
-	
-	
 	it('expected member end not provided', function() {
 		assert.throws(
 			function() {
-				queryBuilder.buildTimeQuery({ "start" : "" });
+				queryBuilder.buildTimeQuery({ "start" : "2013-09-12T00:00:00" });
+			},
+			Error
+		);
+	})
+	
+	it('invalid date format: start', function() {
+		assert.throws(
+			function() {
+				queryBuilder.buildTimeQuery({ "start" :  "invalid date format" , "end" : "2013-09-12T12:00:00" });
 			},
 			Error
 		);
