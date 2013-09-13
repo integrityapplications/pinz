@@ -1,13 +1,16 @@
 var express = require('express');
 
-var app = express();
+start(3000);
 
-app.use(express.bodyParser());
+function start(port) {
+	var app = express();
 
-app.post('/hello.txt', function(req, res) {
-	res.send(req.body);
-	
-});
+	app.use(express.bodyParser());
 
-app.listen(3000);
-console.log('Listening on port 3000');
+	app.post('/hello.txt', function(req, res) {
+		res.send(req.body);
+	});
+
+	app.listen(3000);
+	console.log('Listening on port 3000');
+}
