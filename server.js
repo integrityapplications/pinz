@@ -17,7 +17,9 @@ function start(port) {
 	var app = express();
 
 	app.use(express.bodyParser());
-	
+	app.use('/ngapp', express.static(__dirname+'/ngapp'));
+	app.use('/static', express.static(__dirname+'/public'));
+
 	app.post('/hello.txt', processRequest);
 	
 	app.listen(3000);
