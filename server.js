@@ -30,9 +30,17 @@ function start(port) {
 
 function processRequest(req, res) {
 	var queries = req.body;
-
-	//res.send(req.body);
-	GLOBAL.dbHandle.collection("A").find( {}).toArray(function(err , docs) {
-		res.send(docs);
+	var results = [];
+	async.forEach(queries, function(query, callback) {
+		GLOBAL.dbHandle.collection(query.src).find({}).toArray(function(err , docs) {
+			if (err) callback(err);
+			results.push(docs);
+			callback();
+		});
+	}, function(err) {
+		if (err) {
+			//return 500
+		}
+		res.send(results);
 	});
 }
