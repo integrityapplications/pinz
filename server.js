@@ -28,21 +28,26 @@ function start(port) {
 	console.log('Listening on port 3000');
 }
 
-
 function processRequest(req, res) {
 	var inputs = req.body;
 	var results = [];
 	async.forEach(inputs, function(input, callback) {
-		var query = queryBuilder.buildMongoQuery(input);
-		GLOBAL.dbHandle.collection(input.src).find(query).toArray(function(err , docs) {
-			if (err) callback(err);
-			results = results.concat(docs);
-			callback();
-		});
+		try {
+			var query = queryBuilder.buildMongoQuery(input);
+			GLOBAL.dbHandle.collection(input.src).find(query).toArray(function(err , docs) {
+				if (err) callback({status:500, msg:"Server Error"});
+				results = results.concat(docs);
+				callback();
+			});
+		} catch(e) {
+			//console.log(JSON.stringify(e, null, ""))
+			callback({status:400, msg:"Bad Request"});
+		}
 	}, function(err) {
 		if (err) {
-			//return 500
+			res.send(err.status, err.msg);
+		} else {
+			res.send(results);
 		}
-		res.send(results);
 	});
 }
