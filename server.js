@@ -20,7 +20,7 @@ function start(port) {
 
 	app.use(express.bodyParser());
 	app.use('/ngapp', express.static(__dirname+'/ngapp'));
-	app.use('/static', express.static(__dirname+'/public'));
+	app.use('/static', express.static(__dirname+'/static'));
 
 	app.post('/data', processRequest);
 	

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<!-- todo: 
+  * add clustering
+  * try heatmap
+  * add button to switch
+  * age off old points
+  * use a live data source -->
+
+<head>
+<title>Test Leaflet Plugins </title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+<!-- <style>  #map { height: 180px; }</style> -->
+<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+<script src="L.Control.MousePosition.js"></script>
+<link rel="stylesheet" src="L.Control.MousePosition.css" />
+
+<link rel="stylesheet" href="Control.FullScreen.css" />
+ <script src="Control.FullScreen.js"></script>
+
+ <link rel="stylesheet" href="MarkerCluster.css" />
+ <link rel="stylesheet" href="MarkerCluster.Default.css" />
+ <script src="leaflet.markercluster-src.js"></script>
+
+ <style>
+   .mycluster {
+   width: 40px;
+   height: 40px;
+   background-color: greenyellow;
+   text-align: center;
+   font-size: 24px;
+   }
+
+   </style>
+</head>
+
+<body>
+<h1>Leaflet Map Example </h1>
+<br>
+<!-- A leaflet map with some random points on it -->
+
+<div id="map"  style="width: 600px; height: 400px"></div>
+
+<script>
+ <!-- retrieve data from the pinz server -->
+
+  function getRandomLatLng(map) {
+  var bounds = map.getBounds(),
+  southWest = bounds.getSouthWest(),
+  northEast = bounds.getNorthEast(),
+  lngSpan = northEast.lng - southWest.lng,
+  latSpan = northEast.lat - southWest.lat;
+
+  return L.latLng(
+  southWest.lat + latSpan * Math.random(),
+  southWest.lng + lngSpan * Math.random());
+  }
+
+  var cLat = -37.81, cLon = 144.93;
+  var map = L.map('map',{  fullscreenControl: true }).setView([cLat, cLon], 11 ); 
+
+  L.control.mousePosition().addTo(map);
+  L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
+  attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+  maxZoom: 18
+  }).addTo(map);
+
+  <!-- add some random points to the map -->
+  var markers = new L.MarkerClusterGroup();
+    var i;
+    var nbPoints = 10000;
+    for ( i=0; i<nbPoints; i += 1 ){
+        markers.addLayer(new L.Marker(getRandomLatLng(map)));
+    }
+    map.addLayer(markers);
+			   
+</script>
+
+</body>
+
+</html>
+
