@@ -15,6 +15,16 @@ Populating MongoDB with observables is outside the scope of pinz and will vary g
 API Guide
 =========
 
+/metadata
+---------
+
+The metadata endpoint is accessed via HTTP GET and returns an array of json documents with one document per event stream. Each document describes the event stream and defines all domain specific key value pairs available for that event stream. Each key value pair definition describes the attribute, defines the type (number|string|enumeration), and defines valid ranges for numeric and enumeration types. Pinz’s example GUI uses this endpoint to obtain the data needed to build event filtering menus.
+
+/data
+-----
+
+The data endpoint is accessed via HTTP POST and returns an array of observable json documents matching search criteria defined in the post body. A maximum of 5000 documents is returned per event stream.
+
 Area search inputs are
 
 `time-within`
