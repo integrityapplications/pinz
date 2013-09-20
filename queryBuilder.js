@@ -1,3 +1,4 @@
+module.exports.buildGeoWithinQuery=buildGeoWithinQuery
 module.exports.buildTimeQuery=buildTimeQuery
 
 
@@ -15,7 +16,30 @@ function buildTimeQuery(time) {
 		throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + time.end);
 	}
 
-	
 	return { start : start , end : end };
-	
+}
+
+function buildGeoWithinQuery(coords) {
+	if (coords.length % 2 !== 0)  throw new Error("Coordinates array contains odd number of values, lat/lon pairs required");
+	if (coords.length <= 6)  throw new Error("Coordinates array does not contain enough points to define closed polygon");
+	if (coords[0] !== coords[coords.length-2] 
+		&& coords[1] !== coords[coords.length-1])  throw new Error("Coordinates array does not definen closed polygon, first and last point are not the same");
+
+	var outerRing = [];
+	for (var i=0; i<coords.length; i+=2) {
+		var lat = coords[i];
+		var lon = coords[i+1];
+		outerRing.push([lon, lat]);
+	}
+
+	return {
+		$geoWithin : {
+			$geometry : {
+				type : "Polygon" ,
+				coordinates : [ 
+					outerRing
+				]
+			}
+		}
+	};
 }
