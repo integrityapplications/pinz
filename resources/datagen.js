@@ -31,7 +31,7 @@ var sources = [
 		]
 	}
 ]
-var num = 5;
+var num = 100;
 var mongoUrl = "mongodb://127.0.0.1:27017/observabledb";
 
 mongo.connect(mongoUrl , function(err, db) {
@@ -62,7 +62,7 @@ function generateDocs(src, numDocs) {
 					id: "location",
 					loc: {
 						type: "Point",
-						coordinates : getCoordinates(39.7392, 104.9847, 25) 
+						coordinates : getCoordinates() 
 					}
 				}
 			]
@@ -79,7 +79,7 @@ function generateAttrs(attrRecipes) {
 		var recipe = attrRecipes[recipeIndex];
 		var val = "";
 		if ('range' in recipe) {
-			val = recipe.range[randomFromInterval(0, recipe.range.length)];
+			val = recipe.range[randomFromInterval(0, recipe.range.length-1)];
 		} else if ('low' in recipe || 'high' in recipe) {
 			val = randomFromInterval(recipe.low, recipe.high) 
 		}
@@ -95,16 +95,14 @@ function generateAttrs(attrRecipes) {
 
 //stackoverflow.com/questions/4959975/generate-random-value-between-two-numbers-in-javascript
 function randomFromInterval(from, to) {
-	var random = Math.floor(Math.random() * (to-from)) + from;
+	var random = Math.floor(Math.random()*(to-from+1)+from);
 	//console.log("from: " + from + ", to: " + to + ", random: " + random);
 	return random;
 }
 
-function getCoordinates(cLat, cLon, maxDis_meters) {
-	var ONE_METER = 0.00001; //rough estimation of meter in decimal degrees
-	var maxDis = maxDis_meters * ONE_METER;
+function getCoordinates() {
 	var coor = []; //lon, lat geojson
-	coor[0] = randomFromInterval(cLon-maxDis, cLon+maxDis);
-	coor[1] = randomFromInterval(cLat-maxDis, cLon+maxDis);
+	coor[0] = randomFromInterval(-179.9, 179.9);
+	coor[1] = randomFromInterval(-89.9, 89.9);
 	return coor;
 }
