@@ -5,14 +5,14 @@ Geospatial visualization of near real-time data in a browser.
 
 Pinz provides a data agnostic platform for caching event streams, a robust RESTful web API for data retrieval, and an example client GUI allowing end users to view, filter, and discover disparate data streams from a modern web browser. 
 
-The web is already saturated with web applications that do the same thing, why develop pinz? Most existing solutions are tailored for specific data sources, like twitter. We want a solution that makes it trivial to plugin new data sources without writing a single line of code or restarting the application. Data source intregration is removed from the application and occurs at the data store level.
+The web is already saturated with web applications that do the same thing, why develop pinz? Most existing solutions are tailored for specific data sources, like twitter. We want a solution that makes it trivial to plug in new data sources without writing a single line of code or restarting the application. **Data source intregration is removed from the application layer and occurs at the data store layer**.
 
 Under the Covers
 ----------------
 
 Event streams are cached in a single MongoDB database, observabledb, as capped collections with one collection per event stream. The collection name will be the name of the event stream. Pinz is intended to handle event streams with millions of events per day. The current mongo architecture may have to be tweaked if write locking becomes a problem (TBD). 
 
-Events are stored as documents we call observables. An observable is a generic json document containing data about a single event. 
+Events are stored as documents called observables. An observable is a generic json document containing data about a single event. 
 An observable defines the data source, event time, event id, event location(s), and domain specific key value pair(s). 
 
 Populating MongoDB with observables is outside the scope of pinz and will vary greatly by user needs and available event streams.
