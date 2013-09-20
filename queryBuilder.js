@@ -9,9 +9,13 @@ function buildTimeQuery(time) {
 	if (isNaN(start.getTime())) {
 		throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + time.start);
 	}
+
+	var end = new Date(time.end);
+	if (isNaN(end.getTime())) {
+		throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + time.end);
+	}
+
 	
-	return "test";
+	return { start : start , end : end };
+	
 }
-
-
-
