@@ -29,12 +29,9 @@ function start(port) {
 
 
 function processRequest(req, res) {
-	//var queries = req.body;
-	var queries = [{src:'A'}, {src:'B'}];
-	console.log("query: " + queries);
+	var queries = req.body;
 	var results = [];
 	async.forEach(queries, function(query, callback) {
-		console.log("source: " + query.src);
 		GLOBAL.dbHandle.collection(query.src).find({}).toArray(function(err , docs) {
 			results.push(docs);
 			callback();
@@ -43,13 +40,6 @@ function processRequest(req, res) {
         if (err) {
         	//return 500
         }
-        //var docs = cursor.toArray();
-        console.log("found: " + results.length);
         res.send(results);
     });
-
-	//res.send(req.body);
-	/*GLOBAL.dbHandle.collection("A").find( {}).toArray(function(err , docs) {
-		res.send(docs);
-	});*/
 }
