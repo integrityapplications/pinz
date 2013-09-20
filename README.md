@@ -40,12 +40,14 @@ Area search inputs are
 Running a demo
 ==============
 
-start mongo (host:localhost port:27017)
+1. Install node dependencies (npm install)
 
-run node application resources/datagen.js to populate MongoDB with randomly generated observables. Verify by viewing generated documents in 'observabledb' with mongo shell.
+2. start mongo (host:localhost port:27017)
 
-start pinz application (npm start) 
+3. Run node application resources/datagen.js to populate MongoDB with randomly generated observables. Verify by viewing generated documents in 'observabledb' with mongo shell.
 
-Test installation by running resources/testPost.sh. An array of matching observable documents will be output if everything is working properly.
+4. start pinz application (npm start) 
+
+5. Test installation by running resources/testPost.sh. An array of matching observable documents will be output if everything is working properly.
 
 
