@@ -34,7 +34,7 @@ function processRequest(req, res) {
 	async.forEach(queries, function(query, callback) {
 		GLOBAL.dbHandle.collection(query.src).find({}).toArray(function(err , docs) {
 			if (err) callback(err);
-			results.push(docs);
+			results = results.concat(docs);
 			callback();
 		});
 	}, function(err) {
