@@ -37,4 +37,15 @@ Area search inputs are
 
 `src` :	Name of data feed to query
 
+Running a demo
+==============
+
+start mongo (host:localhost port:27017)
+
+run node application resources/datagen.js to populate MongoDB with observables
+
+start pinz application (npm start) 
+
+Test installation by running resources/testPost.sh. An array of matching observable documents will be output if everything is working properly.
+
 
