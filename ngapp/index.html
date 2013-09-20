@@ -1,28 +1,39 @@
 <!DOCTYPE html>
 <html ng-app="leafletDemoApp">
- <!-- based off article at http://briantford.com/blog/angular-d3.html -->
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css"/>
     <title>AngularJS + Leaflet.js</title>
     <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
     
+    <!-- have added 3 goodies to leaflet: mouse position, full screen, and
+    marker cluster.  Files are in public/css,js -->
+    <script src="/static/js/L.Control.MousePosition.js"></script>
+    <link rel="stylesheet" href="/static/css/L.Control.MousePosition.css" />
+    <link rel="stylesheet" href="/static/css/Control.FullScreen.css" />
+    <script src="/static/js/Control.FullScreen.js"></script>
+    <link rel="stylesheet" href="/static/css/MarkerCluster.css" />
+    <link rel="stylesheet" href="/static/css/MarkerCluster.Default.css" />
+    <script src="/static/js/leaflet.markercluster-src.js"></script>
+    <!-- marker cluster style for pinz -->
+    <link rel="stylesheet" href="/static/css/pinz.css" />
   </head>
   <body ng-controller="AppCtrl">
-    <h1>Yahoo! GeoPlanet Airport Finder</h1>
-    Searching for airport {{airport}}...
-    <!-- Here's where our visualization will go -->
-    <form ng-submit="locateAirport()">
-      Airport Code: <input ng-model="airport"></input>
-      <input type="submit" value="Get Location">
-      Popup <input type="checkbox" ng-model="popup">
-    </form>
-    <!-- geoplanet-leaflet val="data"></geoplanet-leaflet-->
+    <h1>View Pinz Server Data</h1>
+    <button ng-click="getPinzData()"> Retrieve Data </button>
+    <span id="errors"> {{error}} </span>
     <div id="map" style="width: 900px; height: 480px"></div>
-
+    <div id="rawData">
+      <h3> Posted request: </h3>
+      <pre> {{postData|json}}  </pre>
+    </div>
+    <div id="returnedData">
+      <h3> The response: </h3>
+      <pre> {{geoData|json}} </pre>
+    </div>
   </body>
   <script src="/ngapp/app.js"></script>
 </html>
