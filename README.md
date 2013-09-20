@@ -5,7 +5,7 @@ Geospatial visualization of near real-time data in a browser.
 
 Pinz provides a data agnostic platform for caching event streams, a robust RESTful web API for data retrieval, and an example client GUI allowing end users to view, filter, and discover disparate data streams from a modern web browser. 
 
-The web is already saturated with web applications that do the same thing, why develop pinz? Most existing solutions are tailored for specific data sources, like twitter. We want a solution that makes it trivial to plugin new data sources without writing a single line of code or restarting the application.
+The web is already saturated with web applications that do the same thing, why develop pinz? Most existing solutions are tailored for specific data sources, like twitter. We want a solution that makes it trivial to plugin new data sources without writing a single line of code or restarting the application. Data source intregration is removed from the application and occurs at the data store level.
 
 Under the Covers
 ----------------
