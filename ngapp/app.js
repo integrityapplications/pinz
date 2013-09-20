@@ -19,7 +19,9 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
 	L.control.mousePosition().addTo(map);
 	L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
 	    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-	    maxZoom: 18
+	    maxZoom: 18,
+	    minZoom: 2
+	    //maxBounds: L.LatLngBounds( L.LatLng(-90,-180), L.LatLng(90,180) ) // sw, ne
 	}).addTo(map);
 
 	$scope.map = map;
@@ -111,6 +113,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
 	}
 	$scope.map.addLayer(markers);
 	$scope.map.fitBounds(markers.getBounds());
+	//$scope.map.setMaxBounds( L.LatLngBounds( L.LatLng(-90,-180), L.LatLng(90,180) ) );
     }
 
     $scope.initLeaflet();
