@@ -6,8 +6,8 @@ var queryBuilder = require('./../queryBuilder');
 describe( 'queryBuilder.buildTimeQuery()' , function() {
 	it('queryBuilder should return valid MongoDB query' , function() {
 		var query = queryBuilder.buildTimeQuery({ "start" :  "2013-09-12T00:00:00", "end" : "2013-09-12T12:00:00" });
-		assert.equal( "2013-09-12T00:00:00.000Z" , query.start.toISOString() );
-		assert.equal( "2013-09-12T12:00:00.000Z" , query.end.toISOString() );
+		assert.equal( "2013-09-12T00:00:00.000Z" , query.$gte.toISOString() );
+		assert.equal( "2013-09-12T12:00:00.000Z" , query.$lte.toISOString() );
 	});
 	
 	it('expected member start not provided', function() {

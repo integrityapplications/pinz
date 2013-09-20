@@ -16,7 +16,10 @@ function buildTimeQuery(time) {
 		throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + time.end);
 	}
 
-	return { start : start , end : end };
+	return { 
+		$gte : start , 
+		$lte : end 
+	};
 }
 
 function buildGeoWithinQuery(coords) {
