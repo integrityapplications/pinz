@@ -42,7 +42,7 @@ Running a demo
 
 start mongo (host:localhost port:27017)
 
-run node application resources/datagen.js to populate MongoDB with observables
+run node application resources/datagen.js to populate MongoDB with randomly generated observables. Verify by viewing generated documents in 'observabledb' with mongo shell.
 
 start pinz application (npm start) 
 
