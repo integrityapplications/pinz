@@ -1,6 +1,7 @@
 var mongo = require('mongodb');
 var express = require('express');
 var async = require('async');
+var queryBuilder = require('./queryBuilder');
 
 var mongoUrl = "mongodb://localhost:27017/observabledb";
 
@@ -29,10 +30,11 @@ function start(port) {
 
 
 function processRequest(req, res) {
-	var queries = req.body;
+	var inputs = req.body;
 	var results = [];
-	async.forEach(queries, function(query, callback) {
-		GLOBAL.dbHandle.collection(query.src).find({}).toArray(function(err , docs) {
+	async.forEach(inputs, function(input, callback) {
+		var query = queryBuilder.buildMongoQuery(input);
+		GLOBAL.dbHandle.collection(input.src).find(query).toArray(function(err , docs) {
 			if (err) callback(err);
 			results = results.concat(docs);
 			callback();
