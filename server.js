@@ -33,13 +33,14 @@ function processRequest(req, res) {
 	var results = [];
 	async.forEach(queries, function(query, callback) {
 		GLOBAL.dbHandle.collection(query.src).find({}).toArray(function(err , docs) {
+			if (err) callback(err);
 			results.push(docs);
 			callback();
 		});
 	}, function(err) {
-        if (err) {
-        	//return 500
-        }
-        res.send(results);
-    });
+		if (err) {
+			//return 500
+		}
+		res.send(results);
+	});
 }
