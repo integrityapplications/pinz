@@ -47,57 +47,50 @@ describe( 'queryBuilder.buildTimeQuery()' , function() {
 	});
 });
 
-
-
-
 describe('queryBuilder.buildTimeInsertedQuery()' , function() {
-		it("Input must not be blank" , function() {
-			assert.throws(
-				function() {
-					queryBuilder.buildTimeInsertedQuery( { } , Error);
-				}
-			);
-		});
+	it("queryBuilder should return valid MongoDB query: start only" , function(){
+		var query = queryBuilder.buildTimeInsertedQuery( { "start" :  "2013-09-12T00:00:00" } );
+		assert.equal(query.$gte.toHexString(), "523104000000000000000000");
+	});
 
-		it("Input must contain 'start' property" , function() {
-			assert.throws(
-				function() {
-					queryBuilder.buildTimeInsertedQuery( { "end" :  "invalid date format" } , Error);
-				}
-			);
-		});
+	it("queryBuilder should return valid MongoDB query" , function(){
+		var query = queryBuilder.buildTimeInsertedQuery( { "start" :  "2013-09-12T00:00:00" , "end" :  "2013-12-12T00:00:00"} );
+		assert.equal(query.$gte.toHexString(), "523104000000000000000000");
+		assert.equal(query.$lte.toHexString(), "52a8fc800000000000000000");
+	});
 
-		it("invalid date format: start" , function() {
-			assert.throws(
-				function() {
-					queryBuilder.buildTimeInsertedQuery( { "start" :  "invalid date format" } , Error);
-				}
-			);
-		});
+	it("Input must not be blank" , function() {
+		assert.throws(
+			function() {
+				queryBuilder.buildTimeInsertedQuery( { } , Error);
+			}
+		);
+	});
 
-		it("invalid date format: end (optional)" , function() {
-			assert.throws(
-				function() {
-					queryBuilder.buildTimeInsertedQuery( { "end" :  "invalid date format" } , Error);
-				}
-			);
-		});
+	it("Input must contain 'start' property" , function() {
+		assert.throws(
+			function() {
+				queryBuilder.buildTimeInsertedQuery( { "end" :  "invalid date format" } , Error);
+			}
+		);
+	});
 
-		it("time inserted query builder should return valid mongo query for valid start date value" , function(){
-			var query = queryBuilder.buildTimeInsertedQuery( { "start" :  "2013-09-12T00:00:00" } );
-			assert.equal( "2013-09-12T00:00:00.000Z" , query.$gte.toISOString() );
-		});
+	it("invalid date format: start" , function() {
+		assert.throws(
+			function() {
+				queryBuilder.buildTimeInsertedQuery( { "start" :  "invalid date format" } , Error);
+			}
+		);
+	});
 
-		it("time inserted query builder should return valid mongo query for valid start and optional end date vales" , function(){
-			var query = queryBuilder.buildTimeInsertedQuery( { "start" :  "2013-09-12T00:00:00" , "end" :  "2013-12-12T00:00:00"} );
-			assert.equal( "2013-09-12T00:00:00.000Z" , query.$gte.toISOString() );
-			assert.equal( "2013-12-12T00:00:00.000Z" , query.$lte.toISOString() );
-		});
-		
+	it("invalid date format: end (optional)" , function() {
+		assert.throws(
+			function() {
+				queryBuilder.buildTimeInsertedQuery( { "end" :  "invalid date format" } , Error);
+			}
+		);
+	});
 });
-
-
-
 
 describe( 'queryBuilder.buildGeoWithinQuery()' , function() {
 	it('queryBuilder should return valid MongoDB query' , function() {

@@ -1,9 +1,9 @@
+var ObjectID = require('mongodb').ObjectID;
+
 module.exports.buildGeoWithinQuery=buildGeoWithinQuery
 module.exports.buildTimeInsertedQuery=buildTimeInsertedQuery
-
 module.exports.buildTimeQuery=buildTimeQuery
 module.exports.buildMongoQuery=buildMongoQuery
-
 
 function buildTimeQuery(time) {
 	if (!('start' in time)) throw new Error("Required property start not provided");
@@ -25,9 +25,7 @@ function buildTimeQuery(time) {
 	};
 }
 
-
 function buildTimeInsertedQuery(time){
-	// funciton to query the time data was entered into the DB
 	if (!('start' in time)) throw new Error("Required property start not provided");
 
 	var start = new Date(time.start);
@@ -43,17 +41,11 @@ function buildTimeInsertedQuery(time){
 		}
 	}
 
-	if(start != null && end == null) {
-		return { $gte : start };
-
-	} else if(start != null && end != null) {
-		return {
-			$gte : start , 
-			$lte : end 
-	};
-	}
+	var query = {};
+	if (start) query.$gte = objectIdFromDate(start);
+	if (end) query.$lte = objectIdFromDate(end);
+	return query;
 }
-
 
 function buildGeoWithinQuery(coords) {
 	if (coords.length % 2 !== 0)  throw new Error("Coordinates array contains odd number of values, lat/lon pairs required");
@@ -80,8 +72,6 @@ function buildGeoWithinQuery(coords) {
 	};
 }
 
-
-
 function buildMongoQuery(query) {
 
 	var mongoQuery = {};
@@ -92,4 +82,14 @@ function buildMongoQuery(query) {
 	//console.log("\tBuilt Mongo query = " + JSON.stringify(mongoQuery, null, "").split("\n").join("") );
 	
 	return mongoQuery
+}
+
+function objectIdFromDate(date) {
+	var seconds = Math.floor(date.getTime()/1000);
+	//http://mongodb.github.io/node-mongodb-native/api-bson-generated/objectid.html
+	return ObjectID.createFromTime(seconds);
+
+	//http://stackoverflow.com/questions/8749971/can-i-query-mongodb-objectid-by-date
+	//var hexSeconds = seconds.toString(16);
+	//return new ObjectID(hexSeconds + "0000000000000000");
 }
