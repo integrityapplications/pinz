@@ -1,6 +1,7 @@
 var mongo = require('mongodb');
 var express = require('express');
 var async = require('async');
+var queryBuilder = require('./queryBuilder');
 
 var mongoUrl = "mongodb://localhost:27017/observabledb";
 
@@ -27,20 +28,26 @@ function start(port) {
 	console.log('Listening on port 3000');
 }
 
-
 function processRequest(req, res) {
-	var queries = req.body;
+	var inputs = req.body;
 	var results = [];
-	async.forEach(queries, function(query, callback) {
-		GLOBAL.dbHandle.collection(query.src).find({}).toArray(function(err , docs) {
-			if (err) callback(err);
-			results = results.concat(docs);
-			callback();
-		});
+	async.forEach(inputs, function(input, callback) {
+		try {
+			var query = queryBuilder.buildMongoQuery(input);
+			GLOBAL.dbHandle.collection(input.src).find(query).toArray(function(err , docs) {
+				if (err) callback({status:500, msg:"Server Error"});
+				results = results.concat(docs);
+				callback();
+			});
+		} catch(e) {
+			//console.log(JSON.stringify(e, null, ""))
+			callback({status:400, msg:"Bad Request"});
+		}
 	}, function(err) {
 		if (err) {
-			//return 500
+			res.send(err.status, err.msg);
+		} else {
+			res.send(results);
 		}
-		res.send(results);
 	});
 }

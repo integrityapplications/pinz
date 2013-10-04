@@ -47,6 +47,7 @@ describe( 'queryBuilder.buildTimeQuery()' , function() {
 	});
 });
 
+
 describe( 'queryBuilder.buildGeoWithinQuery()' , function() {
 	it('queryBuilder should return valid MongoDB query' , function() {
 		var query = queryBuilder.buildGeoWithinQuery([
@@ -88,3 +89,43 @@ describe( 'queryBuilder.buildGeoWithinQuery()' , function() {
 		);
 	});
 });
+
+
+/*describe('buildQuery.buildMongoQuery()' , function() {
+
+	var query = {
+		"src" : "A",
+		"time_within" : {
+			"start" : "2013-09-13T16:00:00",
+			"end" : "2013-09-13T16:00:30"
+		},
+		"geo_within" : [
+			40.0, -55.0,
+			40.0, -30.0,
+			10.0, -30.0,
+			10.0, -55.0,
+			40.0, -55.0
+		],
+		"attrs" : [
+			{
+				"k" : "color",
+				"v" : ["red" , "green"]
+			},
+			{
+				"k" : "animal",
+				"v" : ["koala"]
+			},
+			{
+				"k" : "weight",
+				"low" : 50,
+				"high" : 100
+			}
+		]
+	}
+
+	it('mongo query should be valid JSON' , function() {
+		assert.equal("" , queryBuilder.buildMongoQuery(query));
+	});
+
+});
+*/
