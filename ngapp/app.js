@@ -26,21 +26,29 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
 
     $scope.map = map;
     $scope.layerType="points";
+    // This is the marker data currently displayed.
+    $scope.markers = null;
+    // This array holds our point data.  Watch it and display when dirty.
+    $scope.geoData = null;
+    $scope.$watch( 'geoData', function(newVal, oldVal){
+      $log.log( 'geoData changed, invoking display' );
+      displayData( newVal );
+    });
   }
 
   $scope.postData = [
     {
       "src" : "A",
-      "time-within" : {
-	"start" : "2013-09-13T16:00:00",
-	"end" : "2013-09-13T16:00:30"
-      },
-      "geo-within" : [
-	40.0, -55.0,
-	40.0, -30.0,
-	10.0, -30.0,
-	10.0, -55.0,
-	40.0, -55.0
+//      "time_within" : {
+//	"start" : "2013-09-13T16:00:00",
+//	"end" : "2013-09-13T16:00:30"
+//      },
+      "geo_within" : [
+			40.0, -55.0,
+			40.0, -30.0,
+			10.0, -30.0,
+			10.0, -55.0,
+			40.0, -55.0
       ],
       "attrs" : [
 	{
@@ -64,20 +72,30 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
 
   $scope.getPinzData = function() {
     $log.log('getPinzData: invoked');
+    // set the time and geo params for the data query from the totally awesome data service.
+    var timewithin = 
+    {
+	"start" : moment().subtract('minutes',1).toISOString(),
+	"end"   : moment().toISOString() // now
+    };
+    $log.log( 'setting timewithin = ', timewithin );
+    $scope.postData[0].time_within = timewithin;
+    $log.log( 'after setting, postdata = ', $scope.postData[0] );
+
     $http({
       method: 'POST',
       url:'/data',
       data:$scope.postData,
       headers:headersCfg
-    }).
-	  success(function (data) {
+    }).success(function (data) {
       // attach this data to the scope.  It is an array of leaflet lat-long objects.
       $scope.geoData = reformatData(data);
-      displayData( $scope.geoData );
+      $log.log('Retrieved geoData has length ', $scope.geoData.length);
+      // now it's watched, see above
+      //displayData( $scope.geoData );
       // clear the error messages
       $scope.error = 'success';
-    }).
-		     error(function (data, status) {
+    }).error(function (data, status) {
       if (status === 404) {
 	$scope.error = 'That place does not exist';
 	$log.error('Could not find that place');
@@ -89,7 +107,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
   }
 
   function reformatData(data) {
-    console.debug(data);
+    //console.debug(data);
     var observables = data; // an array of them
     var formatted = [];
     for ( var i=0; i<observables.length; i++ ) {
@@ -107,14 +125,41 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
   }
 
   function displayData( lfltPoints ) {
-    $log.log( 'displaying data with render option ', $scope.render );
-    var markers = new L.MarkerClusterGroup();
-    for ( var i=0; i<lfltPoints.length; i ++ ){
-      markers.addLayer(new L.Marker( lfltPoints[i] ) );
+    if ( lfltPoints == null ) return;
+
+    // Remove previous
+    if ( $scope.markers != null ){
+      //$scope.map.remove( $scope.markers );
+      $scope.markers.clearLayers();
     }
-    $scope.map.addLayer(markers);
-    $scope.map.fitBounds(markers.getBounds());
-    //$scope.map.setMaxBounds( L.LatLngBounds( L.LatLng(-90,-180), L.LatLng(90,180) ) );
+
+    $log.log( 'displaying ' + lfltPoints.length + ' data points with render option ', $scope.layerType );
+    switch ($scope.layerType) {
+      case 'points':
+	$scope.markers = new L.LayerGroup();
+	for ( var i=0; i<Math.min(1000000000,lfltPoints.length); i ++ ){
+	  $scope.markers.addLayer(new L.Marker( lfltPoints[i] ) );
+        }
+        //$log.log( 'markers layer id = ', $scope.markers.getLayers()[0]._leaflet_id );
+	//console.debug( 'markers = ', $scope.markers );
+	$scope.map.addLayer($scope.markers);
+	$scope.map.fitWorld();
+	break
+      case 'cluster':
+	$scope.markers = new L.MarkerClusterGroup();
+	for ( var i=0; i<lfltPoints.length; i ++ ){
+	  $scope.markers.addLayer(new L.Marker( lfltPoints[i] ) );
+        }
+	$scope.map.addLayer($scope.markers);
+	$scope.map.fitWorld();
+	break;
+      case 'heat':
+	$log.log(  'not implemented' );
+	break;
+      default:
+	$log.log( 'Undefined display type ' + $scope.layerType );
+	break;
+    }
   }
 
   $scope.initLeaflet();
