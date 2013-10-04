@@ -23,6 +23,13 @@ function buildTimeQuery(time) {
 	};
 }
 
+
+function buildTimeInsertedQuery(){
+	// funciton to query the time data was entered into the DB
+	
+}
+
+
 function buildGeoWithinQuery(coords) {
 	if (coords.length % 2 !== 0)  throw new Error("Coordinates array contains odd number of values, lat/lon pairs required");
 	if (coords.length <= 6)  throw new Error("Coordinates array does not contain enough points to define closed polygon");
