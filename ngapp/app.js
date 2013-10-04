@@ -25,7 +25,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
     }).addTo(map);
 
     $scope.map = map;
-    $scope.layerType="points";
+    $scope.layerType="heat";
     // This is the marker data currently displayed.
     $scope.markers = null;
     // This array holds our point data.  Watch it and display when dirty.
@@ -43,7 +43,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
 			"start" : "2013-09-13T16:00:00",
 			"end" : "2099-12-31T23:59:59"
 		},
-		"geo_xwithin" : [
+		"geo_withinDISABLED" : [
 			40.0, -55.0,
 			40.0, -30.0,
 			10.0, -30.0,
@@ -129,8 +129,8 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
 
     // Remove previous
     if ( $scope.markers != null ){
-      //$scope.map.remove( $scope.markers );
-      $scope.markers.clearLayers();
+      $scope.map.remove( $scope.markers );
+      //$scope.markers.clearLayers();
     }
 
     $log.log( 'displaying ' + lfltPoints.length + ' data points with render option ', $scope.layerType );
@@ -154,7 +154,39 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
 	$scope.map.fitWorld();
 	break;
       case 'heat':
-	$log.log(  'not implemented' );
+	$scope.markers = L.TileLayer.heatMap({
+	//var heatmapLayer = L.TileLayer.heatMap({
+	  radius: 20,
+	  opacity: 50,
+	  gradient: {
+	    0.45: "rgb(0,0,255)",
+	    0.55: "rgb(0,255,255)",
+	    0.65: "rgb(0,255,0)",
+	    0.95: "yellow",
+	    1.0: "rgb(255,0,0)"
+	  }
+        });
+	newPts = [];
+	//console.log(lfltPoints);
+	var lls = 1000;
+	var lln = -1000;
+	var llw = 1000;
+	var lle = -1000;
+
+	for ( var i=0; i<Math.min(1000000000,lfltPoints.length); i ++ ){
+	  var pt = lfltPoints[i];
+	  newPts.push( {lat: pt.lat, lon: pt.lng, value: 1} );
+	  lls = Math.min( lls, pt.lat );
+	  lln = Math.max( lln, pt.lat );
+	  llw = Math.min( llw, pt.lng );
+	  lle = Math.max( lle, pt.lng );
+        }
+	$scope.markers.addData(newPts);
+	$scope.map.addLayer($scope.markers);
+	var llbounds = [[lls,llw],[lln,lle]];
+	console.log('lat long bounds = ', llbounds);
+	$scope.map.fitBounds( llbounds );
+	//$scope.map.fitWorld();
 	break;
       default:
 	$log.log( 'Undefined display type ' + $scope.layerType );
