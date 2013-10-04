@@ -35,6 +35,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
       $log.log( 'geoData changed, invoking display' );
       displayData( newVal );
     });
+    $scope.pollingTimeout = 10;
   }
 
   $scope.postData = [
@@ -77,6 +78,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     $scope.getPinzData();
     $scope.cancelDataFeed = $timeout(function() {
         updateData();
+        $scope.error = "polling for data...";
     }, $scope.pollingTimeout * 1000);
   } 
 
@@ -88,6 +90,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
   $scope.stopDataFeed = function() {
     console.log('stop the data feed');
     $timeout.cancel($scope.cancelDataFeed);
+    $scope.error = "stopped";
   }
 
   $scope.getPinzData = function() {
@@ -159,7 +162,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
         //$log.log( 'markers layer id = ', $scope.markers.getLayers()[0]._leaflet_id );
 	//console.debug( 'markers = ', $scope.markers );
 	//$scope.map.addLayer($scope.markers);
-	$scope.map.fitWorld();
+	//$scope.map.fitWorld();
 	break
       case 'cluster':
 	var mcg = new L.MarkerClusterGroup();
@@ -168,7 +171,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
         }
 	$scope.markers.addLayer(mcg);
 	//$scope.map.addLayer($scope.markers);
-	$scope.map.fitWorld();
+	//$scope.map.fitWorld();
 	break;
       case 'heat':
 	var heatmapLayer = L.TileLayer.heatMap({
@@ -204,7 +207,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
 	//$scope.map.addLayer($scope.markers);
 	var llbounds = [[lls,llw],[lln,lle]];
 	console.log('lat long bounds = ', llbounds);
-	$scope.map.fitBounds( llbounds );
+	//$scope.map.fitBounds( llbounds );
 	//$scope.map.fitWorld();
 	break;
       default:
