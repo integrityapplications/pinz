@@ -11,20 +11,30 @@ function processDataRequest(req, res) {
 		res.send(400, "Bad Request, POSTed JSON array expected to contain elements.");
 		return;
 	}
+	for (var i=0; i<inputs.length; i++) {
+		if (!('src' in inputs[i])) {
+			res.send(400, "Bad Request, object[" + i + "] does not contain required element 'src'");
+			return;
+		}
+	}
 
 	var results = [];
 	async.forEach(inputs, function(input, callback) {
+		var query = null;
 		try {
-			var query = queryBuilder.buildMongoQuery(input);
+			query = queryBuilder.buildMongoQuery(input);
+		} catch(e) {
+			console.log(JSON.stringify(e, null, ""));
+			callback({status:400, msg:"Bad Request"});
+		}
+		if (query) {
 			GLOBAL.dbHandle.collection(input.src).find(query).toArray(function(err , docs) {
 				if (err) callback({status:500, msg:"Server Error"});
 				results = results.concat(docs);
 				callback();
 			});
-		} catch(e) {
-			console.log(JSON.stringify(e, null, ""))
-			callback({status:400, msg:"Bad Request"});
 		}
+		
 	}, function(err) {
 		if (err) {
 			res.send(err.status, err.msg);
