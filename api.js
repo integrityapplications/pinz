@@ -28,7 +28,7 @@ function processDataRequest(req, res) {
 			callback({status:400, msg:"Bad Request"});
 		}
 		if (query) {
-			GLOBAL.dbHandle.collection(input.src).find(query).toArray(function(err , docs) {
+			GLOBAL.dbHandle.collection(input.src).find(query).limit(5000).toArray(function(err , docs) {
 				if (err) callback({status:500, msg:"Server Error"});
 				results = results.concat(docs);
 				callback();

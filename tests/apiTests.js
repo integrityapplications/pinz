@@ -3,47 +3,34 @@ var api = require('./../api');
 
 describe( 'api.processDataRequest', function() {
 
+	var res = {
+		send: function(status, body) {
+			this.status = status;
+			this.body = body;
+		}	
+	};
+
 	it('Ensure POST is JSON array', function() {
 		var req = {body : {} };
-		var res = {
-			send: function(status, message) {
-				this.status = status;
-				this.message = message;
-			}	
-		};
-
 		api.processDataRequest(req, res);
 		assert.equal("400" , res.status);
 	});
 
 	it('Ensure POST JSON array is not empty', function() {
 		var req = {body : [] };
-		var res = {
-			send: function(status, message) {
-				this.status = status;
-				this.message = message;
-			}	
-		};
-
 		api.processDataRequest(req, res);
 		assert.equal("400" , res.status);
 	});
 
 	it('Ensure POST contains required element "src"', function() {
 		var req = {body : [{}] };
-		var res = {
-			send: function(status, message) {
-				this.status = status;
-				this.message = message;
-			}	
-		};
-
 		api.processDataRequest(req, res);
 		assert.equal("400" , res.status);
 	});
 
 	it('Valid POST', function() {
 		var curosrMock = {
+			limit: function(num) { return this;},
 			toArray: function(callback) { callback(null, ["obsMock1", "obsMock2", "obsMock3"]);}
 		};
 		var collectionMock = {
@@ -53,17 +40,15 @@ describe( 'api.processDataRequest', function() {
 			collection: function(name) { return collectionMock;}
 		};
 
-		var req = {body : [{src: "source1"}] };
-		var res = {
-			send: function(status, body) {
-				this.status = status;
-				this.body = body;
-			}	
+		var req = {
+			body : [
+				{src: "source1"},
+				{src: "source2"}
+			]
 		};
-
 		api.processDataRequest(req, res);
 		assert.equal("200", res.status);
-		assert.equal(3, res.body.length);
+		assert.equal(6, res.body.length);
 	});
 });
 	

@@ -1,7 +1,9 @@
+var ObjectID = require('mongodb').ObjectID;
+
 module.exports.buildGeoWithinQuery=buildGeoWithinQuery
+module.exports.buildTimeInsertedQuery=buildTimeInsertedQuery
 module.exports.buildTimeQuery=buildTimeQuery
 module.exports.buildMongoQuery=buildMongoQuery
-
 
 function buildTimeQuery(time) {
 	if (!('start' in time)) throw new Error("Required property start not provided");
@@ -23,12 +25,27 @@ function buildTimeQuery(time) {
 	};
 }
 
+function buildTimeInsertedQuery(time){
+	if (!('start' in time)) throw new Error("Required property start not provided");
 
-function buildTimeInsertedQuery(){
-	// funciton to query the time data was entered into the DB
-	
+	var start = new Date(time.start);
+	if (isNaN(start.getTime())) {
+		throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + time.start);
+	}
+
+	var end = null; // end is an optional parameter
+	if( ('end' in time) ) {
+		end = new Date(time.end);
+		if (isNaN(end.getTime())) {
+			throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + time.end);
+		}
+	}
+
+	var query = {};
+	if (start) query.$gte = objectIdFromDate(start);
+	if (end) query.$lte = objectIdFromDate(end);
+	return query;
 }
-
 
 function buildGeoWithinQuery(coords) {
 	if (coords.length % 2 !== 0)  throw new Error("Coordinates array contains odd number of values, lat/lon pairs required");
@@ -55,17 +72,24 @@ function buildGeoWithinQuery(coords) {
 	};
 }
 
-
-
 function buildMongoQuery(query) {
 
-	console.log("\tINFO: Building mongo query function...");
-	var mongoQuery = {}
+	var mongoQuery = {};
 
-	if('time_within' in query) mongoQuery.t = buildTimeQuery(query.time_within)
-	if('geo_within' in query) mongoQuery.geos = buildGeoWithinQuery(query.geo_within)
+	if('time_within' in query) mongoQuery.t = buildTimeQuery(query.time_within);
+	if('geo_within' in query) mongoQuery.geos = buildGeoWithinQuery(query.geo_within);
 	
-	console.log( JSON.stringify(mongoQuery, null, "").split("\n").join("") );
+	//console.log("\tBuilt Mongo query = " + JSON.stringify(mongoQuery, null, "").split("\n").join("") );
 	
 	return mongoQuery
+}
+
+function objectIdFromDate(date) {
+	var seconds = Math.floor(date.getTime()/1000);
+	//http://mongodb.github.io/node-mongodb-native/api-bson-generated/objectid.html
+	return ObjectID.createFromTime(seconds);
+
+	//http://stackoverflow.com/questions/8749971/can-i-query-mongodb-objectid-by-date
+	//var hexSeconds = seconds.toString(16);
+	//return new ObjectID(hexSeconds + "0000000000000000");
 }
