@@ -45,9 +45,12 @@ Area search inputs are
 Running a demo
 ==============
 
-1. Install node dependencies (npm install)
+1. Install node dependencies:
+    npm install
 
-2. start mongo (host:localhost port:27017)
+2. start mongo on port 27017:
+    mkdir db
+    mongod --dbpath ./db --port 27017 --fork
 
 3. Run node application resources/datagen.js to continously populate MongoDB with randomly generated observables. Verify by viewing generated documents in 'observabledb' with mongo shell.
 
@@ -55,8 +58,13 @@ datagen.js options:
 	--samplesPerUpdate
 	--updateSec
 
-4. start pinz application (npm start) 
+    node resources/datagen.js --samplesPerUpdate=10 --updateSec=10
+
+4. start pinz application:
+    npm start
 
 5. Test installation by running resources/testPost.sh. An array of matching observable documents will be output if everything is working properly.
 
+6. Use the web client:
+    http://localhost:3000/ngapp/
 
