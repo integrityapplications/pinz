@@ -31,7 +31,7 @@ describe( 'queryBuilder.buildTimeQuery()' , function() {
 	it('invalid date format: start', function() {
 		assert.throws(
 			function() {
-				queryBuilder.buildTimeQuery({ "start" :  "invalid date format" , "start" : "2013-09-12T00:00:00" });
+				queryBuilder.buildTimeQuery({ "start" :  "invalid date format" , "end" : "2013-09-12T00:00:00" });
 			},
 			Error
 		);
@@ -51,7 +51,7 @@ describe( 'queryBuilder.buildTimeQuery()' , function() {
 
 
 describe('queryBuilder.buildTimeInsertedQuery()' , function() {
-		it("Input should not be blank" , function() {
+		it("Input must not be blank" , function() {
 			assert.throws(
 				function() {
 					queryBuilder.buildTimeInsertedQuery( { } , Error);
@@ -65,6 +65,33 @@ describe('queryBuilder.buildTimeInsertedQuery()' , function() {
 					queryBuilder.buildTimeInsertedQuery( { "end" :  "invalid date format" } , Error);
 				}
 			);
+		});
+
+		it("invalid date format: start" , function() {
+			assert.throws(
+				function() {
+					queryBuilder.buildTimeInsertedQuery( { "start" :  "invalid date format" } , Error);
+				}
+			);
+		});
+
+		it("invalid date format: end (optional)" , function() {
+			assert.throws(
+				function() {
+					queryBuilder.buildTimeInsertedQuery( { "end" :  "invalid date format" } , Error);
+				}
+			);
+		});
+
+		it('queryBuilder.buildTimeInsertedQuery should return valid MongoDB query from start value' , function() {
+			var query = queryBuilder.buildTimeInsertedQuery({ "start" :  "2013-09-12T00:00:00" } );
+			assert.equal( "2013-09-12T00:00:00.000Z" , query.$gte.toISOString() );
+		});
+
+		it('queryBuilder.buildTimeInsertedQuery should return valid MongoDB query from start and end values' , function() {
+			var query = queryBuilder.buildTimeInsertedQuery({ "start" :  "2013-09-12T00:00:00", "end" : "2013-09-12T12:00:00" });
+			assert.equal( "2013-09-12T00:00:00.000Z" , query.$gte.toISOString() );
+			assert.equal( "2013-09-12T12:00:00.000Z" , query.$lte.toISOString() );
 		});
 });
 
