@@ -26,7 +26,9 @@
   </head>
   <body ng-controller="AppCtrl">
     <h1>View Pinz Server Data</h1>
-    <button ng-click="getPinzData()"> Retrieve Data </button>
+    Reload data every <input size="3" placeholder="10" ng-model="pollingTimeout"> seconds
+    <button ng-click="startDataFeed()">Start</button>
+    <button ng-click="stopDataFeed()">Stop</button>
     <span id="errors"> {{error}} 
 
       <form id="renderOption", name="renderOption">

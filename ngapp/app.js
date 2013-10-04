@@ -8,7 +8,7 @@ leafletDemoApp.config(['$httpProvider', function($httpProvider) {
 ]);
 
 // controller business logic
-leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
+leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $timeout) {
   //this should really go in services
 
   $scope.initLeaflet = function() {
@@ -69,6 +69,25 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
   ];
 
   var headersCfg = {"content-type":"application/json"};
+
+  $scope.cancelDataFeed = null;
+
+  function updateData() {
+    $scope.getPinzData();
+    $scope.cancelDataFeed = $timeout(function() {
+        updateData();
+    }, $scope.pollingTimeout * 1000);
+  } 
+
+  $scope.startDataFeed = function() {
+    console.log('start the data feed');
+    updateData();
+  }
+
+  $scope.stopDataFeed = function() {
+    console.log('stop the data feed');
+    $timeout.cancel($scope.cancelDataFeed);
+  }
 
   $scope.getPinzData = function() {
     $log.log('getPinzData: invoked');
