@@ -83,16 +83,17 @@ describe('queryBuilder.buildTimeInsertedQuery()' , function() {
 			);
 		});
 
-		it('queryBuilder.buildTimeInsertedQuery should return valid MongoDB query from start value' , function() {
-			var query = queryBuilder.buildTimeInsertedQuery({ "start" :  "2013-09-12T00:00:00" } );
+		it("time inserted query builder should return valid mongo query for valid start date value" , function(){
+			var query = queryBuilder.buildTimeInsertedQuery( { "start" :  "2013-09-12T00:00:00" } );
 			assert.equal( "2013-09-12T00:00:00.000Z" , query.$gte.toISOString() );
 		});
 
-		it('queryBuilder.buildTimeInsertedQuery should return valid MongoDB query from start and end values' , function() {
-			var query = queryBuilder.buildTimeInsertedQuery({ "start" :  "2013-09-12T00:00:00", "end" : "2013-09-12T12:00:00" });
+		it("time inserted query builder should return valid mongo query for valid start and optional end date vales" , function(){
+			var query = queryBuilder.buildTimeInsertedQuery( { "start" :  "2013-09-12T00:00:00" , "end" :  "2013-12-12T00:00:00"} );
 			assert.equal( "2013-09-12T00:00:00.000Z" , query.$gte.toISOString() );
-			assert.equal( "2013-09-12T12:00:00.000Z" , query.$lte.toISOString() );
+			assert.equal( "2013-12-12T00:00:00.000Z" , query.$lte.toISOString() );
 		});
+		
 });
 
 
