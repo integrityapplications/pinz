@@ -37,35 +37,35 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
   }
 
   $scope.postData = [
-    {
-      "src" : "A",
-//      "time_within" : {
-//	"start" : "2013-09-13T16:00:00",
-//	"end" : "2013-09-13T16:00:30"
-//      },
-      "geo_within" : [
+	{
+		"src" : "A",
+		"time_within" : {
+			"start" : "2013-09-13T16:00:00",
+			"end" : "2099-12-31T23:59:59"
+		},
+		"geo_xwithin" : [
 			40.0, -55.0,
 			40.0, -30.0,
 			10.0, -30.0,
 			10.0, -55.0,
 			40.0, -55.0
-      ],
-      "attrs" : [
-	{
-	  "k" : "color",
-	  "v" : ["red" , "green"]
-	},
-	{
-	  "k" : "animal",
-	  "v" : ["koala"]
-	},
-	{
-	  "k" : "weight",
-	  "low" : 50,
-	  "high" : 100
+		],
+		"attrs" : [
+			{
+				"k" : "color",
+				"v" : ["red" , "green"]
+			},
+			{
+				"k" : "animal",
+				"v" : ["koala"]
+			},
+			{
+				"k" : "weight",
+				"low" : 50,
+				"high" : 100
+			}
+		]
 	}
-      ]
-    }
   ];
 
   var headersCfg = {"content-type":"application/json"};
