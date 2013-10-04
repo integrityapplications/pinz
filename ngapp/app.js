@@ -25,9 +25,10 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     }).addTo(map);
 
     $scope.map = map;
-    $scope.layerType="points";
+    $scope.layerType="heat";
     // This is the marker data currently displayed.
-    $scope.markers = null;
+    $scope.markers = new L.LayerGroup();
+    $scope.map.addLayer($scope.markers);
     // This array holds our point data.  Watch it and display when dirty.
     $scope.geoData = null;
     $scope.$watch( 'geoData', function(newVal, oldVal){
@@ -43,7 +44,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
 			"start" : "2013-09-13T16:00:00",
 			"end" : "2099-12-31T23:59:59"
 		},
-		"geo_xwithin" : [
+		"geo_withinDISABLED" : [
 			40.0, -55.0,
 			40.0, -30.0,
 			10.0, -30.0,
@@ -147,33 +148,64 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     if ( lfltPoints == null ) return;
 
     // Remove previous
-    if ( $scope.markers != null ){
-      //$scope.map.remove( $scope.markers );
-      $scope.markers.clearLayers();
-    }
+    $scope.markers.clearLayers();
 
     $log.log( 'displaying ' + lfltPoints.length + ' data points with render option ', $scope.layerType );
     switch ($scope.layerType) {
       case 'points':
-	$scope.markers = new L.LayerGroup();
 	for ( var i=0; i<Math.min(1000000000,lfltPoints.length); i ++ ){
 	  $scope.markers.addLayer(new L.Marker( lfltPoints[i] ) );
         }
         //$log.log( 'markers layer id = ', $scope.markers.getLayers()[0]._leaflet_id );
 	//console.debug( 'markers = ', $scope.markers );
-	$scope.map.addLayer($scope.markers);
+	//$scope.map.addLayer($scope.markers);
 	$scope.map.fitWorld();
 	break
       case 'cluster':
-	$scope.markers = new L.MarkerClusterGroup();
+	var mcg = new L.MarkerClusterGroup();
 	for ( var i=0; i<lfltPoints.length; i ++ ){
-	  $scope.markers.addLayer(new L.Marker( lfltPoints[i] ) );
+	  mcg.addLayer(new L.Marker( lfltPoints[i] ) );
         }
-	$scope.map.addLayer($scope.markers);
+	$scope.markers.addLayer(mcg);
+	//$scope.map.addLayer($scope.markers);
 	$scope.map.fitWorld();
 	break;
       case 'heat':
-	$log.log(  'not implemented' );
+	var heatmapLayer = L.TileLayer.heatMap({
+	  radius: 20,
+	  opacity: 50,
+	  gradient: {
+	    0.45: "rgb(0,0,255)",
+	    0.55: "rgb(0,255,255)",
+	    0.65: "rgb(0,255,0)",
+	    0.95: "yellow",
+	    1.0: "rgb(255,0,0)"
+	  }
+        });
+	newPts = [];
+	//console.log(lfltPoints);
+	var lls = 1000;
+	var lln = -1000;
+	var llw = 1000;
+	var lle = -1000;
+
+	for ( var i=0; i<Math.min(1000000000,lfltPoints.length); i ++ ){
+	  var pt = lfltPoints[i];
+	  newPts.push( {lat: pt.lat, lon: pt.lng, value: 1} );
+	  lls = Math.min( lls, pt.lat );
+	  lln = Math.max( lln, pt.lat );
+	  llw = Math.min( llw, pt.lng );
+	  lle = Math.max( lle, pt.lng );
+        }
+	heatmapLayer.addData(newPts);
+	// Add this layer inside a layer group
+	//$scope.markers = new L.LayerGroup();
+	$scope.markers.addLayer( heatmapLayer );
+	//$scope.map.addLayer($scope.markers);
+	var llbounds = [[lls,llw],[lln,lle]];
+	console.log('lat long bounds = ', llbounds);
+	$scope.map.fitBounds( llbounds );
+	//$scope.map.fitWorld();
 	break;
       default:
 	$log.log( 'Undefined display type ' + $scope.layerType );
