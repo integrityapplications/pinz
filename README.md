@@ -30,51 +30,53 @@ The metadata endpoint is accessed via HTTP GET and returns an array of json docu
 
 The data endpoint is accessed via HTTP POST and returns an array of observable json documents matching search criteria defined in the post body. A maximum of 5000 documents is returned per event stream. The first iteration will just support AJAX pulling at regulation intervals. Future releases will explore SSE and/or web sockets (TBD).
 
-Area search inputs are
+### Required inputs
+`src` :	Name of data feed to query
 
-`time-within`
+### Optional inputs
+`time_within`
  * start : ISODate lower time bound, assumed to be in "zulu" time [(pretty much GMT)](http://en.wikipedia.org/wiki/Coordinated_Universal_Time)
  * end : ISODate upper time bound, assumed to be in "zulu" time (pretty much GMT)
 
-`geo-within` : Array of latitude, longitude pairs that define a valid closed polygon search area
+`geo_within` : Array of latitude, longitude pairs that define a valid closed polygon search area
 
 `attrs` : Array of key:value objects (TBD)
 
-`src` :	Name of data feed to query
+[Example POST document](https://raw.github.com/integrityapplications/pinz/data-api/resources/postExample.json)
 
 Running a demo
 ==============
 
 1. Install node dependencies:
 
-```
-    npm install
-```
+  ```
+      npm install
+  ```
 
 2. start mongo on port 27017:
 
-```
-    mkdir db
-    mongod --dbpath ./db --port 27017 --fork
-```
+  ```
+	mkdir db
+	mongod --dbpath ./db --port 27017 --fork
+  ```
 
 3. Run node application resources/datagen.js to continously populate MongoDB with randomly generated observables. Verify by viewing generated documents in 'observabledb' with mongo shell.
 
-```
+  ```
     node resources/datagen.js --samplesPerUpdate=10 --updateSec=10
-```
+  ```
 
 4. start pinz application:
 
-```
+  ```
     npm start 
-```
+  ```
 
-5. Test installation by running resources/testPost.sh. An array of matching observable documents will be output if everything is working properly.
+5. Test installation by running resources/post.sh. An array of matching observable documents will be output if everything is working properly.
 
 6. Use the web client:
 
-```
+  ```
     http://localhost:3000/ngapp/
-```
+  ```
 
