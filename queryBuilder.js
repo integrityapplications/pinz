@@ -52,12 +52,13 @@ function buildGeoWithinQuery(coords) {
 
 function buildMongoQuery(query) {
 
+	console.log("\tINFO: Building mongo query function...");
 	var mongoQuery = {}
 
 	if('time_within' in query) mongoQuery.t = buildTimeQuery(query.time_within)
 	if('geo_within' in query) mongoQuery.geos = buildGeoWithinQuery(query.geo_within)
 	
-	//console.log( JSON.stringify(mongoQuery, null, "").split("\n").join("") );
-
+	console.log( JSON.stringify(mongoQuery, null, "").split("\n").join("") );
+	
 	return mongoQuery
 }
