@@ -30,6 +30,7 @@ describe( 'api.processDataRequest', function() {
 
 	it('Valid POST', function() {
 		var curosrMock = {
+			limit: function(num) { return this;},
 			toArray: function(callback) { callback(null, ["obsMock1", "obsMock2", "obsMock3"]);}
 		};
 		var collectionMock = {

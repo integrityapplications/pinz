@@ -30,6 +30,8 @@ The metadata endpoint is accessed via HTTP GET and returns an array of json docu
 
 The data endpoint is accessed via HTTP POST and returns an array of observable json documents matching search criteria defined in the post body. A maximum of 5000 documents is returned per event stream. The first iteration will just support AJAX pulling at regulation intervals. Future releases will explore SSE and/or web sockets (TBD).
 
+[Example POST document](https://raw.github.com/integrityapplications/pinz/data-api/resources/postExample.json)
+
 ### Required inputs
 `src` :	Name of data feed to query
 
@@ -41,8 +43,6 @@ The data endpoint is accessed via HTTP POST and returns an array of observable j
 `geo_within` : Array of latitude, longitude pairs that define a valid closed polygon search area
 
 `attrs` : Array of key:value objects (TBD)
-
-[Example POST document](https://raw.github.com/integrityapplications/pinz/data-api/resources/postExample.json)
 
 Running a demo
 ==============
