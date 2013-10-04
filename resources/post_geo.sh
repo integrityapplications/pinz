@@ -1,0 +1,1 @@
+curl -X POST -d  @postGeoExample.json -H 'content-type:application/json' http://localhost:3000/data
