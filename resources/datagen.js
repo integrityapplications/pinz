@@ -1,4 +1,5 @@
 var mongo = require('mongodb');
+var argv = require('optimist').argv;
 
 var sources = [
 	{
@@ -31,21 +32,28 @@ var sources = [
 		]
 	}
 ]
-var num = 100;
+var samplesPerUpdate = 100;
+var updateSec = 10000;
 var mongoUrl = "mongodb://127.0.0.1:27017/observabledb";
+
+if (argv.updateSec) updateSec = argv.updateSec;
+if (argv.samplesPerUpdate) samplesPerUpdate = argv.samplesPerUpdate;
+console.log("updateSec: " + updateSec + ", samplesPerUpdate: " + samplesPerUpdate);
 
 mongo.connect(mongoUrl , function(err, db) {
 	if(err) throw err;
 	
 	console.log("Successfully connected to mongo at " + mongoUrl);
 	
-	for(var srcIdx = 0; srcIdx < sources.length ; srcIdx++) {
-		console.log("Generating and publishing documents for source " + sources[srcIdx].src);
-		db.collection(sources[srcIdx].src).insert(generateDocs(sources[srcIdx], num) , function(err, objects) {
-			if(err) throw err;
-		});
-	}
-	//db.close();
+	setInterval(function() {
+		for(var srcIdx = 0; srcIdx < sources.length ; srcIdx++) {
+			console.log("Publishing " + samplesPerUpdate + " documents to collection: " + sources[srcIdx].src);
+			db.collection(sources[srcIdx].src).insert(generateDocs(sources[srcIdx], samplesPerUpdate) , function(err, objects) {
+				if(err) throw err;
+			});
+		}
+		console.log("Waiting for next interval: " + updateSec);
+	}, updateSec);
 });
 
 function generateDocs(src, numDocs) {
