@@ -39,7 +39,7 @@ function processDataRequest(req, res) {
 		if (err) {
 			res.send(err.status, err.msg);
 		} else {
-			res.send(results);
+			res.send(200, results);
 		}
 	});
 }
