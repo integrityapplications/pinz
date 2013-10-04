@@ -27,7 +27,8 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
     $scope.map = map;
     $scope.layerType="heat";
     // This is the marker data currently displayed.
-    $scope.markers = null;
+    $scope.markers = new L.LayerGroup();
+    $scope.map.addLayer($scope.markers);
     // This array holds our point data.  Watch it and display when dirty.
     $scope.geoData = null;
     $scope.$watch( 'geoData', function(newVal, oldVal){
@@ -128,34 +129,30 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
     if ( lfltPoints == null ) return;
 
     // Remove previous
-    if ( $scope.markers != null ){
-      $scope.map.remove( $scope.markers );
-      //$scope.markers.clearLayers();
-    }
+    $scope.markers.clearLayers();
 
     $log.log( 'displaying ' + lfltPoints.length + ' data points with render option ', $scope.layerType );
     switch ($scope.layerType) {
       case 'points':
-	$scope.markers = new L.LayerGroup();
 	for ( var i=0; i<Math.min(1000000000,lfltPoints.length); i ++ ){
 	  $scope.markers.addLayer(new L.Marker( lfltPoints[i] ) );
         }
         //$log.log( 'markers layer id = ', $scope.markers.getLayers()[0]._leaflet_id );
 	//console.debug( 'markers = ', $scope.markers );
-	$scope.map.addLayer($scope.markers);
+	//$scope.map.addLayer($scope.markers);
 	$scope.map.fitWorld();
 	break
       case 'cluster':
-	$scope.markers = new L.MarkerClusterGroup();
+	var mcg = new L.MarkerClusterGroup();
 	for ( var i=0; i<lfltPoints.length; i ++ ){
-	  $scope.markers.addLayer(new L.Marker( lfltPoints[i] ) );
+	  mcg.addLayer(new L.Marker( lfltPoints[i] ) );
         }
-	$scope.map.addLayer($scope.markers);
+	$scope.markers.addLayer(mcg);
+	//$scope.map.addLayer($scope.markers);
 	$scope.map.fitWorld();
 	break;
       case 'heat':
-	$scope.markers = L.TileLayer.heatMap({
-	//var heatmapLayer = L.TileLayer.heatMap({
+	var heatmapLayer = L.TileLayer.heatMap({
 	  radius: 20,
 	  opacity: 50,
 	  gradient: {
@@ -181,8 +178,11 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
 	  llw = Math.min( llw, pt.lng );
 	  lle = Math.max( lle, pt.lng );
         }
-	$scope.markers.addData(newPts);
-	$scope.map.addLayer($scope.markers);
+	heatmapLayer.addData(newPts);
+	// Add this layer inside a layer group
+	//$scope.markers = new L.LayerGroup();
+	$scope.markers.addLayer( heatmapLayer );
+	//$scope.map.addLayer($scope.markers);
 	var llbounds = [[lls,llw],[lln,lle]];
 	console.log('lat long bounds = ', llbounds);
 	$scope.map.fitBounds( llbounds );
