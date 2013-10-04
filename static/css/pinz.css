@@ -11,3 +11,13 @@ pre{
   border: 2px;
   border-radius: 12px;
 }
+
+#renderOption{
+  margin: 0px;
+  padding: 0px;
+ 
+}
+
+input {
+  display: inline;
+}

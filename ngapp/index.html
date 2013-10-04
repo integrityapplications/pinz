@@ -24,7 +24,15 @@
   <body ng-controller="AppCtrl">
     <h1>View Pinz Server Data</h1>
     <button ng-click="getPinzData()"> Retrieve Data </button>
-    <span id="errors"> {{error}} </span>
+    <span id="errors"> {{error}} 
+
+      <form id="renderOption", name="renderOption">
+	<input type="radio" ng-model="layerType" value="points">   Points <br/>
+	<input type="radio" ng-model="layerType" value="cluster">  Clusters <br/>
+	<input type="radio" ng-model="layerType" value="heat">     Heat Map <br/>
+	<tt>render type = {{layerType}}</tt><br/>
+      </form>
+    </span>
     <div id="map" style="width: 900px; height: 450px"></div>
     <div id="rawData">
       <h3> Posted request: </h3>

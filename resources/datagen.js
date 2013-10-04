@@ -45,7 +45,7 @@ mongo.connect(mongoUrl , function(err, db) {
 			if(err) throw err;
 		});
 	}
-	//db.close();
+	db.close();
 });
 
 function generateDocs(src, numDocs) {

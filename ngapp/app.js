@@ -25,6 +25,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
 	}).addTo(map);
 
 	$scope.map = map;
+        $scope.layerType="points";
     }
 
     $scope.postData = [
@@ -106,7 +107,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log) {
     }
 
     function displayData( lfltPoints ) {
-	$log.log( 'displaying data...' );
+	$log.log( 'displaying data with render option ', $scope.render );
 	var markers = new L.MarkerClusterGroup();
 	for ( var i=0; i<lfltPoints.length; i ++ ){
             markers.addLayer(new L.Marker( lfltPoints[i] ) );
