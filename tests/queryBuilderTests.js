@@ -48,6 +48,29 @@ describe( 'queryBuilder.buildTimeQuery()' , function() {
 });
 
 
+
+
+describe('queryBuilder.buildTimeInsertedQuery()' , function() {
+		it("Input should not be blank" , function() {
+			assert.throws(
+				function() {
+					queryBuilder.buildTimeInsertedQuery( { } , Error);
+				}
+			);
+		});
+
+		it("Input must contain 'start' property" , function() {
+			assert.throws(
+				function() {
+					queryBuilder.buildTimeInsertedQuery( { "end" :  "invalid date format" } , Error);
+				}
+			);
+		});
+});
+
+
+
+
 describe( 'queryBuilder.buildGeoWithinQuery()' , function() {
 	it('queryBuilder should return valid MongoDB query' , function() {
 		var query = queryBuilder.buildGeoWithinQuery([
