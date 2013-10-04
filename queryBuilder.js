@@ -24,7 +24,7 @@ function buildTimeQuery(time) {
 }
 
 
-function buildTimeInsertedQuery(){
+function buildTimeInsertedQuery(time){
 	// funciton to query the time data was entered into the DB
 		if (!('start' in time)) throw new Error("Required property start not provided");
 	if( !('end' in time) ) throw new Error("Required property end not provided");
