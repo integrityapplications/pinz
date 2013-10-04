@@ -1,11 +1,9 @@
 var assert = require('assert');
-
 var api = require('./../api');
 
 describe( 'api.processDataRequest' , function() {
 
-	// is array
-	it('processsDataRequest should return a 400 response if given empty input' , function() {
+	it('Ensure POST is JSON array' , function() {
 		var req = {body : {} };
 		var res = {
 			send: function(status, message) {
@@ -15,20 +13,20 @@ describe( 'api.processDataRequest' , function() {
 		};
 
 		api.processDataRequest(req, res);
-		assert.equal( "400" , res.status); // syntax for getting to the 400 status
-
+		assert.equal("400" , res.status);
 	});
 
-	// // is non-empty array
-	// it('processRequest should return a 400 response if given a empty JSON array' , function() {
-	// 	var req = {[]};
+	it('Ensure POST JSON array is not empty' , function() {
+		var req = {body : [] };
+		var res = {
+			send: function(status, message) {
+				this.status = status;
+				this.message = message;
+			}	
+		};
 
-	// 	var out = server.processRequest(req, res);
-
-	// 	assert.equal( 400, out); // syntax for getting to the 400 status
-		
-	// });
-
-	}
-)
+		api.processDataRequest(req, res);
+		assert.equal("400" , res.status);
+	});
+});
 	

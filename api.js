@@ -7,6 +7,10 @@ function processDataRequest(req, res) {
 		res.send(400, "Bad Request, POST body expected to contain JSON array.");
 		return;
 	}
+	if (inputs.length === 0) {
+		res.send(400, "Bad Request, POSTed JSON array expected to contain elements.");
+		return;
+	}
 
 	var results = [];
 	async.forEach(inputs, function(input, callback) {
