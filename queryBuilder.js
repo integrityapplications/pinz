@@ -26,25 +26,30 @@ function buildTimeQuery(time) {
 
 function buildTimeInsertedQuery(time){
 	// funciton to query the time data was entered into the DB
-		if (!('start' in time)) throw new Error("Required property start not provided");
-	if( !('end' in time) ) throw new Error("Required property end not provided");
-	
+	if (!('start' in time)) throw new Error("Required property start not provided");
+
 	var start = new Date(time.start);
 	if (isNaN(start.getTime())) {
 		throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + time.start);
 	}
 
-	var end = new Date(time.end);
-	if (isNaN(end.getTime())) {
-		throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + time.end);
+	var end = null; // end is an optional parameter
+	if( ('end' in time) ) {
+		end = new Date(time.end);
+		if (isNaN(end.getTime())) {
+			throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + time.end);
+		}
 	}
 
-	return {
+	if(start != null && end == null) {
+		return { $gte : start };
 
-		
-		// $gte : start , 
-		// $lte : end 
+	} else if(start != null && end != null) {
+		return {
+			$gte : start , 
+			$lte : end 
 	};
+	}
 }
 
 
