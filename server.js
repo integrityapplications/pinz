@@ -25,11 +25,16 @@ function start(port) {
 	app.post('/data', processRequest);
 	
 	app.listen(3000);
-	console.log('Listening on port 3000');
+	console.log('Listening on port 3000.  Good hunting.');
 }
 
 function processRequest(req, res) {
+	
+	console.log("\tINFO: Processing POST request to ../data");
 	var inputs = req.body;
+
+	console.log("\INFO: Input equals " + JSON.stringify(inputs));
+
 	var results = [];
 	async.forEach(inputs, function(input, callback) {
 		try {
@@ -40,7 +45,7 @@ function processRequest(req, res) {
 				callback();
 			});
 		} catch(e) {
-			//console.log(JSON.stringify(e, null, ""))
+			console.log(JSON.stringify(e, null, ""))
 			callback({status:400, msg:"Bad Request"});
 		}
 	}, function(err) {
