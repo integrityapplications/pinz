@@ -9,7 +9,8 @@
 		"optimist" : "0.x"
 	} ,
 	"devDependencies" : {
-		"mocha"   : "1.12.1"
+		"mocha"   : "1.12.1",
+		"xml2js" : "0.2.8"
 	} ,
 	"scripts" : {
 		"start" : "node server.js",
