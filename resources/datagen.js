@@ -1,5 +1,6 @@
 var mongo = require('mongodb');
 var argv = require('optimist').argv;
+var metadata = require('./metadata_gen');
 
 var sources = [
 	{
@@ -45,6 +46,8 @@ mongo.connect(mongoUrl , function(err, db) {
 	
 	console.log("Successfully connected to mongo at " + mongoUrl);
 	
+	metadata.insertMetadataDocs(db);
+
 	setInterval(function() {
 		for(var srcIdx = 0; srcIdx < sources.length ; srcIdx++) {
 			console.log("Publishing " + samplesPerUpdate + " documents to collection: " + sources[srcIdx].src);

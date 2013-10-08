@@ -1,5 +1,4 @@
 var mongo = require('mongodb');
-// Dont need cmd line args
 
 var sourceA = {
 
@@ -36,7 +35,6 @@ var sourceA = {
 	]
 }
 
-
 var sourceB = {
 
 	_id : "B" ,
@@ -57,39 +55,19 @@ var sourceB = {
 
 };
 
-// connect to db, and persist to observabledb.metadata collection
-var mongoUrl = "mongodb://127.0.0.1:27017/observabledb";
+function insertMetadataDocs(db) {
 
-// mongo.connect(mongoUrl , function(err, db) {
-
-// 	if(err) throw err;
-	
-// 	console.log("Successfully connected to mongo at " + mongoUrl);
-	
-// 	db.collection("metadata" , sourceA, function(err, objects) {
-// 				if(err) throw err;
-// 	});
-
-// 	db.collection("metadata" , sourceB, function(err, objects) {
-// 				if(err) throw err;
-// 	});
-
-// });
-
-
-def insertMetadata(db) {
-
-	db.collection("metadata").drop(function(err) {
+	db.collection("metadata").drop(function() {
 		db.collection("metadata").insert([sourceA, sourceB] , function(err, objects) {
-			if(err):
-				console.log("WARN :: Error persisting source object to metadata collection @ " + mongoUrl);
-			else:
-				console.log("INFO :: Successfully persisted sourceA object to metadata collection @ " + mongoUrl);
+			if(err) {
+				console.log("WARN :: Error persisting metadata documents");
+			} else {
+				console.log("INFO :: Successfully persisted metadata documents");
+			}
 		});
 
 	});
 
 }
 
-
-
+module.exports.insertMetadataDocs=insertMetadataDocs;
