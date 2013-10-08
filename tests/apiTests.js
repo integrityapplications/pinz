@@ -28,6 +28,28 @@ describe( 'api.processDataRequest', function() {
 		assert.equal("400" , res.status);
 	});
 
+	it('Mongo exception', function() {
+		var curosrMock = {
+			limit: function(num) { return this;},
+			toArray: function(callback) { callback("simulated mongo exception", null);}
+		};
+		var collectionMock = {
+			find: function(query) { return curosrMock;}
+		};
+		GLOBAL.dbHandle = { 
+			collection: function(name) { return collectionMock;}
+		};
+
+		var req = {
+			body : [
+				{src: "source1"},
+				{src: "source2"}
+			]
+		};
+		api.processDataRequest(req, res);
+		assert.equal("500", res.status);
+	});
+
 	it('Valid POST', function() {
 		var curosrMock = {
 			limit: function(num) { return this;},
