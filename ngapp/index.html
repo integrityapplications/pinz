@@ -4,14 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <script src="/static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" media="screen" >
+
     <script src="/static/js/moment.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css"/>
     <title>Pinz - Geospatial Visualisation of Real-time Data</title>
     <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
 
-<script type="text/javascript" src="http://www.patrick-wied.at/static/heatmapjs/src/heatmap.js"></script>
-<script type="text/javascript" src="http://www.patrick-wied.at/static/heatmapjs/src/heatmap-leaflet.js"></script>
+    <script type="text/javascript" src="http://www.patrick-wied.at/static/heatmapjs/src/heatmap.js"></script>
+    <script type="text/javascript" src="http://www.patrick-wied.at/static/heatmapjs/src/heatmap-leaflet.js"></script>
     
     <!-- have added 3 goodies to leaflet: mouse position, full screen, and
     marker cluster.  Files are in public/css,js -->
@@ -29,19 +32,26 @@
   </head>
   <body ng-controller="AppCtrl">
     <h1>View Pinz Server Data</h1>
-    Reload data every <input size="3" placeholder="1" ng-model="pollingTimeout"> seconds
-    <button ng-click="startDataFeed()">Start</button>
-    <button ng-click="stopDataFeed()">Stop</button>
-    Buffer <input size="3" placeholder="200" ng-model="nbBuffered"> points
-    <span id="errors"> {{error}} 
+    <div class="panel panel-default">
+      <div class="panel-body">
+	Reload data every <input size="3" placeholder="1" ng-model="pollingTimeout"> seconds
+	<div class="btn-group">
+	  <button type="button" ng-click="startDataFeed()" class="btn btn-default">Start</button>
+	  <button type="button" ng-click="stopDataFeed()" class="btn btn-default">Stop</button>
+	</div>
+	Buffer <input size="3" placeholder="200" ng-model="nbBuffered"> points
+	<span id="errors"> {{error}} 
 
-      <form id="renderOption", name="renderOption">
-	<input type="radio" ng-model="layerType" value="points">   Points <br/>
-	<input type="radio" ng-model="layerType" value="cluster">  Clusters <br/>
-	<input type="radio" ng-model="layerType" value="heat">     Heat Map <br/>
-	<tt>render type = {{layerType}}</tt><br/>
-      </form>
-    </span>
+	  <form id="renderOption", name="renderOption">
+	    <input type="radio" ng-model="layerType" value="points">   Points <br/>
+	    <input type="radio" ng-model="layerType" value="cluster">  Clusters <br/>
+	    <input type="radio" ng-model="layerType" value="heat">     Heat Map <br/>
+	    <tt>render type = {{layerType}}</tt><br/>
+	  </form>
+
+	</span>
+      </div>
+    </div>
     <div id="map" style="width: 900px; height: 450px"></div>
     <div id="rawData">
       <h3> Posted request: </h3>
