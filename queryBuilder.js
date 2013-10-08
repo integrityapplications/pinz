@@ -77,14 +77,10 @@ function buildAttributeQuery( attr ) {
 
 	if(attr == null) throw new Error("Attribute data is null");
 
-	// does v exist?  Ifso....
-	// if not, check high, low or both  - if none, error
-
 	var key = attr.k;
 	var value = null;
 
 	if('v' in attr) {
-
 		if (attr.v instanceof Array) {
 			value = {$in: attr.v};
 		} else {
@@ -94,6 +90,8 @@ function buildAttributeQuery( attr ) {
 		value = {};
 		if('low' in attr) value.$gte = attr.low;
 		if('high' in attr) value.$lte = attr.high;
+	} else {
+		throw new Error("missing required elems 'v', 'low', 'high'");
 	}
 
 	return { 
@@ -113,6 +111,13 @@ function buildMongoQuery(query) {
 	if('time_inserted' in query) mongoQuery._id = buildTimeInsertedQuery(query.time_inserted);
 	if('time_within' in query) mongoQuery.t = buildTimeQuery(query.time_within);
 	if('geo_within' in query) mongoQuery["geos.loc"] = buildGeoWithinQuery(query.geo_within);
+	if('attrs' in query) {
+		var all = [];
+		query.attrs.forEach(function(attr, index){
+			all.push(buildAttributeQuery(attr));
+		});
+		mongoQuery.attrs = {$all: all};
+	}
 	
 	console.log("\tBuilt Mongo query = " + JSON.stringify(mongoQuery, null, "").split("\n").join("") );
 	

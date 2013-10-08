@@ -156,13 +156,22 @@ describe('buildQuery.buildAttributeQuery' , function() {
 
 	});
 
-it('attribute range' , function() {
+	it('attribute range' , function() {
 		var input = { k : "weight",	low : 50, high : 100}
 		var response = queryBuilder.buildAttributeQuery(input);
 
 		assert.equal(
 			'{"$elemMatch":{"k":"weight","v":{"$gte":50,"$lte":100}}}' , 
 			JSON.stringify(response, null, "").split("\n").join(""));
+	});
+
+	it('no value or range' , function() {
+		assert.throws(
+			function() {
+				queryBuilder.buildAttributeQuery({k:"color"});
+			},
+			Error
+		);
 	});
 
 });
@@ -237,4 +246,20 @@ describe('buildQuery.buildMongoQuery()' , function() {
 			JSON.stringify(query, null, "").split("\n").join(""));
 	});
 
+	it('attrs' , function() {
+		var input = {
+			"src" : "A",
+			"attrs" : [
+				{
+					"k" : "color",
+					"v" : ["red" , "green"]
+				}
+			]
+		};
+
+		var query = queryBuilder.buildMongoQuery(input);
+		assert.equal(
+			'{"attrs":{"$all":[{"$elemMatch":{"k":"color","v":{"$in":["red","green"]}}}]}}' , 
+			JSON.stringify(query, null, "").split("\n").join(""));
+	});
 });
