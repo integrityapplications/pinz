@@ -135,21 +135,10 @@ describe( 'queryBuilder.buildGeoWithinQuery()' , function() {
 });
 
 
-/*describe('buildQuery.buildMongoQuery()' , function() {
+describe('buildQuery.buildMongoQuery()' , function() {
 
-	var query = {
+	/*var input = {
 		"src" : "A",
-		"time_within" : {
-			"start" : "2013-09-13T16:00:00",
-			"end" : "2013-09-13T16:00:30"
-		},
-		"geo_within" : [
-			40.0, -55.0,
-			40.0, -30.0,
-			10.0, -30.0,
-			10.0, -55.0,
-			40.0, -55.0
-		],
 		"attrs" : [
 			{
 				"k" : "color",
@@ -165,11 +154,54 @@ describe( 'queryBuilder.buildGeoWithinQuery()' , function() {
 				"high" : 100
 			}
 		]
-	}
+	};*/
 
-	it('mongo query should be valid JSON' , function() {
-		assert.equal("" , queryBuilder.buildMongoQuery(query));
+	it('time_within' , function() {
+		var input = {
+			"src" : "A",
+			"time_within" : {
+				"start" : "2013-09-13T16:00:00",
+				"end" : "2013-09-13T16:00:30"
+			}
+		};
+
+		var query = queryBuilder.buildMongoQuery(input);
+		assert.equal(
+			'{"t":{"$gte":"2013-09-13T16:00:00.000Z","$lte":"2013-09-13T16:00:30.000Z"}}' , 
+			JSON.stringify(query, null, "").split("\n").join(""));
+	});
+
+	it('time_inserted' , function() {
+		var input = {
+			"src" : "A",
+			"time_inserted" : {
+				"start" : "2013-09-13T16:00:00",
+				"end" : "2013-09-13T16:00:30"
+			}
+		};
+
+		var query = queryBuilder.buildMongoQuery(input);
+		assert.equal(
+			'{"_id":{"$gte":"523336800000000000000000","$lte":"5233369e0000000000000000"}}' , 
+			JSON.stringify(query, null, "").split("\n").join(""));
+	});
+
+	it('geo_within' , function() {
+		var input = {
+			"src" : "A",
+			"geo_within" : [
+				40.0, -55.0,
+				40.0, -30.0,
+				10.0, -30.0,
+				10.0, -55.0,
+				40.0, -55.0
+			]
+		};
+
+		var query = queryBuilder.buildMongoQuery(input);
+		assert.equal(
+			'{"geos.loc":{"$geoWithin":{"$geometry":{"type":"Polygon","coordinates":[[[-55,40],[-30,40],[-30,10],[-55,10],[-55,40]]]}}}}' , 
+			JSON.stringify(query, null, "").split("\n").join(""));
 	});
 
 });
-*/

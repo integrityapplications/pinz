@@ -76,7 +76,7 @@ function buildMongoQuery(query) {
 
 	var mongoQuery = {};
 
-	if('time_inserted' in query) mongoQuery.ObjectID = buildTimeInsertedQuery(query.time_inserted);
+	if('time_inserted' in query) mongoQuery._id = buildTimeInsertedQuery(query.time_inserted);
 	if('time_within' in query) mongoQuery.t = buildTimeQuery(query.time_within);
 	if('geo_within' in query) mongoQuery["geos.loc"] = buildGeoWithinQuery(query.geo_within);
 	
