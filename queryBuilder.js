@@ -77,12 +77,23 @@ function buildAttributeQuery( attr ) {
 
 	if(attr == null) throw new Error("Attribute data is null");
 
-	key = attr.k;
-	value = null;
-	if (attr.v instanceof Array) {
-		value = {$in: attr.v};
-	} else {
-		value = attr.v;
+	// does v exist?  Ifso....
+	// if not, check high, low or both  - if none, error
+
+	var key = attr.k;
+	var value = null;
+
+	if('v' in attr) {
+
+		if (attr.v instanceof Array) {
+			value = {$in: attr.v};
+		} else {
+			value = attr.v;
+		}
+	} else if('low' in attr || 'high' in attr) {
+		value = {};
+		if('low' in attr) value.$gte = attr.low;
+		if('high' in attr) value.$lte = attr.high;
 	}
 
 	return { 

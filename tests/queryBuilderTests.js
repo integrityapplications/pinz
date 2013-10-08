@@ -140,8 +140,6 @@ describe('buildQuery.buildAttributeQuery' , function() {
 
 	it('key value' , function() {
 		var input = { k : "color", v : "green"};
-
-		// db.A.find({"attrs" : {"$elemMatch" : {"k":"weight" , "v":88}}})
 		var response = queryBuilder.buildAttributeQuery(input);
 
 		assert.equal('{"$elemMatch":{"k":"color","v":"green"}}' , JSON.stringify(response, null, "").split("\n").join(""));
@@ -150,8 +148,6 @@ describe('buildQuery.buildAttributeQuery' , function() {
 
 	it('multiple values' , function() {
 		var input = { k : "color", v : ["green","red"]};
-
-		// db.A.find({"attrs" : {"$elemMatch" : {"k":"weight" , "v":88}}})
 		var response = queryBuilder.buildAttributeQuery(input);
 
 		assert.equal(
@@ -160,8 +156,14 @@ describe('buildQuery.buildAttributeQuery' , function() {
 
 	});
 
+it('attribute range' , function() {
+		var input = { k : "weight",	low : 50, high : 100}
+		var response = queryBuilder.buildAttributeQuery(input);
 
-
+		assert.equal(
+			'{"$elemMatch":{"k":"weight","v":{"$gte":50,"$lte":100}}}' , 
+			JSON.stringify(response, null, "").split("\n").join(""));
+	});
 
 });
 
