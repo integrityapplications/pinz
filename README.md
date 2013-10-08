@@ -36,9 +36,13 @@ The data endpoint is accessed via HTTP POST and returns an array of observable j
 `src` :	Name of data feed to query
 
 ### Optional inputs
+'time_inserted'
+* start : [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) formated date string defining lower time bound, UTC
+* end : [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) formated date string defining upper time bound, UTC
+
 `time_within`
- * start : ISODate lower time bound, assumed to be in "zulu" time [(pretty much GMT)](http://en.wikipedia.org/wiki/Coordinated_Universal_Time)
- * end : ISODate upper time bound, assumed to be in "zulu" time (pretty much GMT)
+ * start : [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) formated date string defining lower time bound, UTC
+ * end : [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) formated date string defining upper time bound, UTC
 
 `geo_within` : Array of latitude, longitude pairs that define a valid closed polygon search area
 
