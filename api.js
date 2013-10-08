@@ -1,8 +1,10 @@
 var async 			= require('async');
 var queryBuilder 	= require('./queryBuilder');
+var util = require('util');
 
 function processDataRequest(req, res) {
 	var inputs = req.body;
+        console.log(util.inspect(inputs));
 	if (!(inputs instanceof Array)) {
 		res.send(400, "Bad Request, POST body expected to contain JSON array.");
 		return;
@@ -58,4 +60,4 @@ function processMetadataRequest(req, res) {
 }
 
 module.exports.processDataRequest=processDataRequest;
-module.exports.processMetadataRequest=processMetadataRequest
+module.exports.processMetadataRequest=processMetadataRequest;
