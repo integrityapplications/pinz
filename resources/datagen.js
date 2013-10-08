@@ -33,7 +33,7 @@ var sources = [
 	}
 ]
 var samplesPerUpdate = 100;
-var updateSec = 10000;
+var updateSec = 10;
 var mongoUrl = "mongodb://127.0.0.1:27017/observabledb";
 
 if (argv.updateSec) updateSec = argv.updateSec;
@@ -53,7 +53,7 @@ mongo.connect(mongoUrl , function(err, db) {
 			});
 		}
 		console.log("Waiting for next interval: " + updateSec);
-	}, updateSec);
+	}, updateSec * 1000);
 });
 
 function generateDocs(src, numDocs) {
