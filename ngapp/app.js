@@ -25,17 +25,29 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     }).addTo(map);
 
     $scope.map = map;
-    $scope.layerType="heat";
+    $scope.layerType="points";
     // This is the marker data currently displayed.
     $scope.markers = new L.LayerGroup();
     $scope.map.addLayer($scope.markers);
     // This array holds our point data.  Watch it and display when dirty.
-    $scope.geoData = null;
+    //
+    // Initialise it with some data.  Ideally we have some maximum number of
+    // points ($scope.nbBuffered) and get this many most recent.  But the
+    // data server doesn't have this yet.
+    $scope.geoData = [];
+    $scope.pollingTimeout = 1;
+    $scope.nbBuffered = 200;
+    $scope.timeOfLastDataPull = null;
+
+    // fill buffer up
+    $scope.getPinzData(true);
+    $scope.map.fitWorld();
+
     $scope.$watch( 'geoData', function(newVal, oldVal){
       $log.log( 'geoData changed, invoking display' );
       displayData( newVal );
     });
-    $scope.pollingTimeout = 10;
+
   }
 
   $scope.postData = [
@@ -75,7 +87,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
   $scope.cancelDataFeed = null;
 
   function updateData() {
-    $scope.getPinzData();
+    $scope.getPinzData(false);
     $scope.cancelDataFeed = $timeout(function() {
         updateData();
         $scope.error = "polling for data...";
@@ -93,16 +105,21 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     $scope.error = "stopped";
   }
 
-  $scope.getPinzData = function() {
+  // If fillBuffer is true, initialise the buffer with $scope.nbBuffered most recent points.
+  $scope.getPinzData = function( fillBuffer ) {
     $log.log('getPinzData: invoked');
     // set the time and geo params for the data query from the totally awesome data service.
-    var timewithin = 
-    {
-	"start" : moment().subtract('minutes',1).toISOString(),
+    if ( fillBuffer ) {
+      delete $scope.postData[0].time_within;
+    } else {
+      $scope.postData[0].time_within = {
+	// todo: if inclusive bounds, double counted
+    	"start" : $scope.timeOfLastDataPull.toISOString(), 
+	//moment().subtract('minutes',1).toISOString(),
 	"end"   : moment().toISOString() // now
-    };
-    $log.log( 'setting timewithin = ', timewithin );
-    $scope.postData[0].time_within = timewithin;
+      };
+      $log.log('Retrieving data with this time range: ', $scope.postData[0].time_within );
+    }
     $log.log( 'after setting, postdata = ', $scope.postData[0] );
 
     $http({
@@ -112,10 +129,19 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
       headers:headersCfg
     }).success(function (data) {
       // attach this data to the scope.  It is an array of leaflet lat-long objects.
-      $scope.geoData = reformatData(data);
-      $log.log('Retrieved geoData has length ', $scope.geoData.length);
-      // now it's watched, see above
-      //displayData( $scope.geoData );
+      var newData = reformatData(data);
+      //$log.log('new data = ', newData);
+      $scope.geoData = $scope.geoData.concat( newData );
+      $log.log('Before truncation, retrieved-and-concatenated geoData has length ', $scope.geoData.length);
+      
+      // todo:
+      $scope.timeOfLastDataPull = moment();
+
+      // If we now have too much data, truncate
+      if ( $scope.geoData.length > $scope.nbBuffered ) {
+	$scope.geoData = $scope.geoData.slice( $scope.geoData.length - $scope.nbBuffered );
+      }
+      $log.log('After truncation, geoData has length ', $scope.geoData.length);
       // clear the error messages
       $scope.error = 'success';
     }).error(function (data, status) {

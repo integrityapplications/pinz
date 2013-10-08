@@ -29,9 +29,10 @@
   </head>
   <body ng-controller="AppCtrl">
     <h1>View Pinz Server Data</h1>
-    Reload data every <input size="3" placeholder="10" ng-model="pollingTimeout"> seconds
+    Reload data every <input size="3" placeholder="1" ng-model="pollingTimeout"> seconds
     <button ng-click="startDataFeed()">Start</button>
     <button ng-click="stopDataFeed()">Stop</button>
+    Buffer <input size="3" placeholder="200" ng-model="nbBuffered"> points
     <span id="errors"> {{error}} 
 
       <form id="renderOption", name="renderOption">
