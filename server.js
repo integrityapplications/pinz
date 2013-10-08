@@ -28,7 +28,7 @@ function start(port) {
   app.use('/ngapp', express.static(__dirname+'/ngapp'));
   app.use('/static', express.static(__dirname+'/static'));
 
-  app.get('/data', api.processMetadataRequest);
+  app.get('/metadata', api.processMetadataRequest);
 	app.post('/data', api.processDataRequest);
 	
 	app.listen(portnum);
