@@ -78,11 +78,20 @@ function buildAttributeQuery( attr ) {
 	if(attr == null) throw new Error("Attribute data is null");
 
 	key = attr.k;
-	value = attr.v;
+	value = null;
+	if (attr.v instanceof Array) {
+		value = {$in: attr.v};
+	} else {
+		value = attr.v;
+	}
 
-	query = { $elemMatch : { k : key , v : value } };
-
-	return query;
+	return { 
+		$elemMatch : 
+		{
+			k : key, 
+			v : value
+		}
+	};
 }
 
 

@@ -148,6 +148,18 @@ describe('buildQuery.buildAttributeQuery' , function() {
 
 	});
 
+	it('multiple values' , function() {
+		var input = { k : "color", v : ["green","red"]};
+
+		// db.A.find({"attrs" : {"$elemMatch" : {"k":"weight" , "v":88}}})
+		var response = queryBuilder.buildAttributeQuery(input);
+
+		assert.equal(
+			'{"$elemMatch":{"k":"color","v":{"$in":["green","red"]}}}' , 
+			JSON.stringify(response, null, "").split("\n").join(""));
+
+	});
+
 
 
 
