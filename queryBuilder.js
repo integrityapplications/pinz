@@ -4,6 +4,7 @@ module.exports.buildGeoWithinQuery=buildGeoWithinQuery
 module.exports.buildTimeInsertedQuery=buildTimeInsertedQuery
 module.exports.buildTimeQuery=buildTimeQuery
 module.exports.buildMongoQuery=buildMongoQuery
+module.exports.buildAttributeQuery=buildAttributeQuery
 
 function buildTimeQuery(time) {
 	if (!('start' in time)) throw new Error("Required property start not provided");
@@ -72,6 +73,19 @@ function buildGeoWithinQuery(coords) {
 		};
 }
 
+function buildAttributeQuery( attr ) {
+
+	if(attr == null) throw new Error("Attribute data is null");
+
+	key = attr.k;
+	value = attr.v;
+
+	query = { $elemMatch : { k : key , v : value } };
+
+	return query;
+}
+
+
 function buildMongoQuery(query) {
 
 	var mongoQuery = {};
@@ -89,8 +103,5 @@ function objectIdFromDate(date) {
 	var seconds = Math.floor(date.getTime()/1000);
 	//http://mongodb.github.io/node-mongodb-native/api-bson-generated/objectid.html
 	return ObjectID.createFromTime(seconds);
-
-	//http://stackoverflow.com/questions/8749971/can-i-query-mongodb-objectid-by-date
-	//var hexSeconds = seconds.toString(16);
-	//return new ObjectID(hexSeconds + "0000000000000000");
 }
+

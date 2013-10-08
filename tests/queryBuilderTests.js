@@ -135,6 +135,25 @@ describe( 'queryBuilder.buildGeoWithinQuery()' , function() {
 });
 
 
+
+describe('buildQuery.buildAttributeQuery' , function() {
+
+	it('key value' , function() {
+		var input = { k : "color", v : "green"};
+
+		// db.A.find({"attrs" : {"$elemMatch" : {"k":"weight" , "v":88}}})
+		var response = queryBuilder.buildAttributeQuery(input);
+
+		assert.equal('{"$elemMatch":{"k":"color","v":"green"}}' , JSON.stringify(response, null, "").split("\n").join(""));
+
+	});
+
+
+
+
+});
+
+
 describe('buildQuery.buildMongoQuery()' , function() {
 
 	/*var input = {
