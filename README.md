@@ -36,7 +36,7 @@ The data endpoint is accessed via HTTP POST and returns an array of observable j
 `src` :	Name of data feed to query
 
 ### Optional inputs
-'time_inserted'
+`time_inserted`
 * start : [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) formated date string defining lower time bound, UTC
 * end : [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) formated date string defining upper time bound, UTC
 
