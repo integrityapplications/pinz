@@ -26,6 +26,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
 
     $scope.map = map;
     $scope.layerType="points";
+    $scope.historyAmt = 75.0;
     // This is the marker data currently displayed.
     $scope.markers = new L.LayerGroup();
     $scope.map.addLayer($scope.markers);
@@ -173,10 +174,17 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     return formatted;
   }
 
-  function displayData( lfltPoints ) {
-    if ( lfltPoints == null ) return;
+  function displayData( lfltPointsAll ) {
+    if ( lfltPointsAll == null ) return;
 
-    // Remove previous
+    // Which points to render?
+    nbPtsToUse =  Math.round( lfltPointsAll.length * $scope.historyAmt / 100.0 );
+    if ( nbPtsToUse == 0 ) return;
+
+    // Get the end of the list because they should be in temporal order (todo: test that!)
+    lfltPoints = lfltPointsAll.slice( lfltPointsAll.length - nbPtsToUse );
+    
+    // Remove previous map layer contents.
     $scope.markers.clearLayers();
 
     $log.log( 'displaying ' + lfltPoints.length + ' data points with render option ', $scope.layerType );
@@ -185,10 +193,6 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
 	for ( var i=0; i<Math.min(1000000000,lfltPoints.length); i ++ ){
 	  $scope.markers.addLayer(new L.Marker( lfltPoints[i] ) );
         }
-        //$log.log( 'markers layer id = ', $scope.markers.getLayers()[0]._leaflet_id );
-	//console.debug( 'markers = ', $scope.markers );
-	//$scope.map.addLayer($scope.markers);
-	//$scope.map.fitWorld();
 	break
       case 'cluster':
 	var mcg = new L.MarkerClusterGroup();
@@ -196,8 +200,6 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
 	  mcg.addLayer(new L.Marker( lfltPoints[i] ) );
         }
 	$scope.markers.addLayer(mcg);
-	//$scope.map.addLayer($scope.markers);
-	//$scope.map.fitWorld();
 	break;
       case 'heat':
 	var heatmapLayer = L.TileLayer.heatMap({
@@ -212,7 +214,6 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
 	  }
         });
 	newPts = [];
-	//console.log(lfltPoints);
 	var lls = 1000;
 	var lln = -1000;
 	var llw = 1000;
@@ -228,13 +229,9 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
         }
 	heatmapLayer.addData(newPts);
 	// Add this layer inside a layer group
-	//$scope.markers = new L.LayerGroup();
 	$scope.markers.addLayer( heatmapLayer );
-	//$scope.map.addLayer($scope.markers);
 	var llbounds = [[lls,llw],[lln,lle]];
 	console.log('lat long bounds = ', llbounds);
-	//$scope.map.fitBounds( llbounds );
-	//$scope.map.fitWorld();
 	break;
       default:
 	$log.log( 'Undefined display type ' + $scope.layerType );

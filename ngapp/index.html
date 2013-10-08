@@ -46,8 +46,11 @@
 	    <input type="radio" ng-model="layerType" value="points">   Points <br/>
 	    <input type="radio" ng-model="layerType" value="cluster">  Clusters <br/>
 	    <input type="radio" ng-model="layerType" value="heat">     Heat Map <br/>
-	    <tt>render type = {{layerType}}</tt><br/>
+	    <tt>render type = {{layerType}}</tt>
 	  </form>
+		
+	  History amount: <input type="range" ng-model="historyAmt" min="0" max="100" step="1" style="width: 320px">
+	  <tt> = {{historyAmt}} %</tt><br/>
 
 	</span>
       </div>
