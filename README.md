@@ -72,7 +72,7 @@ Running a demo
     npm start 
   ```
 
-5. Test installation by running resources/post.sh. An array of matching observable documents will be output if everything is working properly.
+5. Test installation by running some of the exmaple http commands in resources/curl_examples.
 
 6. Use the web client:
 
