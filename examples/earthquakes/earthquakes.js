@@ -16,13 +16,14 @@ mongo.connect(mongoUrl , function(err, db) {
 	console.log("Connected to mongoDB @ " + mongoUrl);
 	GLOBAL.dbHandle = db;
 
-	pollAtomFeed();
+	pollAtomFeed(db);
 	setInterval(function() {
 		pollAtomFeed();
 	}, 300000);
 });
 
-function pollAtomFeed() {
+
+function pollAtomFeed(db) {
 	var atomXml = null;
 	var earthquakes = [];
 	console.log("polling server for data...");
@@ -60,6 +61,14 @@ function pollAtomFeed() {
 			async.forEach(earthquakes, function(earthquake, insertCallback) {
 				console.log(JSON.stringify(earthquake, null, "\t"));
 				//TODO insert me into database please!
+				db.collection("earthquake").insert(earthquake , function(err, objects) {
+					if(err) {
+						console.log("WARN :: Error persisting earthquake observable::\n" + JSON.stringify(earthquake , null, 4));
+					} else {
+						console.log("INFO :: Successfully persisted earthquake observable");
+					}
+				});
+
 				insertCallback();
 			}, function(err) {
 				callback();
