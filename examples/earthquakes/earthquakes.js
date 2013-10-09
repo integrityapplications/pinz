@@ -60,7 +60,7 @@ function pollAtomFeed(db) {
 		function(callback) {
 			async.forEach(earthquakes, function(earthquake, insertCallback) {
 				console.log(JSON.stringify(earthquake, null, "\t"));
-				//TODO insert me into database please!
+				
 				db.collection("earthquake").insert(earthquake , function(err, objects) {
 					if(err) {
 						console.log("WARN :: Error persisting earthquake observable::\n" + JSON.stringify(earthquake , null, 4));
