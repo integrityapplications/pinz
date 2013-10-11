@@ -1,11 +1,34 @@
 var mongo = require('mongodb');
+var argv = require('optimist').argv;
 var express = require('express');
 var api = require('./api');
 
 // todo: make the portnum an option
-var mongoUrl = "mongodb://localhost:27017/observabledb";
-// todo: make portnum an option
-var portnum = 3000
+
+var mongoHost = "";
+var portNumber = null;
+var serverPort = null;
+
+if(argv.mongoHost) {
+  mongoHost = argv.mongoHost;
+} else {
+  mongoHost = "localhost";
+}
+
+if(argv.mongoPort) {
+  mongoPort = argv.mongoPort;
+} else {
+  mongoPort = 27017;
+}
+
+if(argv.serverPort) {
+  serverPort = argv.serverPort;
+} else {
+  serverPort = 3000;
+}
+
+var mongoUrl = "mongodb://" + mongoHost + ":" + mongoPort + "/observabledb";
+
 
 mongo.connect(mongoUrl , function(err, db) {
   
@@ -18,7 +41,7 @@ mongo.connect(mongoUrl , function(err, db) {
   console.log("Connected to mongoDB @ " + mongoUrl);
   GLOBAL.dbHandle = db;
   
-  start(portnum);
+  start(serverPort);
 });
 
 function start(port) {
@@ -31,6 +54,7 @@ function start(port) {
   app.get('/metadata', api.processMetadataRequest);
 	app.post('/data', api.processDataRequest);
 	
-	app.listen(portnum);
-  console.log('Listening on port ' + portnum);
+	app.listen(port);
+  console.log();
+  console.log('Listening on port ' + port);
 }
