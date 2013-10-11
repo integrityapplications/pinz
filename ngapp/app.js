@@ -27,61 +27,61 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     $scope.map = map;
     $scope.layerType="points";
     $scope.historyAmt = 75.0;
-    // This is the marker data currently displayed.
-    $scope.markers = new L.LayerGroup();
-    $scope.map.addLayer($scope.markers);
+    // This is the marker data currently displayed.  A list, one for each data source.
+    // todo: poor management having separate lists, should be objects.
+    $scope.markers =[ new L.LayerGroup(),  new L.LayerGroup() ];
+    for ( var i=0; i<$scope.markers.length; i++ ){
+      $scope.map.addLayer($scope.markers[i]);
+    }
     // This array holds our point data.  Watch it and display when dirty.
+    //
+    // An array of arrays, one for each data source.  todo: better management together with layers
     //
     // Initialise it with some data.  Ideally we have some maximum number of
     // points ($scope.nbBuffered) and get this many most recent.  But the
     // data server doesn't have this yet.
-    $scope.geoData = [];
+    $scope.geoData = [[], []];
     $scope.pollingTimeout = 1;
     $scope.nbBuffered = 200;
-    $scope.timeOfLastDataPull = null;
+    $scope.timeOfLastDataPull = moment();
 
-    // fill buffer up
+    // fill buffer up.
+    // todo: should call for each data source, but it's spaghetti code (global vars)
     $scope.getPinzData(true);
     $scope.map.fitWorld();
 
-    $scope.$watch( 'geoData', function(newVal, oldVal){
-      $log.log( 'geoData changed, invoking display' );
-      displayData( newVal );
+    $scope.$watch( 'geoData[0]', function(newVal, oldVal){
+      $log.log( 'geoData[0] changed, invoking display' );
+      displayData( newVal, 0 );
+    });
+    $scope.$watch( 'geoData[1]', function(newVal, oldVal){
+      $log.log( 'geoData[1] changed, invoking display' );
+      displayData( newVal, 1 );
     });
 
   }
 
-  $scope.postData = [
+  $scope.dataSources = [
+    // A
+    {
+      name: 'test source A',
+      postDataTemplate: [
 	{
-		"src" : "A",
-		"time_within" : {
-			"start" : "2013-09-13T16:00:00",
-			"end" : "2099-12-31T23:59:59"
-		},
-		"geo_withinDISABLED" : [
-			40.0, -55.0,
-			40.0, -30.0,
-			10.0, -30.0,
-			10.0, -55.0,
-			40.0, -55.0
-		],
-		"attrs" : [
-			{
-				"k" : "color",
-				"v" : ["red" , "green"]
-			},
-			{
-				"k" : "animal",
-				"v" : ["koala"]
-			},
-			{
-				"k" : "weight",
-				"low" : 50,
-				"high" : 100
-			}
-		]
+	  "src" : "A"
 	}
+      ]
+    },
+    // B
+    {
+      name: 'test source B',
+      postDataTemplate: [
+	{
+	  "src" : "B"
+	}
+      ]
+    }
   ];
+
 
   var headersCfg = {"content-type":"application/json"};
 
@@ -90,8 +90,8 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
   function updateData() {
     $scope.getPinzData(false);
     $scope.cancelDataFeed = $timeout(function() {
-        updateData();
-        $scope.error = "polling for data...";
+      updateData();
+      $scope.error = "polling for data...";
     }, $scope.pollingTimeout * 1000);
   } 
 
@@ -107,53 +107,62 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
   }
 
   // If fillBuffer is true, initialise the buffer with $scope.nbBuffered most recent points.
-  $scope.getPinzData = function( fillBuffer ) {
+  $scope.getPinzData = function( fillBuffer ) { 
     $log.log('getPinzData: invoked');
-    // set the time and geo params for the data query from the totally awesome data service.
-    if ( fillBuffer ) {
-      delete $scope.postData[0].time_within;
-    } else {
-      $scope.postData[0].time_within = {
-	// todo: if inclusive bounds, double counted
-    	"start" : $scope.timeOfLastDataPull.toISOString(), 
-	//moment().subtract('minutes',1).toISOString(),
-	"end"   : moment().toISOString() // now
-      };
-      $log.log('Retrieving data with this time range: ', $scope.postData[0].time_within );
-    }
-    $log.log( 'after setting, postdata = ', $scope.postData[0] );
+    for ( var ds=0; ds<$scope.dataSources.length; ds++ ){
+      dataSource = $scope.dataSources[ds];
 
-    $http({
-      method: 'POST',
-      url:'/data',
-      data:$scope.postData,
-      headers:headersCfg
-    }).success(function (data) {
-      // attach this data to the scope.  It is an array of leaflet lat-long objects.
-      var newData = reformatData(data);
-      //$log.log('new data = ', newData);
-      $scope.geoData = $scope.geoData.concat( newData );
-      $log.log('Before truncation, retrieved-and-concatenated geoData has length ', $scope.geoData.length);
-      
-      // todo:
-      $scope.timeOfLastDataPull = moment();
+      // This is how you copy an object...wtf?
+      var dummy = {};
+      jQuery.extend(dummy,dataSource.postDataTemplate[0]);
+      var postData = [ dummy ];
 
-      // If we now have too much data, truncate
-      if ( $scope.geoData.length > $scope.nbBuffered ) {
-	$scope.geoData = $scope.geoData.slice( $scope.geoData.length - $scope.nbBuffered );
-      }
-      $log.log('After truncation, geoData has length ', $scope.geoData.length);
-      // clear the error messages
-      $scope.error = 'success';
-    }).error(function (data, status) {
-      if (status === 404) {
-	$scope.error = 'That place does not exist';
-	$log.error('Could not find that place');
+      // set the time and geo params for the data query from the totally awesome data service.
+      if ( fillBuffer ) {
+	delete postData[0].time_within;
       } else {
-	$scope.error = 'Error: ' + status;
-	$log.error('Some other error...');
+	postData[0].time_within = {
+	  // todo: if inclusive bounds, double counted
+    	  "start" : $scope.timeOfLastDataPull.toISOString(), 
+	  //moment().subtract('minutes',1).toISOString(),
+	  "end"   : moment().toISOString() // now
+	};
+	$log.log('Retrieving data with this time range: ', postData[0].time_within );
       }
-    });
+      $log.log( 'after setting, postdata = ', postData[0] );
+
+      $http({
+	method: 'POST',
+	url:'/data',
+	data:postData,
+	headers:headersCfg
+      }).success(function (data) {
+	// attach this data to the scope.  It is an array of leaflet lat-long objects.
+        var newData = reformatData(data);
+	//$log.log('new data = ', newData);
+	$scope.geoData[ds] = $scope.geoData[ds].concat( newData );
+	$log.log('Before truncation, retrieved-and-concatenated geoData has length ', $scope.geoData[ds].length);
+	
+	// todo:
+	$scope.timeOfLastDataPull = moment();
+
+	// If we now have too much data, truncate
+	if ( $scope.geoData[ds].length > $scope.nbBuffered ) {
+	  $scope.geoData[ds] = $scope.geoData[ds].slice( $scope.geoData[ds].length - $scope.nbBuffered );
+	}
+	$log.log('After truncation, geoData has length ', $scope.geoData[ds].length);
+	// clear the error messages
+	$scope.error = 'success';
+      }).error(function (data, status) {
+	if (status === 404) {
+	  $scope.error = 'That place does not exist';
+	  $log.error('Could not find that place');
+	} else {
+	  $scope.error = 'Error: ' + status;
+	  $log.error('Some other error...');
+	}
+      });
+    } // for each data source
   }
 
   function reformatData(data) {
@@ -174,7 +183,9 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     return formatted;
   }
 
-  function displayData( lfltPointsAll ) {
+  // Input is an array of arrays, one for each data source.
+  function displayData( lfltPointsAll, ds ) {
+
     if ( lfltPointsAll == null ) return;
 
     // Which points to render?
@@ -185,21 +196,21 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     lfltPoints = lfltPointsAll.slice( lfltPointsAll.length - nbPtsToUse );
     
     // Remove previous map layer contents.
-    $scope.markers.clearLayers();
+    $scope.markers[ds].clearLayers();
 
-    $log.log( 'displaying ' + lfltPoints.length + ' data points with render option ', $scope.layerType );
+    $log.log( 'Data set ', ds, ': displaying ' + lfltPoints.length + ' data points with render option ', $scope.layerType );
     switch ($scope.layerType) {
       case 'points':
 	for ( var i=0; i<Math.min(1000000000,lfltPoints.length); i ++ ){
-	  $scope.markers.addLayer(new L.Marker( lfltPoints[i] ) );
-        }
+	  $scope.markers[ds].addLayer(new L.Marker( lfltPoints[i] ) );
+      }
 	break
       case 'cluster':
 	var mcg = new L.MarkerClusterGroup();
 	for ( var i=0; i<lfltPoints.length; i ++ ){
 	  mcg.addLayer(new L.Marker( lfltPoints[i] ) );
-        }
-	$scope.markers.addLayer(mcg);
+      }
+	$scope.markers[ds].addLayer(mcg);
 	break;
       case 'heat':
 	var heatmapLayer = L.TileLayer.heatMap({
@@ -211,8 +222,8 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
 	    0.65: "rgb(0,255,0)",
 	    0.95: "yellow",
 	    1.0: "rgb(255,0,0)"
-	  }
-        });
+	}
+      });
 	newPts = [];
 	var lls = 1000;
 	var lln = -1000;
@@ -226,10 +237,10 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
 	  lln = Math.max( lln, pt.lat );
 	  llw = Math.min( llw, pt.lng );
 	  lle = Math.max( lle, pt.lng );
-        }
+      }
 	heatmapLayer.addData(newPts);
 	// Add this layer inside a layer group
-	$scope.markers.addLayer( heatmapLayer );
+	$scope.markers[ds].addLayer( heatmapLayer );
 	var llbounds = [[lls,llw],[lln,lle]];
 	console.log('lat long bounds = ', llbounds);
 	break;
