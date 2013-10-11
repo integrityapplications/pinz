@@ -1,0 +1,1 @@
+curl -X POST -d  @postQuakeTimeExample.json -H 'content-type:application/json' http://192.168.1.200:3000/data
