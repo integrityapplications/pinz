@@ -34,7 +34,7 @@ function processDataRequest(req, res) {
 				if (err) {
 					callback({status:500, msg:"Server Error"});
 				} else {
-					results = results.push(docs);
+					results.push(docs);
 					callback();
 				}
 			});
