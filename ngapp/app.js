@@ -27,6 +27,8 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     $scope.map = map;
     $scope.layerType="points";
     $scope.historyAmt = 75.0;
+    $scope.heatOpacity = 0.5;
+    $scope.heatRadius = 10;
     // This is the marker data currently displayed.  A list, one for each data source.
     // todo: poor management having separate lists, should be objects.
     markers =[ new L.LayerGroup(),  new L.LayerGroup() ];
@@ -41,8 +43,8 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     // points ($scope.nbBuffered) and get this many most recent.  But the
     // data server doesn't have this yet.
     $scope.geoData = [[], []];
-    pollingTimeout = 1;
-    nbBuffered = 200;
+    $scope.pollingTimeout = 1;
+    $scope.nbBuffered = 2000;
     timeOfLastDataPull = moment();
 
     // fill buffer up.
@@ -94,14 +96,14 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
 
   var headersCfg = {"content-type":"application/json"};
 
-  cancelDataFeed = null;
+  $scope.cancelDataFeed = null;
 
   function updateData() {
     $scope.getPinzData(false);
-    cancelDataFeed = $timeout(function() {
+    $scope.cancelDataFeed = $timeout(function() {
       updateData();
       $scope.error = "polling for data...";
-    }, pollingTimeout * 1000);
+    }, $scope.pollingTimeout * 1000);
   } 
 
   $scope.startDataFeed = function() {
@@ -111,7 +113,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
 
   $scope.stopDataFeed = function() {
     console.log('stop the data feed');
-    $timeout.cancel(cancelDataFeed);
+    $timeout.cancel($scope.cancelDataFeed);
     $scope.error = "stopped";
   }
 
@@ -166,8 +168,8 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
                    $scope.geoData[ds].length);
 
           // If we now have too much data, truncate
-          if ( $scope.geoData[ds].length > nbBuffered ) {
-            $scope.geoData[ds] = $scope.geoData[ds].slice( $scope.geoData[ds].length - nbBuffered );
+          if ( $scope.geoData[ds].length > $scope.nbBuffered ) {
+            $scope.geoData[ds] = $scope.geoData[ds].slice( $scope.geoData[ds].length - $scope.nbBuffered );
           }
           $log.log('After truncation, geoData has length ', $scope.geoData[ds].length);
         }// for ds
@@ -211,12 +213,13 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     if ( lfltPointsAll == null ) return;
     if (!(lfltPointsAll instanceof Array)) { alert('value is not Array!'); } 
 
+    colours = ['red','green'];
     // Which points to render?
     nbPtsToUse =  Math.round( lfltPointsAll.length * $scope.historyAmt / 100.0 );
     if ( nbPtsToUse == 0 ) return;
 
     // Get the end of the list because they should be in temporal order (todo: test that!)
-    $log.log( 'lfltPointsAll = ', lfltPointsAll);
+    //$log.log( 'lfltPointsAll = ', lfltPointsAll);
     lfltPoints = lfltPointsAll.slice( lfltPointsAll.length - nbPtsToUse );
     
     // Remove previous map layer contents.
@@ -226,28 +229,28 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     switch ($scope.layerType) {
       case 'points':
         for ( var i=0; i<Math.min(1000000000,lfltPoints.length); i ++ ){
-          markers[ds].addLayer(new L.Marker( lfltPoints[i] ) );
+          markers[ds].addLayer(new L.Marker( lfltPoints[i], { icon: L.spriteIcon( colours[ds] ) } ) );
       }
         break
       case 'cluster':
         var mcg = new L.MarkerClusterGroup();
         for ( var i=0; i<lfltPoints.length; i ++ ){
-          mcg.addLayer(new L.Marker( lfltPoints[i] ) );
+          mcg.addLayer(new L.Marker( lfltPoints[i], { icon: L.spriteIcon( colours[ds] ) } ) );
       }
         markers[ds].addLayer(mcg);
         break;
       case 'heat':
-        var heatmapLayer = L.TileLayer.heatMap({
-          radius: 20,
-          opacity: 50,
-          gradient: {
-            0.45: "rgb(0,0,255)",
-            0.55: "rgb(0,255,255)",
-            0.65: "rgb(0,255,0)",
-            0.95: "yellow",
-            1.0: "rgb(255,0,0)"
+	var heatmapGrads = [{},{}];
+	for ( var g=0.0; g<=1.0; g+=0.01 ){
+	  heatmapGrads[0][g] = "rgb(" + Math.round(255*g) + ",0,0)";
+	  heatmapGrads[1][g] = "rgb(0," + Math.round(255*g) + ",0)";
         }
-      });
+	$log.log('heatmaps = ', heatmapGrads);
+        var heatmapLayer = L.TileLayer.heatMap({
+          radius: $scope.heatRadius,
+          opacity: $scope.heatOpacity,
+          gradient: heatmapGrads[ds]
+        });
         newPts = [];
         var lls = 1000;
         var lln = -1000;
