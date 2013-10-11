@@ -74,6 +74,11 @@ Running a demo
 
   ```
     npm start 
+
+    or
+
+    node server.js --mongoHost=some.host --mongoPort=3333 --serverPort=6161
+    (to specify non-default settings)
   ```
 
 5. Test installation by running some of the exmaple http commands in resources/curl_examples.
