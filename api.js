@@ -32,7 +32,7 @@ function processDataRequest(req, res) {
 		if (query) {
 			GLOBAL.dbHandle.collection(input.src).find(query).limit(5000).toArray(function(err , docs) {
 				if (err) callback({status:500, msg:"Server Error"});
-				results = results.concat(docs);
+				results.push(docs);
 				callback();
 			});
 		}

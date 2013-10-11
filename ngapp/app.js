@@ -29,9 +29,9 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     $scope.historyAmt = 75.0;
     // This is the marker data currently displayed.  A list, one for each data source.
     // todo: poor management having separate lists, should be objects.
-    $scope.markers =[ new L.LayerGroup(),  new L.LayerGroup() ];
-    for ( var i=0; i<$scope.markers.length; i++ ){
-      $scope.map.addLayer($scope.markers[i]);
+    markers =[ new L.LayerGroup(),  new L.LayerGroup() ];
+    for ( var i=0; i<markers.length; i++ ){
+      $scope.map.addLayer(markers[i]);
     }
     // This array holds our point data.  Watch it and display when dirty.
     //
@@ -41,43 +41,52 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     // points ($scope.nbBuffered) and get this many most recent.  But the
     // data server doesn't have this yet.
     $scope.geoData = [[], []];
-    $scope.pollingTimeout = 1;
-    $scope.nbBuffered = 200;
-    $scope.timeOfLastDataPull = moment();
+    pollingTimeout = 1;
+    nbBuffered = 200;
+    timeOfLastDataPull = moment();
 
     // fill buffer up.
     // todo: should call for each data source, but it's spaghetti code (global vars)
     $scope.getPinzData(true);
     $scope.map.fitWorld();
 
+    // Doesn't work for some reason...
+    // $scope.$watch( 'geoData', function(newVal, oldVal){
+    //   $log.log( 'geoData changed, invoking display' );
+    //   displayData( newVal[0], 0 );
+    //   displayData( newVal[1], 1 );
+    // });
+
     $scope.$watch( 'geoData[0]', function(newVal, oldVal){
       $log.log( 'geoData[0] changed, invoking display' );
-      displayData( newVal, 0 );
+      if (!(newVal instanceof Array)) { alert('newVal0 is not Array!'); } 
+      if ( newVal.length > 0 ){ displayData( newVal, 0 );}
     });
     $scope.$watch( 'geoData[1]', function(newVal, oldVal){
       $log.log( 'geoData[1] changed, invoking display' );
-      displayData( newVal, 1 );
+      if (!(newVal instanceof Array)) { alert('newVal1 is not Array!'); } 
+      if ( newVal.length > 0 ){ displayData( newVal, 1 ); }
     });
 
   }
 
-  $scope.dataSources = [
+  dataSources = [
     // A
     {
       name: 'test source A',
       postDataTemplate: [
-	{
-	  "src" : "A"
-	}
+        {
+          "src" : "A"
+        }
       ]
     },
     // B
     {
       name: 'test source B',
       postDataTemplate: [
-	{
-	  "src" : "B"
-	}
+        {
+          "src" : "B"
+        }
       ]
     }
   ];
@@ -85,14 +94,14 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
 
   var headersCfg = {"content-type":"application/json"};
 
-  $scope.cancelDataFeed = null;
+  cancelDataFeed = null;
 
   function updateData() {
     $scope.getPinzData(false);
-    $scope.cancelDataFeed = $timeout(function() {
+    cancelDataFeed = $timeout(function() {
       updateData();
       $scope.error = "polling for data...";
-    }, $scope.pollingTimeout * 1000);
+    }, pollingTimeout * 1000);
   } 
 
   $scope.startDataFeed = function() {
@@ -102,67 +111,80 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
 
   $scope.stopDataFeed = function() {
     console.log('stop the data feed');
-    $timeout.cancel($scope.cancelDataFeed);
+    $timeout.cancel(cancelDataFeed);
     $scope.error = "stopped";
   }
 
+  //
   // If fillBuffer is true, initialise the buffer with $scope.nbBuffered most recent points.
+  //
   $scope.getPinzData = function( fillBuffer ) { 
     $log.log('getPinzData: invoked');
-    for ( var ds=0; ds<$scope.dataSources.length; ds++ ){
-      dataSource = $scope.dataSources[ds];
+
+    // Make an uber post request for all data sources at once.
+    var postDataAll = [];
+
+    for ( var ds=0; ds<dataSources.length; ds++ ){
+      dataSource = dataSources[ds];
 
       // This is how you copy an object...wtf?
       var dummy = {};
       jQuery.extend(dummy,dataSource.postDataTemplate[0]);
-      var postData = [ dummy ];
+      var postData = dummy;
 
       // set the time and geo params for the data query from the totally awesome data service.
       if ( fillBuffer ) {
-	delete postData[0].time_within;
+        delete postData.time_within;
       } else {
-	postData[0].time_within = {
-	  // todo: if inclusive bounds, double counted
-    	  "start" : $scope.timeOfLastDataPull.toISOString(), 
-	  //moment().subtract('minutes',1).toISOString(),
-	  "end"   : moment().toISOString() // now
-	};
-	$log.log('Retrieving data with this time range: ', postData[0].time_within );
+        postData.time_within = {
+          // todo: if inclusive bounds, double counted
+          "start" : timeOfLastDataPull.toISOString(), 
+          //moment().subtract('minutes',1).toISOString(),
+          "end"   : moment().toISOString() // now
+        };
+        $log.log('Retrieving data with this time range: ', postData.time_within );
       }
-      $log.log( 'after setting, postdata = ', postData[0] );
+      $log.log( 'after setting, postdata = ', postData );
+      postDataAll.push(postData);
+    }// for
 
+    // Now post'em
       $http({
-	method: 'POST',
-	url:'/data',
-	data:postData,
-	headers:headersCfg
+        method: 'POST',
+        url:'/data',
+        data:postDataAll,
+        headers:headersCfg
       }).success(function (data) {
-	// attach this data to the scope.  It is an array of leaflet lat-long objects.
-        var newData = reformatData(data);
-	//$log.log('new data = ', newData);
-	$scope.geoData[ds] = $scope.geoData[ds].concat( newData );
-	$log.log('Before truncation, retrieved-and-concatenated geoData has length ', $scope.geoData[ds].length);
-	
-	// todo:
-	$scope.timeOfLastDataPull = moment();
+        if ( data.length  != 2 ) { alert('expected data length 2, got ', data.length); }
+        for ( var ds=0; ds<dataSources.length; ds++ ){
+          // attach this data to the scope.  It is an array of leaflet lat-long objects.
+          var newData = reformatData(data[ds]);
+          //$log.log('new data = ', newData);
+          $log.log('callback is concating geoData for ds = ', ds);
+          $scope.geoData[ds] = $scope.geoData[ds].concat( newData );
+          $log.log('Before truncation, retrieved-and-concatenated geoData has length ', 
+                   $scope.geoData[ds].length);
 
-	// If we now have too much data, truncate
-	if ( $scope.geoData[ds].length > $scope.nbBuffered ) {
-	  $scope.geoData[ds] = $scope.geoData[ds].slice( $scope.geoData[ds].length - $scope.nbBuffered );
-	}
-	$log.log('After truncation, geoData has length ', $scope.geoData[ds].length);
-	// clear the error messages
-	$scope.error = 'success';
+          // If we now have too much data, truncate
+          if ( $scope.geoData[ds].length > nbBuffered ) {
+            $scope.geoData[ds] = $scope.geoData[ds].slice( $scope.geoData[ds].length - nbBuffered );
+          }
+          $log.log('After truncation, geoData has length ', $scope.geoData[ds].length);
+        }// for ds
+        // todo:
+        timeOfLastDataPull = moment();
+
+        // clear the error messages
+        $scope.error = 'success';
       }).error(function (data, status) {
-	if (status === 404) {
-	  $scope.error = 'That place does not exist';
-	  $log.error('Could not find that place');
-	} else {
-	  $scope.error = 'Error: ' + status;
-	  $log.error('Some other error...');
-	}
+        if (status === 404) {
+          $scope.error = 'That place does not exist';
+          $log.error('Could not find that place');
+        } else {
+          $scope.error = 'Error: ' + status;
+          $log.error('Some other error...');
+        }
       });
-    } // for each data source
   }
 
   function reformatData(data) {
@@ -172,12 +194,12 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     for ( var i=0; i<observables.length; i++ ) {
       var obs = observables[i];
       if ( obs.geos.length>0 ) {
-	// loop over the array of geos
-	for ( var j=0; j<obs.geos.length; j++ ) {
-	  var geo = obs.geos[j];
-	  var lfltLL = L.latLng( geo.loc.coordinates[1], geo.loc.coordinates[0] );
-	  formatted.push(lfltLL);
-	}
+        // loop over the array of geos
+        for ( var j=0; j<obs.geos.length; j++ ) {
+          var geo = obs.geos[j];
+          var lfltLL = L.latLng( geo.loc.coordinates[1], geo.loc.coordinates[0] );
+          formatted.push(lfltLL);
+        }
       }// if
     }// for i
     return formatted;
@@ -185,69 +207,72 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
 
   // Input is an array of arrays, one for each data source.
   function displayData( lfltPointsAll, ds ) {
-
+    $log.log('displayData ',ds, ': start');
     if ( lfltPointsAll == null ) return;
+    if (!(lfltPointsAll instanceof Array)) { alert('value is not Array!'); } 
 
     // Which points to render?
     nbPtsToUse =  Math.round( lfltPointsAll.length * $scope.historyAmt / 100.0 );
     if ( nbPtsToUse == 0 ) return;
 
     // Get the end of the list because they should be in temporal order (todo: test that!)
+    $log.log( 'lfltPointsAll = ', lfltPointsAll);
     lfltPoints = lfltPointsAll.slice( lfltPointsAll.length - nbPtsToUse );
     
     // Remove previous map layer contents.
-    $scope.markers[ds].clearLayers();
+    markers[ds].clearLayers();
 
     $log.log( 'Data set ', ds, ': displaying ' + lfltPoints.length + ' data points with render option ', $scope.layerType );
     switch ($scope.layerType) {
       case 'points':
-	for ( var i=0; i<Math.min(1000000000,lfltPoints.length); i ++ ){
-	  $scope.markers[ds].addLayer(new L.Marker( lfltPoints[i] ) );
+        for ( var i=0; i<Math.min(1000000000,lfltPoints.length); i ++ ){
+          markers[ds].addLayer(new L.Marker( lfltPoints[i] ) );
       }
-	break
+        break
       case 'cluster':
-	var mcg = new L.MarkerClusterGroup();
-	for ( var i=0; i<lfltPoints.length; i ++ ){
-	  mcg.addLayer(new L.Marker( lfltPoints[i] ) );
+        var mcg = new L.MarkerClusterGroup();
+        for ( var i=0; i<lfltPoints.length; i ++ ){
+          mcg.addLayer(new L.Marker( lfltPoints[i] ) );
       }
-	$scope.markers[ds].addLayer(mcg);
-	break;
+        markers[ds].addLayer(mcg);
+        break;
       case 'heat':
-	var heatmapLayer = L.TileLayer.heatMap({
-	  radius: 20,
-	  opacity: 50,
-	  gradient: {
-	    0.45: "rgb(0,0,255)",
-	    0.55: "rgb(0,255,255)",
-	    0.65: "rgb(0,255,0)",
-	    0.95: "yellow",
-	    1.0: "rgb(255,0,0)"
-	}
+        var heatmapLayer = L.TileLayer.heatMap({
+          radius: 20,
+          opacity: 50,
+          gradient: {
+            0.45: "rgb(0,0,255)",
+            0.55: "rgb(0,255,255)",
+            0.65: "rgb(0,255,0)",
+            0.95: "yellow",
+            1.0: "rgb(255,0,0)"
+        }
       });
-	newPts = [];
-	var lls = 1000;
-	var lln = -1000;
-	var llw = 1000;
-	var lle = -1000;
+        newPts = [];
+        var lls = 1000;
+        var lln = -1000;
+        var llw = 1000;
+        var lle = -1000;
 
-	for ( var i=0; i<Math.min(1000000000,lfltPoints.length); i ++ ){
-	  var pt = lfltPoints[i];
-	  newPts.push( {lat: pt.lat, lon: pt.lng, value: 1} );
-	  lls = Math.min( lls, pt.lat );
-	  lln = Math.max( lln, pt.lat );
-	  llw = Math.min( llw, pt.lng );
-	  lle = Math.max( lle, pt.lng );
+        for ( var i=0; i<Math.min(1000000000,lfltPoints.length); i ++ ){
+          var pt = lfltPoints[i];
+          newPts.push( {lat: pt.lat, lon: pt.lng, value: 1} );
+          lls = Math.min( lls, pt.lat );
+          lln = Math.max( lln, pt.lat );
+          llw = Math.min( llw, pt.lng );
+          lle = Math.max( lle, pt.lng );
       }
-	heatmapLayer.addData(newPts);
-	// Add this layer inside a layer group
-	$scope.markers[ds].addLayer( heatmapLayer );
-	var llbounds = [[lls,llw],[lln,lle]];
-	console.log('lat long bounds = ', llbounds);
-	break;
+        heatmapLayer.addData(newPts);
+        // Add this layer inside a layer group
+        markers[ds].addLayer( heatmapLayer );
+        var llbounds = [[lls,llw],[lln,lle]];
+        console.log('lat long bounds = ', llbounds);
+        break;
       default:
-	$log.log( 'Undefined display type ' + $scope.layerType );
-	break;
+        $log.log( 'Undefined display type ' + $scope.layerType );
+        break;
     }
+    $log.log('displayData ',ds, ': finish');
   }
 
   $scope.initLeaflet();
