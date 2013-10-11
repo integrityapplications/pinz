@@ -1,3 +1,12 @@
+// hackspaghettifest: to add new data source change these vars:
+//   dataSources
+//   geoData
+//   markers
+//   colours
+//   heatmapGrads
+// sorry :)
+
+
 // create module for custom directives
 var leafletDemoApp = angular.module('leafletDemoApp', []);
 
@@ -17,12 +26,17 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     var map = L.map('map',{  fullscreenControl: true }).setView([cLat, cLon], 11 ); 
 
     L.control.mousePosition().addTo(map);
+    var tileLayer = 
     L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
       maxZoom: 18,
       minZoom: 2
       //maxBounds: L.LatLngBounds( L.LatLng(-90,-180), L.LatLng(90,180) ) // sw, ne
-    }).addTo(map);
+    });
+    map.addLayer( tileLayer );
+    //var baseLayers = {
+    //"CloudMade": tileLayer
+    //};
 
     $scope.map = map;
     $scope.layerType="points";
@@ -31,10 +45,15 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     $scope.heatRadius = 10;
     // This is the marker data currently displayed.  A list, one for each data source.
     // todo: poor management having separate lists, should be objects.
-    markers =[ new L.LayerGroup(),  new L.LayerGroup() ];
+    var overlays = {};
+    markers =[ new L.LayerGroup(),  new L.LayerGroup(), new L.LayerGroup() ];
     for ( var i=0; i<markers.length; i++ ){
-      $scope.map.addLayer(markers[i]);
+      map.addLayer(markers[i]);
+      overlays[ "data " + (i+1) ] = markers[i];
     }
+
+    L.control.layers(null, overlays, {collapsed:false}).addTo( map );
+
     // This array holds our point data.  Watch it and display when dirty.
     //
     // An array of arrays, one for each data source.  todo: better management together with layers
@@ -42,15 +61,15 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     // Initialise it with some data.  Ideally we have some maximum number of
     // points ($scope.nbBuffered) and get this many most recent.  But the
     // data server doesn't have this yet.
-    $scope.geoData = [[], []];
+    $scope.geoData = [[], [], []];
     $scope.pollingTimeout = 1;
-    $scope.nbBuffered = 2000;
+    $scope.nbBuffered = 200;
     timeOfLastDataPull = moment();
 
     // fill buffer up.
     // todo: should call for each data source, but it's spaghetti code (global vars)
     $scope.getPinzData(true);
-    $scope.map.fitWorld();
+    map.fitWorld();
 
     // Doesn't work for some reason...
     // $scope.$watch( 'geoData', function(newVal, oldVal){
@@ -68,6 +87,11 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
       $log.log( 'geoData[1] changed, invoking display' );
       if (!(newVal instanceof Array)) { alert('newVal1 is not Array!'); } 
       if ( newVal.length > 0 ){ displayData( newVal, 1 ); }
+    });
+    $scope.$watch( 'geoData[2]', function(newVal, oldVal){
+      $log.log( 'geoData[2] changed, invoking display' );
+      if (!(newVal instanceof Array)) { alert('newVal2 is not Array!'); } 
+      if ( newVal.length > 0 ){ displayData( newVal, 2 ); }
     });
 
   }
@@ -88,6 +112,15 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
       postDataTemplate: [
         {
           "src" : "B"
+        }
+      ]
+    },
+    // earthquake
+    {
+      name: 'source earthquake',
+      postDataTemplate: [
+        {
+          "src" : "earthquake"
         }
       ]
     }
@@ -157,7 +190,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
         data:postDataAll,
         headers:headersCfg
       }).success(function (data) {
-        if ( data.length  != 2 ) { alert('expected data length 2, got ', data.length); }
+        if ( data.length  != 3 ) { alert('expected data length 3, got ', data.length); }
         for ( var ds=0; ds<dataSources.length; ds++ ){
           // attach this data to the scope.  It is an array of leaflet lat-long objects.
           var newData = reformatData(data[ds]);
@@ -169,9 +202,11 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
 
           // If we now have too much data, truncate
           if ( $scope.geoData[ds].length > $scope.nbBuffered ) {
-            $scope.geoData[ds] = $scope.geoData[ds].slice( $scope.geoData[ds].length - $scope.nbBuffered );
+            $scope.geoData[ds] = $scope.geoData[ds].slice( 
+	       $scope.geoData[ds].length - $scope.nbBuffered );
           }
-          $log.log('After truncation, geoData has length ', $scope.geoData[ds].length);
+          $log.log('After truncation, geoData has length ', 
+		   $scope.geoData[ds].length);
         }// for ds
         // todo:
         timeOfLastDataPull = moment();
@@ -213,7 +248,7 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     if ( lfltPointsAll == null ) return;
     if (!(lfltPointsAll instanceof Array)) { alert('value is not Array!'); } 
 
-    colours = ['red','green'];
+    colours = ['red','green','blue'];
     // Which points to render?
     nbPtsToUse =  Math.round( lfltPointsAll.length * $scope.historyAmt / 100.0 );
     if ( nbPtsToUse == 0 ) return;
@@ -225,7 +260,8 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
     // Remove previous map layer contents.
     markers[ds].clearLayers();
 
-    $log.log( 'Data set ', ds, ': displaying ' + lfltPoints.length + ' data points with render option ', $scope.layerType );
+    $log.log( 'Data set ', ds, ': displaying ' + lfltPoints.length + ' data points with render option ', 
+	     $scope.layerType );
     switch ($scope.layerType) {
       case 'points':
         for ( var i=0; i<Math.min(1000000000,lfltPoints.length); i ++ ){
@@ -240,10 +276,11 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
         markers[ds].addLayer(mcg);
         break;
       case 'heat':
-	var heatmapGrads = [{},{}];
+	var heatmapGrads = [{},{},{}];
 	for ( var g=0.0; g<=1.0; g+=0.01 ){
 	  heatmapGrads[0][g] = "rgb(" + Math.round(255*g) + ",0,0)";
 	  heatmapGrads[1][g] = "rgb(0," + Math.round(255*g) + ",0)";
+	  heatmapGrads[2][g] = "rgb(0,0," + Math.round(255*g) + ")";
         }
 	$log.log('heatmaps = ', heatmapGrads);
         var heatmapLayer = L.TileLayer.heatMap({
@@ -264,10 +301,11 @@ leafletDemoApp.controller('AppCtrl', function AppCtrl ($scope, $http, $log, $tim
           lln = Math.max( lln, pt.lat );
           llw = Math.min( llw, pt.lng );
           lle = Math.max( lle, pt.lng );
-      }
+        }
         heatmapLayer.addData(newPts);
         // Add this layer inside a layer group
         markers[ds].addLayer( heatmapLayer );
+
         var llbounds = [[lls,llw],[lln,lle]];
         console.log('lat long bounds = ', llbounds);
         break;
