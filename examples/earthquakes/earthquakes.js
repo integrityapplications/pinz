@@ -23,7 +23,7 @@ mongo.connect(mongoUrl , function(err, db) {
 });
 
 
-function pollAtomFeed(db) {
+function pollAtomFeed() {
 	var atomXml = null;
 	var earthquakes = [];
 	console.log("polling server for data...");
@@ -61,7 +61,7 @@ function pollAtomFeed(db) {
 			async.forEach(earthquakes, function(earthquake, insertCallback) {
 				console.log(JSON.stringify(earthquake, null, "\t"));
 				
-				db.collection("earthquake").insert(earthquake , function(err, objects) {
+				GLOBAL.dbHandle.collection("earthquake").insert(earthquake , function(err, objects) {
 					if(err) {
 						console.log("WARN :: Error persisting earthquake observable::\n" + JSON.stringify(earthquake , null, 4));
 					} else {
