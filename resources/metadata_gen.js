@@ -55,6 +55,31 @@ var sourceB = {
 
 };
 
+var sourceEarthquake = {
+
+	_id : "earthquake" ,
+
+	desc : "Global earthquake event data from USGS feeds @ http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom" ,
+
+	attrs : [
+		{
+			name : "magnitude" ,
+			type : "number" ,
+			desc : "The magnitude of the earthquake, as measured on the Richter scale" ,
+			low : 0 ,
+			units : "Ml"
+		} , 
+		{
+			name : "title" ,
+			type : "string",
+			desc: "The title of the earthquake event, as given by USGS"
+		}
+
+	]
+
+};
+
+
 function insertMetadataDocs(db) {
 
 	db.collection("metadata").drop(function() {
