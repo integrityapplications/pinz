@@ -9,9 +9,13 @@ var portnum = 3000
 
 mongo.connect(mongoUrl , function(err, db) {
   
-  if(err) throw err;
-  console.log("Connected to mongoDB @ " + mongoUrl);
+  if(err) {
+    console.log("Unable to connect to mongo, mongoUrl: " + mongoUrl);
+    console.log("Error: " + JSON.stringify(err, null, ""));
+    process.exit(1);
+  }
   
+  console.log("Connected to mongoDB @ " + mongoUrl);
   GLOBAL.dbHandle = db;
   
   start(portnum);
@@ -24,6 +28,7 @@ function start(port) {
   app.use('/ngapp', express.static(__dirname+'/ngapp'));
   app.use('/static', express.static(__dirname+'/static'));
 
+  app.get('/metadata', api.processMetadataRequest);
 	app.post('/data', api.processDataRequest);
 	
 	app.listen(portnum);

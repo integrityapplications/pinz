@@ -135,21 +135,52 @@ describe( 'queryBuilder.buildGeoWithinQuery()' , function() {
 });
 
 
-/*describe('buildQuery.buildMongoQuery()' , function() {
 
-	var query = {
+describe('buildQuery.buildAttributeQuery' , function() {
+
+	it('key value' , function() {
+		var input = { k : "color", v : "green"};
+		var response = queryBuilder.buildAttributeQuery(input);
+
+		assert.equal('{"$elemMatch":{"k":"color","v":"green"}}' , JSON.stringify(response, null, "").split("\n").join(""));
+
+	});
+
+	it('multiple values' , function() {
+		var input = { k : "color", v : ["green","red"]};
+		var response = queryBuilder.buildAttributeQuery(input);
+
+		assert.equal(
+			'{"$elemMatch":{"k":"color","v":{"$in":["green","red"]}}}' , 
+			JSON.stringify(response, null, "").split("\n").join(""));
+
+	});
+
+	it('attribute range' , function() {
+		var input = { k : "weight",	low : 50, high : 100}
+		var response = queryBuilder.buildAttributeQuery(input);
+
+		assert.equal(
+			'{"$elemMatch":{"k":"weight","v":{"$gte":50,"$lte":100}}}' , 
+			JSON.stringify(response, null, "").split("\n").join(""));
+	});
+
+	it('no value or range' , function() {
+		assert.throws(
+			function() {
+				queryBuilder.buildAttributeQuery({k:"color"});
+			},
+			Error
+		);
+	});
+
+});
+
+
+describe('buildQuery.buildMongoQuery()' , function() {
+
+	/*var input = {
 		"src" : "A",
-		"time_within" : {
-			"start" : "2013-09-13T16:00:00",
-			"end" : "2013-09-13T16:00:30"
-		},
-		"geo_within" : [
-			40.0, -55.0,
-			40.0, -30.0,
-			10.0, -30.0,
-			10.0, -55.0,
-			40.0, -55.0
-		],
 		"attrs" : [
 			{
 				"k" : "color",
@@ -165,11 +196,70 @@ describe( 'queryBuilder.buildGeoWithinQuery()' , function() {
 				"high" : 100
 			}
 		]
-	}
+	};*/
 
-	it('mongo query should be valid JSON' , function() {
-		assert.equal("" , queryBuilder.buildMongoQuery(query));
+	it('time_within' , function() {
+		var input = {
+			"src" : "A",
+			"time_within" : {
+				"start" : "2013-09-13T16:00:00",
+				"end" : "2013-09-13T16:00:30"
+			}
+		};
+
+		var query = queryBuilder.buildMongoQuery(input);
+		assert.equal(
+			'{"t":{"$gte":"2013-09-13T16:00:00.000Z","$lte":"2013-09-13T16:00:30.000Z"}}' , 
+			JSON.stringify(query, null, "").split("\n").join(""));
 	});
 
+	it('time_inserted' , function() {
+		var input = {
+			"src" : "A",
+			"time_inserted" : {
+				"start" : "2013-09-13T16:00:00",
+				"end" : "2013-09-13T16:00:30"
+			}
+		};
+
+		var query = queryBuilder.buildMongoQuery(input);
+		assert.equal(
+			'{"_id":{"$gte":"523336800000000000000000","$lte":"5233369e0000000000000000"}}' , 
+			JSON.stringify(query, null, "").split("\n").join(""));
+	});
+
+	it('geo_within' , function() {
+		var input = {
+			"src" : "A",
+			"geo_within" : [
+				40.0, -55.0,
+				40.0, -30.0,
+				10.0, -30.0,
+				10.0, -55.0,
+				40.0, -55.0
+			]
+		};
+
+		var query = queryBuilder.buildMongoQuery(input);
+		assert.equal(
+			'{"geos.loc":{"$geoWithin":{"$geometry":{"type":"Polygon","coordinates":[[[-55,40],[-30,40],[-30,10],[-55,10],[-55,40]]]}}}}' , 
+			JSON.stringify(query, null, "").split("\n").join(""));
+	});
+
+	it('attrs' , function() {
+		var input = {
+			"src" : "A",
+			"attrs" : [
+				{
+					"k" : "color",
+					"v" : ["red" , "green"]
+				}
+			]
+		};
+
+		var query = queryBuilder.buildMongoQuery(input);
+		assert.equal(
+			'{"attrs":{"$all":[{"$elemMatch":{"k":"color","v":{"$in":["red","green"]}}}]}}' , 
+			JSON.stringify(query, null, "").split("\n").join(""));
+	});
 });
-*/

@@ -1,5 +1,6 @@
 var mongo = require('mongodb');
 var argv = require('optimist').argv;
+var metadata = require('./metadata_gen');
 
 var sources = [
 	{
@@ -33,7 +34,7 @@ var sources = [
 	}
 ]
 var samplesPerUpdate = 100;
-var updateSec = 10000;
+var updateSec = 10;
 var mongoUrl = "mongodb://127.0.0.1:27017/observabledb";
 
 if (argv.updateSec) updateSec = argv.updateSec;
@@ -45,6 +46,8 @@ mongo.connect(mongoUrl , function(err, db) {
 	
 	console.log("Successfully connected to mongo at " + mongoUrl);
 	
+	metadata.insertMetadataDocs(db);
+
 	setInterval(function() {
 		for(var srcIdx = 0; srcIdx < sources.length ; srcIdx++) {
 			console.log("Publishing " + samplesPerUpdate + " documents to collection: " + sources[srcIdx].src);
@@ -53,7 +56,7 @@ mongo.connect(mongoUrl , function(err, db) {
 			});
 		}
 		console.log("Waiting for next interval: " + updateSec);
-	}, updateSec);
+	}, updateSec * 1000);
 });
 
 function generateDocs(src, numDocs) {

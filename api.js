@@ -31,9 +31,12 @@ function processDataRequest(req, res) {
 		}
 		if (query) {
 			GLOBAL.dbHandle.collection(input.src).find(query).limit(5000).toArray(function(err , docs) {
-				if (err) callback({status:500, msg:"Server Error"});
-				results.push(docs);
-				callback();
+				if (err) {
+					callback({status:500, msg:"Server Error"});
+				} else {
+					results = results.push(docs);
+					callback();
+				}
 			});
 		}
 		
@@ -46,4 +49,15 @@ function processDataRequest(req, res) {
 	});
 }
 
-module.exports.processDataRequest=processDataRequest
+function processMetadataRequest(req, res) {
+	GLOBAL.dbHandle.collection('metadata').find().toArray(function(err , docs) {
+		if (err) {
+			res.send(err.status, err);
+		} else {
+			res.json(docs);
+		}
+	});
+}
+
+module.exports.processDataRequest=processDataRequest;
+module.exports.processMetadataRequest=processMetadataRequest;

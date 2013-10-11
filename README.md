@@ -30,15 +30,19 @@ The metadata endpoint is accessed via HTTP GET and returns an array of json docu
 
 The data endpoint is accessed via HTTP POST and returns an array of observable json documents matching search criteria defined in the post body. A maximum of 5000 documents is returned per event stream. The first iteration will just support AJAX pulling at regulation intervals. Future releases will explore SSE and/or web sockets (TBD).
 
-[Example POST document](https://raw.github.com/integrityapplications/pinz/data-api/resources/postExample.json)
+[Example POST document](https://raw.github.com/integrityapplications/pinz/master/resources/curl_examples/data/postExample.json)
 
 ### Required inputs
 `src` :	Name of data feed to query
 
 ### Optional inputs
+`time_inserted`
+* start : [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) formated date string defining lower time bound, UTC
+* end : [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) formated date string defining upper time bound, UTC
+
 `time_within`
- * start : ISODate lower time bound, assumed to be in "zulu" time [(pretty much GMT)](http://en.wikipedia.org/wiki/Coordinated_Universal_Time)
- * end : ISODate upper time bound, assumed to be in "zulu" time (pretty much GMT)
+ * start : [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) formated date string defining lower time bound, UTC
+ * end : [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) formated date string defining upper time bound, UTC
 
 `geo_within` : Array of latitude, longitude pairs that define a valid closed polygon search area
 
@@ -72,7 +76,7 @@ Running a demo
     npm start 
   ```
 
-5. Test installation by running resources/post.sh. An array of matching observable documents will be output if everything is working properly.
+5. Test installation by running some of the exmaple http commands in resources/curl_examples.
 
 6. Use the web client:
 
