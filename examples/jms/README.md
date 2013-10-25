@@ -9,7 +9,7 @@ The JMS Example
 
 3. Inserts the pinz observable documents into MongoDB
 
-The message body expected on the JMS topic is a result interfacing with a legacy application.
+The message body expected on the JMS topic is the result of interfacing with a legacy application.
 Feel free to use this example with your existing JMS data streams, just replace obsBuiler.js with one that knows how to handle your specific messages.
 
 A little history
