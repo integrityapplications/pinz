@@ -1,4 +1,0 @@
-example queries
-
-db.A.find({"attrs" : {"$elemMatch" : {"k":"weight" , "v":88}}})
-db.A.find({"attrs" : {"$elemMatch" : {"k":"weight" , "v":{"$gte":50 , "$lte":100}}}})

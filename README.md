@@ -30,7 +30,7 @@ The metadata endpoint is accessed via HTTP GET and returns an array of json docu
 
 The data endpoint is accessed via HTTP POST and returns an array of observable json documents matching search criteria defined in the post body. A maximum of 5000 documents is returned per event stream. The first iteration will just support AJAX pulling at regulation intervals. Future releases will explore SSE and/or web sockets (TBD).
 
-[Example POST document](https://raw.github.com/integrityapplications/pinz/master/resources/curl_examples/data/postExample.json)
+[Example POST document](https://raw.github.com/integrityapplications/pinz/master/examples/random/curl_examples/data/postExample.json)
 
 ### Required inputs
 `src` :	Name of data feed to query
@@ -64,10 +64,10 @@ Running a demo
 	mongod --dbpath ./db --port 27017 --fork
   ```
 
-3. Run node application resources/datagen.js to continously populate MongoDB with randomly generated observables. Verify by viewing generated documents in 'observabledb' with mongo shell.
+3. Run node application examples/random/datagen.js to continously populate MongoDB with randomly generated observables. Verify by viewing generated documents in 'observabledb' with mongo shell.
 
   ```
-    node resources/datagen.js --samplesPerUpdate=10 --updateSec=10
+    node examples/random/datagen.js --samplesPerUpdate=10 --updateSec=10
   ```
 
 4. start pinz application:
@@ -77,11 +77,11 @@ Running a demo
 
     or
 
-    node server.js --mongoHost=some.host --mongoPort=3333 --serverPort=6161
+    node server.js --mongoUrl=mongodb://localhost:27017/pinz --serverPort=6161
     (to specify non-default settings)
   ```
 
-5. Test installation by running some of the exmaple http commands in resources/curl_examples.
+5. Test installation by running some of the exmaple http commands in examples/random/curl_examples.
 
 6. Use the web client:
 

@@ -3,35 +3,13 @@ var argv = require('optimist').argv;
 var express = require('express');
 var api = require('./api');
 
-// todo: make the portnum an option
+var mongoUrl = "mongodb://localhost:27017/pinz";
+if(argv.mongoUrl) mongoUrl = argv.mongoUrl;
 
-var mongoHost = "";
-var portNumber = null;
-var serverPort = null;
+var serverPort = 3000;
+if(argv.serverPort) serverPort = argv.serverPort;
 
-if(argv.mongoHost) {
-  mongoHost = argv.mongoHost;
-} else {
-  mongoHost = "localhost";
-}
-
-if(argv.mongoPort) {
-  mongoPort = argv.mongoPort;
-} else {
-  mongoPort = 27017;
-}
-
-if(argv.serverPort) {
-  serverPort = argv.serverPort;
-} else {
-  serverPort = 3000;
-}
-
-var mongoUrl = "mongodb://" + mongoHost + ":" + mongoPort + "/observabledb";
-
-
-mongo.connect(mongoUrl , function(err, db) {
-  
+mongo.connect(mongoUrl , function(err, db) {  
   if(err) {
     console.log("Unable to connect to mongo, mongoUrl: " + mongoUrl);
     console.log("Error: " + JSON.stringify(err, null, ""));

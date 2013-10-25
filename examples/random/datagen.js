@@ -33,9 +33,9 @@ var sources = [
 		]
 	}
 ]
-var samplesPerUpdate = 100;
+var samplesPerUpdate = 1000;
 var updateSec = 10;
-var mongoUrl = "mongodb://127.0.0.1:27017/observabledb";
+var mongoUrl = "mongodb://127.0.0.1:27017/pinz";
 
 if (argv.updateSec) updateSec = argv.updateSec;
 if (argv.samplesPerUpdate) samplesPerUpdate = argv.samplesPerUpdate;
