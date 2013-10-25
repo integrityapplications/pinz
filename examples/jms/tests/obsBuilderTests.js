@@ -114,10 +114,11 @@ describe( 'obsBuilder.buildGeos', function() {
 		assertNumber(geos[0].loc.properties.angle, 90);
 	});
 
-	it("point", function() {
+	it("point with elevation", function() {
 		var geolocations = {
 			id: "location",
-			"ns:point": "30 -60"
+			"ns:point": "30 -60",
+			"ns:elev": 1000
 		};
 		var geos = obsBuilder.buildGeos(geolocations);
 		assert.equal(geos.length, 1);
