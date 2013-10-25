@@ -64,7 +64,7 @@ Running a demo
 	mongod --dbpath ./db --port 27017 --fork
   ```
 
-3. Run node application examples/random/datagen.js to continously populate MongoDB with randomly generated observables. Verify by viewing generated documents in 'observabledb' with mongo shell.
+3. Run node application examples/random/datagen.js to continously populate MongoDB with randomly generated observables. Verify by viewing generated documents with mongo shell.
 
   ```
     node examples/random/datagen.js --samplesPerUpdate=10 --updateSec=10
@@ -88,4 +88,26 @@ Running a demo
   ```
     http://localhost:3000/ngapp/
   ```
+
+Indexing
+========
+Indexes are a vital part of a properly tuned mongo installation ensuring efficient and timely queries. Below are the recommended indexes and the types of queries they cover. Since every pinz installation will support a unique set of users, not all indexes are needed if only certain types of queries are performed.
+
+MongoDB provides excellent visibility into query performance with `explain`. View `explain' results by including the HTTP header `pinz-debug-query` in your HTTP requests.
+
+1. Unbounded domain specific attribute queries
+
+  ```
+    db.source.ensureIndex({"attrs.k":1, "attrs.v":1})
+  ```
+
+2. Domain specific attribute queries bounded by time, geospacial, or time and geospacial constrains
+
+3. Geospacial constraints
+
+4. Time constrains
+
+5. Time and geospacial constraints
+
+
 
