@@ -20,9 +20,9 @@ function publishMsgs() {
 	Object.keys(docs).forEach(function(key) {
 		if (docs[key].length > 0) {
 			console.log("Attempting to publish " + docs[key].length + " docs to " + key);
-			GLOBAL.dbHandle.colleciton(key).insert(docs[key], function err, objects) {
+			GLOBAL.dbHandle.colleciton(key).insert(docs[key], function(err, objects) {
 				if(err) console.error("Unable to publish documents to mongo, error: " +  error);
-			}
+			});
 		}
 	});
 }
