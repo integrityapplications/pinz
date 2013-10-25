@@ -2,6 +2,7 @@ JMS Example
 ====
 
 The JMS Example 
+
 1. Consumes data streams from JMS server. JMS is a Java publish/subcribe messaging middleware protocol.
 
 2. Converts messages into pinz observable documents
