@@ -10,7 +10,7 @@ The web is already saturated with web applications that do the same thing, why d
 Under the Covers
 ----------------
 
-Event streams are cached in a single MongoDB database, observabledb, as capped collections with one collection per event stream. The collection name will be the name of the event stream. Pinz is intended to handle event streams with millions of events per day. The current mongo architecture may have to be tweaked if write locking becomes a problem (TBD). 
+Event streams are cached in a single MongoDB database, pinz, as capped collections with one collection per event stream. The collection name will be the name of the event stream. Pinz is intended to handle event streams with millions of events per day. The current mongo architecture may have to be tweaked if write locking becomes a problem (TBD). 
 
 Events are stored as documents called observables. An observable is a generic json document containing data about a single event. 
 An observable defines the data source, event time, event id, event location(s), and domain specific key value pair(s). 
