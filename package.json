@@ -11,10 +11,11 @@
 	"devDependencies" : {
 		"mocha"   : "1.12.1",
 		"xml2js" : "0.2.8",
-		"request" : "2.27.0"
+		"request" : "2.27.0",
+		"stomp-client": "0.4.0"
 	} ,
 	"scripts" : {
 		"start" : "node server.js",
-		"test" : "./node_modules/mocha/bin/mocha tests/*"
+		"test" : "./node_modules/mocha/bin/mocha $(find tests -name '*Tests.js')"
 	}
 }
