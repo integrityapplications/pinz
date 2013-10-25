@@ -39,3 +39,98 @@ describe( 'obsBuilder.buildObs', function() {
 		assert.equal(doc.geos.length, 1);
 	});
 });
+
+describe( 'obsBuilder.buildAttrs', function() {
+	it("numeric (float) value", function() {
+		var attributes = [
+			{
+				key: 'myFloatAttribute',
+				value: '3.14'
+			}
+		];
+		var attrs = obsBuilder.buildAttrs(attributes);
+		assert.equal(attrs.length, 1);
+		assert.equal(attrs[0].k, 'myFloatAttribute');
+		assertNumber(attrs[0].v, 3.14);
+	});
+
+	it("numeric (int) value", function() {
+		var attributes = [
+			{
+				key: 'myIntAttribute',
+				value: '1'
+			}
+		];
+		var attrs = obsBuilder.buildAttrs(attributes);
+		assert.equal(attrs.length, 1);
+		assert.equal(attrs[0].k, 'myIntAttribute');
+		assertNumber(attrs[0].v, 1);
+	});
+
+	it("string value with units", function() {
+		var attributes = [
+			{
+				key: 'attr1',
+				value: 'value1',
+				units: 'mpg'
+			}
+		];
+		var attrs = obsBuilder.buildAttrs(attributes);
+		assert.equal(attrs.length, 1);
+		assert.equal(attrs[0].k, 'attr1');
+		assert.equal(attrs[0].v, 'value1');
+		assert.equal(attrs[0].u, 'mpg');
+	});
+});
+
+describe( 'obsBuilder.buildGeos', function() {
+	it("ellipse", function() {
+		var geolocations = {
+			id: "location",
+			ellipse: "30 -60 1000 500 90"
+		};
+		var geos = obsBuilder.buildGeos(geolocations);
+		assert.equal(geos.length, 1);
+		assert.equal(geos[0].id, 'location');
+		assert.equal(geos[0].loc.type, 'Point');
+		assertNumber(geos[0].loc.coordinates[0], -60);
+		assertNumber(geos[0].loc.coordinates[1], 30);
+		assertNumber(geos[0].loc.properties.semiMajor, 1000);
+		assertNumber(geos[0].loc.properties.semiMinor, 500);
+		assertNumber(geos[0].loc.properties.angle, 90);
+	});
+
+	it("point", function() {
+		var geolocations = {
+			id: "location",
+			"ns:point": "30 -60"
+		};
+		var geos = obsBuilder.buildGeos(geolocations);
+		assert.equal(geos.length, 1);
+		assert.equal(geos[0].id, 'location');
+		assert.equal(geos[0].loc.type, 'Point');
+		assertNumber(geos[0].loc.coordinates[0], -60);
+		assertNumber(geos[0].loc.coordinates[1], 30);
+	});
+
+	it("polygon", function() {
+		var geolocations = {
+			id: "location",
+			"ns:polygon": "30 -60 30 -55 25 -55 25 -60 30 -60"
+		};
+		var geos = obsBuilder.buildGeos(geolocations);
+		assert.equal(geos.length, 1);
+		assert.equal(geos[0].id, 'location');
+		assert.equal(geos[0].loc.type, 'Polygon');
+		assert.equal(geos[0].loc.coordinates[0].length, 5);
+		assertNumber(geos[0].loc.coordinates[0][0][0], -60);
+		assertNumber(geos[0].loc.coordinates[0][0][1], 30);
+	});
+});
+
+function assertNumber(provided, expected) {
+	assert.equal(typeof provided, 'number');
+	assert.equal(provided, expected);
+}
+
+
