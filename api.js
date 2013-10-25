@@ -36,6 +36,12 @@ function processDataRequest(req, res) {
 					callback();
 				}
 			});
+
+			if ('true' === req.headers['pinz-debug-query']) {
+				GLOBAL.dbHandle.collection(input.src).find(query).limit(5000).explain(function(err , results) {
+					console.log(JSON.stringify(results, null, ' '));
+				});
+			}
 		}
 		
 	}, function(err) {

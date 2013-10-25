@@ -1,1 +1,1 @@
-curl -X POST -d  @postExample.json -H 'content-type:application/json' http://localhost:3000/data
+curl -X POST -d  @postExample.json -H 'content-type:application/json' -H 'Pinz-Debug-Query:true' http://localhost:3000/data
