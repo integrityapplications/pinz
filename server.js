@@ -2,8 +2,7 @@ var mongo = require('mongodb');
 var argv = require('optimist').argv;
 var express = require('express');
 var api = require('./api');
-
-// todo: make the portnum an option
+var cors = require('cors');  // CORS - cross-origin resource sharing
 
 var mongoHost = "";
 var portNumber = null;
@@ -44,15 +43,30 @@ mongo.connect(mongoUrl , function(err, db) {
   start(serverPort);
 });
 
+// CORS module config
+var corsOptions = {
+  // Access-Control-Allow-Origin - defines those domains from which javascript can access server resources.  
+  // Generally, Access-Control-Allow-Origin:* is frowned upon; also does not allow requests to supply credentials, nor does it allow cookies to be sent.
+  // Access-Control-Allow-Origin: http://foo.example
+  // Access-Control-Allow-Methods: POST, GET, OPTIONS
+  // Access-Control-Allow-Headers
+  
+  origin : '*' ,
+  methods : [ 'GET' , 'POST' ]
+
+};
+
+
+
 function start(port) {
+
   var app = express();
 
   app.use(express.bodyParser());
   app.use('/ngapp', express.static(__dirname+'/ngapp'));
   app.use('/static', express.static(__dirname+'/static'));
-
   app.get('/metadata', api.processMetadataRequest);
-	app.post('/data', api.processDataRequest);
+	app.post('/data', cors(corsOptions), api.processDataRequest);
 	
 	app.listen(port);
   console.log();
