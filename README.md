@@ -15,7 +15,7 @@ Event streams are cached in a single MongoDB database, observabledb, as capped c
 Events are stored as documents called observables. An observable is a generic json document containing data about a single event. 
 An observable defines the data source, event time, event id, event location(s), and domain specific key value pair(s). 
 
-Populating MongoDB with observables is outside the scope of pinz and will vary greatly by user needs and available event streams.
+Populating MongoDB with observables is outside the scope of pinz and will vary greatly by user needs and available event streams. The `examples` folder contains several datastore population examples.
 
 API Guide
 =========
