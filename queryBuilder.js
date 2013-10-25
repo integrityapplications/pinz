@@ -119,8 +119,6 @@ function buildMongoQuery(query) {
 		mongoQuery.attrs = {$all: all};
 	}
 	
-	console.log("\tBuilt Mongo query = " + JSON.stringify(mongoQuery, null, "").split("\n").join("") );
-	
 	return mongoQuery
 }
 
