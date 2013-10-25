@@ -1,10 +1,8 @@
 var async 			= require('async');
 var queryBuilder 	= require('./queryBuilder');
-var util = require('util');
 
 function processDataRequest(req, res) {
 	var inputs = req.body;
-        console.log(util.inspect(inputs));
 	if (!(inputs instanceof Array)) {
 		res.send(400, "Bad Request, POST body expected to contain JSON array.");
 		return;
@@ -34,7 +32,7 @@ function processDataRequest(req, res) {
 				if (err) {
 					callback({status:500, msg:"Server Error"});
 				} else {
-					results.push(docs);
+					results = results.concat(docs);
 					callback();
 				}
 			});
