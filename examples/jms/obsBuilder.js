@@ -34,8 +34,16 @@ function constructObs(result) {
 function buildAttrs(attributes) {
 	var attrs = [];
 	attributes.forEach(function(attribute, index) {
-		var value = attribute.value;
-		if (isNumeric(value)) value = +value;
+		var value = String(attribute.value);
+		if (-1 !== value.indexOf(',')) {
+			var values = [];
+			value.split(',').forEach(function(v, index) {
+				values.push(v);
+			});
+			value = values;
+		} else if (isNumeric(value)) {
+			value = +value;
+		}
 		var attr = {
 			k: attribute.key,
 			v: value

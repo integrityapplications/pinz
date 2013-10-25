@@ -81,6 +81,20 @@ describe( 'obsBuilder.buildAttrs', function() {
 		assert.equal(attrs[0].v, 'value1');
 		assert.equal(attrs[0].u, 'mpg');
 	});
+
+	it("value with commas", function() {
+		var attributes = [
+			{
+				key: 'attr1',
+				value: 'value1,value2,value3'
+			}
+		];
+		var attrs = obsBuilder.buildAttrs(attributes);
+		assert.equal(attrs.length, 1);
+		assert.equal(attrs[0].k, 'attr1');
+		assert.equal(attrs[0].v.length, 3);
+		assert.equal(attrs[0].v[0], 'value1');
+	});
 });
 
 describe( 'obsBuilder.buildGeos', function() {
