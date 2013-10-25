@@ -93,7 +93,7 @@ Indexing
 ========
 Indexes are a vital part of a properly tuned mongo installation ensuring efficient and timely queries. Below are the recommended indexes and the types of queries they cover. Since every pinz installation will support a unique set of users, not all indexes are needed if only certain types of queries are performed.
 
-MongoDB provides excellent visibility into query performance with `explain`. View `explain' results by including the HTTP header `pinz-debug-query` in your HTTP requests.
+MongoDB provides excellent visibility into query performance with `explain`. View `explain` results by including the HTTP header `pinz-debug-query` in your HTTP requests.
 
 1. Unbounded domain specific attribute queries
 
