@@ -70,14 +70,14 @@ function buildGeos(geolocations) {
 			};
 		} else if ('ns:point' in geolocation) {
 			//center lat(WGS84), center lon(WGS84)
-			var point = geolocation.['ns:point'].split(' ');
+			var point = geolocation['ns:point'].split(' ');
 			geo.loc = {
 				type: "Point",
 				coordinates: [+point[1], +point[0]]
 			};
 		} else if ('ns:polygon' in geolocation) {
 			//closed ring list of lat/lon pairs
-			var polygon = geolocation.['ns:point'].split(' ');
+			var polygon = geolocation['ns:polygon'].split(' ');
 			var externalRing = [];
 			for (var i=0; i<polygon.length; i=i+2) {
 				var lat = +polygon[i];
@@ -104,4 +104,4 @@ exports.buildAttrs=buildAttrs;
 exports.buildGeos=buildGeos;
 exports.buildObs=buildObs;
 exports.constructObs=constructObs;
-experts.xml2jsOptions=xml2jsOptions;
+exports.xml2jsOptions=xml2jsOptions;
