@@ -150,7 +150,7 @@ Running a demo
     (to specify non-default settings)
   ```
 
-5. Test installation by running some of the exmaple http commands in examples/random/curl_examples.
+5. Test installation by running some of the example http commands in examples/random/curl_examples.
 
 6. Use the web client:
 
@@ -170,13 +170,13 @@ MongoDB provides excellent visibility into query performance with `explain`. Vie
     db.<source>.ensureIndex({"attrs.k":1, "attrs.v":1})
   ```
 
-2. Domain specific attribute queries bounded by time, geospacial, or time and geospacial constrains
+2. Domain specific attribute queries bounded by time, geospatial, or time and geospatial constraints
 
-3. Geospacial constraints
+3. Geospatial constraints
 
-4. Time constrains
+4. Time constraints
 
-5. Time and geospacial constraints
+5. Time and geospatial constraints
 
 
 
