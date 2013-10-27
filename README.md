@@ -30,6 +30,75 @@ The metadata endpoint is accessed via HTTP GET and returns an array of json docu
 
 The data endpoint is accessed via HTTP POST and returns an array of observable json documents matching search criteria defined in the post body. A maximum of 5000 documents is returned per event stream. The first iteration will just support AJAX pulling at regulation intervals. Future releases will explore SSE and/or web sockets (TBD).
 
+### Observable Document
+
+We had a difficult time figuring out how to structure our data. One camp wanted a definable schema to enable indexing and documentent understanding.
+Another camp wanted a boundless schema to enable client side ease of use and not be limited by a definable schema, "we are using a schemaless database and a schemaless language". In the end, we decided both had merits and are needed.
+
+#### content-type application/pinz-json
+
+Returns documents as stored in MongoDB.
+
+```
+{
+  id: 'obsId',
+  src: 'obsSource',
+  t: Date(),
+  attrs: [
+    {
+      k: 'domainSpecificAttribute1'
+      v: 'some value'
+    },
+    {
+      k: 'domainSpecificAttribute2',
+      v: 1,
+      u: MPH
+    }
+  ],
+  geos: [
+    {
+      id: 'geolocation id',
+      loc: {
+        type: 'Point',
+        coordinates: [-60, 30]
+      }
+    }
+  ]
+}
+```
+
+#### content-type application/json
+
+Returns transformed documents with attrs k v pairs broken into standard json elements.
+
+```
+{
+  id: 'obsId',
+  src: 'obsSource',
+  t: Date(),
+  attrs: {
+      domainSpecificAttribute1: {
+        v: 'some value'
+      },
+      domainSpecificAttribute2': {
+        v: 1,
+        u: MPH
+      }
+  },
+  geos: [
+    {
+      id: 'geolocation id',
+      loc: {
+        type: 'Point',
+        coordinates: [-60, 30]
+      }
+    }
+  ]
+}
+```
+
+### POST contents
+
 [Example POST document](https://raw.github.com/integrityapplications/pinz/master/examples/random/curl_examples/data/postExample.json)
 
 ### Required inputs
