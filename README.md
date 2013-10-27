@@ -52,7 +52,7 @@ Returns documents as stored in MongoDB.
     {
       k: 'domainSpecificAttribute2',
       v: 1,
-      u: MPH
+      u: 'MPH'
     }
   ],
   geos: [
@@ -82,7 +82,7 @@ Returns transformed documents with attrs k v pairs broken into standard json ele
       },
       domainSpecificAttribute2': {
         v: 1,
-        u: MPH
+        u: 'MPH'
       }
   },
   geos: [
