@@ -10,6 +10,16 @@ describe( 'api.processDataRequest', function() {
 		}	
 	};
 
+	var validRequest = {
+		body : [
+			{src: "source1"},
+			{src: "source2"}
+		],
+		headers : {
+			"pinz-debug-query": false
+		}
+	};
+
 	it('Ensure POST is JSON array', function() {
 		var req = {body : {} };
 		api.processDataRequest(req, res);
@@ -40,13 +50,7 @@ describe( 'api.processDataRequest', function() {
 			collection: function(name) { return collectionMock;}
 		};
 
-		var req = {
-			body : [
-				{src: "source1"},
-				{src: "source2"}
-			]
-		};
-		api.processDataRequest(req, res);
+		api.processDataRequest(validRequest, res);
 		assert.equal("500", res.status);
 	});
 
@@ -62,13 +66,7 @@ describe( 'api.processDataRequest', function() {
 			collection: function(name) { return collectionMock;}
 		};
 
-		var req = {
-			body : [
-				{src: "source1"},
-				{src: "source2"}
-			]
-		};
-		api.processDataRequest(req, res);
+		api.processDataRequest(validRequest, res);
 		assert.equal("200", res.status);
 		assert.equal(6, res.body.length);
 	});
