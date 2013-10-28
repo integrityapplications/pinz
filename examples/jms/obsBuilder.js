@@ -65,7 +65,7 @@ function buildGeos(geolocations) {
 	var geos = [];
 	geolocations.forEach(function(geolocation, index) {
 		var geo = {
-			id: "location"
+			id: geolocation.id
 		}
 		if ('ellipse' in geolocation) {
 			//center lat(WGS84), center lon(WGS84), semiMajor(meters), semiMinor(meters), orientation(degress from North of semiMajor)
