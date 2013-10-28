@@ -12,11 +12,14 @@ function buildObs(body, headers, callback) {
 		if (error) {
 			callback("Unable to parse JMS msg body as XML, Error: " + error);
 		} else {
+			var doc = null;
 			try {
-				callback(null, constructObs(result));
+				doc = constructObs(result);
 			} catch (exception) {
-				callback("Unable to convert XML document, Error: " +  error);
+				callback("Unable to convert XML document, Error: " +  exception);
+				return;
 			}
+			callback(null, doc);
 		}
 	});
 }
