@@ -10,3 +10,8 @@ http://stackoverflow.com/questions/18422020/how-to-update-and-include-twitter-bo
 
 > bower install --save bootstrap
 > bower install --save bootswatch
+> bower install --save angular-strap
+
+then follow instructions from above SO post:
+npm install --save-dev grunt-bower-install
+grunt bower-install

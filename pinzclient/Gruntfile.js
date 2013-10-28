@@ -19,6 +19,12 @@ module.exports = function (grunt) {
       app: require('./bower.json').appPath || 'app',
       dist: 'dist'
     },
+    "bower-install": {                                
+        target: {
+            html: '<%= yeoman.app %>/index.html',
+            ignorePath: '<%= yeoman.app %>/'  
+        }
+    },
     watch: {
       coffee: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
@@ -318,6 +324,10 @@ module.exports = function (grunt) {
     'connect:test',
     'karma'
   ]);
+
+  // grunt.registerTask('bower-install', [
+  //   'bower-install'
+  // ]);
 
   grunt.registerTask('build', [
     'clean:dist',
