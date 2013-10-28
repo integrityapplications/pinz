@@ -13,7 +13,15 @@
 
         <!-- build:css(.tmp) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
+           <!-- css from bower -->
+           <!-- bower:css -->
+           <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+           <link rel="stylesheet" href="bower_components/bootstrap-datepicker/css/datepicker.css" />
+           <link rel="stylesheet" href="bower_components/bootstrap-timepicker/css/bootstrap-timepicker.min.css" />
+           <link rel="stylesheet" href="bower_components/bootstrap-select/bootstrap-select.css" />
+           <!-- endbower -->
         <!-- endbuild -->
+        <link rel="stylesheet" href="bower_components/bootswatch/flatly/bootstrap.css" />
 </head>
   <body ng-app="pinzclientApp">
     <!--[if lt IE 7]>
@@ -39,6 +47,14 @@
        ga('send', 'pageview');
     </script>
 
+    <!-- other bower managed scripts -->
+        <!-- bower:js -->
+        <script src="bower_components/autotype/index.js"></script>
+        <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+        <script src="bower_components/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
+        <script src="bower_components/bootstrap-select/bootstrap-select.js"></script>
+        <script src="bower_components/angular-strap/dist/angular-strap.min.js"></script>
+        <!-- endbower -->
 
     <script src="bower_components/angular/angular.js"></script>
 
