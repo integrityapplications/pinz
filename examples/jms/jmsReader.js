@@ -20,7 +20,7 @@ mongoClient.connect(mongoUrl, function(error, db) {
 	GLOBAL.dbHandle = db;
 
 	destinations.forEach(function(d, index) {
-		var client = new Stomp(d.host, d.port, d.username, d.password);
+		var client = new stomp(d.host, d.port, d.username, d.password);
 		client.connect(function(sessionId) {
 			console.log('Successfully connected to JMS[host:' + d.host + ', port:' + d.port + ', destination:' + d.destination + ']');
 			client.subscribe(d.destination, function(body, headers) {
