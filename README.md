@@ -46,12 +46,12 @@ Returns documents as stored in MongoDB.
   t: Date(),
   attrs: [
     {
-      k: 'domainSpecificAttribute1'
+      k: 'domainSpecificAttribute1' ,
       v: 'some value'
     },
     {
-      k: 'domainSpecificAttribute2',
-      v: 1,
+      k: 'domainSpecificAttribute2' ,
+      v: 1 ,
       u: 'MPH'
     }
   ],
@@ -67,7 +67,7 @@ Returns documents as stored in MongoDB.
 }
 ```
 
-#### content-type: application/json
+#### content-type: application/json ###
 
 Returns transformed documents with attrs k v pairs broken into standard json elements.
 
