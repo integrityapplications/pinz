@@ -21,7 +21,7 @@ function processDataRequest(req, res) {
 	}
 
 	var pinzJsonBoolean = false;
-	if(req.Accept == 'pinz-json') {
+	if(req.headers.Accept == 'pinz-json') {
 		console.log("\n\tINFO :: request header specified pinz-json.");
 		pinzJsonBoolean = true;
 	}
@@ -30,7 +30,6 @@ function processDataRequest(req, res) {
 
 	// if we asked for pinz, just do the norm
 	if(pinzJsonBoolean == true) {
-		// assume we want "regular" json
 		async.forEach(inputs, function(input, callback) {
 			var query = null;
 			try {
