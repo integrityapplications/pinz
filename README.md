@@ -35,9 +35,9 @@ The data endpoint is accessed via HTTP POST and returns an array of observable j
 We had a difficult time figuring out how to structure our data. One camp wanted a definable schema to enable indexing and documentent understanding.
 Another camp wanted a boundless schema to enable client side ease of use and not be limited by a definable schema, "we are using a schemaless database and a schemaless language". In the end, we decided both had merits and are needed.
 
-#### content-type: application/pinz-json
+These two representations can be accessed using the Accept header.  Using the Accept=application/pinz-json value, the following fom for JSON will be returned::
 
-Returns documents as stored in MongoDB.
+#### Accept header: application/pinz-json - returns documents as stored in MongoDB ###
 
 ```
 {
@@ -67,9 +67,10 @@ Returns documents as stored in MongoDB.
 }
 ```
 
-#### content-type: application/json ###
 
-Returns transformed documents with attrs k v pairs broken into standard json elements.
+However, if the Accept header is set to Accept=application/json, a more "regular" form of JSON will be returned::
+
+#### Accept header: application/json - Returns documents with attrs k v pairs broken into standard json elements.###
 
 ```
 {
@@ -96,6 +97,8 @@ Returns transformed documents with attrs k v pairs broken into standard json ele
   ]
 }
 ```
+
+###Note## Even in the transformed decuments, attribute data values are objects, capturing the value and the unit data.
 
 ### POST contents
 
