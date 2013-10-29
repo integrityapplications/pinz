@@ -2,7 +2,9 @@ var async 			= require('async');
 var queryBuilder 	= require('./queryBuilder');
 
 function processDataRequest(req, res) {
+
 	var inputs = req.body;
+
 	if (!(inputs instanceof Array)) {
 		res.send(400, "Bad Request, POST body expected to contain JSON array.");
 		return;
@@ -19,7 +21,8 @@ function processDataRequest(req, res) {
 	}
 
 	var pinzJsonBoolean = false;
-	if(req.headers["content-type"] == 'pinz-json') {
+	if(req.Accept == 'pinz-json') {
+		console.log("\n\tINFO :: request header specified pinz-json.");
 		pinzJsonBoolean = true;
 	}
 
@@ -136,7 +139,7 @@ function convertPinzObsToRegularJson(pinzObs) {
 				valueObs = {};
 
 				if(attr["k"] != undefined && attr["v"] != undefined) {
-					valueObs[attr["k"]] = attr["v"];
+					valueObs.v = attr["v"];
 					if(attr["u"] != undefined) {
 						valueObs.u = attr["u"];
 					}

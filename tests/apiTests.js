@@ -142,7 +142,7 @@ describe( 'api.convertPinzObsToRegularJson' , function() {
 				}
 			]
 	};
-		testPrint = '{"id":"obsId1","src":"obsSource1","t":"2013-06-13T06:00:00.000Z","domainAttr_1":{"domainAttr_1":"someValue1"},"domainAttr_2":{"domainAttr_2":1,"u":"MPH"},"geos":[{"id":"geolocationID_obs1","loc":{"type":"Point","coordinates":[-60,30]}}]}';
+		testPrint = '{"id":"obsId1","src":"obsSource1","t":"2013-06-13T06:00:00.000Z","domainAttr_1":{"v":"someValue1"},"domainAttr_2":{"v":1,"u":"MPH"},"geos":[{"id":"geolocationID_obs1","loc":{"type":"Point","coordinates":[-60,30]}}]}';
 		assert.equal(testPrint , JSON.stringify(api.convertPinzObsToRegularJson(testPinzObs)));
 
 	});
@@ -249,7 +249,7 @@ describe( 'api.convertPinzObsArrayToRegularJson' , function() {
 		];
 
 
-		var printResult = '[{"id":"obsId1","src":"obsSource1","t":"2013-06-13T06:00:00.000Z","domainAttr_1":{"domainAttr_1":"someValue1"},"domainAttr_2":{"domainAttr_2":1,"u":"MPH"},"geos":[{"id":"geolocationID_obs1","loc":{"type":"Point","coordinates":[-60,30]}}]},{"id":"obsId2","src":"obsSource1","t":"2013-06-13T06:00:00.000Z","domainAttr_1":{"domainAttr_1":"someOtherValue1"},"domainAttr_2":{"domainAttr_2":3,"u":"MPH"},"geos":[{"id":"geolocationID_obs2","loc":{"type":"Point","coordinates":[-65,35]}}]},{"id":"obsId3","src":"obsSource1","t":"2013-06-13T06:00:00.000Z","domainAttr_1":{"domainAttr_1":"yetAnotherValue1"},"domainAttr_3":{"domainAttr_3":85,"u":"Kg"},"geos":[{"id":"geolocationID_obs3","loc":{"type":"Point","coordinates":[-63,36]}}]}]';
+		var printResult = '[{"id":"obsId1","src":"obsSource1","t":"2013-06-13T06:00:00.000Z","domainAttr_1":{"v":"someValue1"},"domainAttr_2":{"v":1,"u":"MPH"},"geos":[{"id":"geolocationID_obs1","loc":{"type":"Point","coordinates":[-60,30]}}]},{"id":"obsId2","src":"obsSource1","t":"2013-06-13T06:00:00.000Z","domainAttr_1":{"v":"someOtherValue1"},"domainAttr_2":{"v":3,"u":"MPH"},"geos":[{"id":"geolocationID_obs2","loc":{"type":"Point","coordinates":[-65,35]}}]},{"id":"obsId3","src":"obsSource1","t":"2013-06-13T06:00:00.000Z","domainAttr_1":{"v":"yetAnotherValue1"},"domainAttr_3":{"v":85,"u":"Kg"},"geos":[{"id":"geolocationID_obs3","loc":{"type":"Point","coordinates":[-63,36]}}]}]';
 		// modify data in place
 		api.convertPinzObsArrayToRegularJson(testData);
 
