@@ -12,6 +12,14 @@ angular.module('pinzclientApp')
     	setUrl: function(url) {
     		metadataUrl = url;
     		$log.log("url: ", metadataUrl);
+    	},
+    	getMetadata: function(callback) {
+    		$http({
+		        method: 'GET',
+		        url: metadataUrl
+		    }).success(function (data) {
+		    	return data;
+		   	});
     	}
     }
   });

@@ -2,6 +2,7 @@ var mongo = require('mongodb');
 var argv = require('optimist').argv;
 var express = require('express');
 var api = require('./api');
+var path = require('path');
 
 var mongoUrl = "mongodb://localhost:27017/pinz";
 if(argv.mongoUrl) mongoUrl = argv.mongoUrl;
@@ -26,9 +27,11 @@ function start(port) {
   var app = express();
 
   app.use(express.bodyParser());
+  app.use(express.static(path.join(__dirname, 'pinzclient/dist')));
+  //app.use('/pinz', express.static(__dirname+'/pinzclient/dist'));
   app.use('/ngapp', express.static(__dirname+'/ngapp'));
   app.use('/static', express.static(__dirname+'/static'));
-
+  
   app.get('/metadata', api.processMetadataRequest);
 	app.post('/data', api.processDataRequest);
 	
