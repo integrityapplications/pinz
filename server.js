@@ -27,15 +27,16 @@ function start(port) {
   var app = express();
 
   app.use(express.bodyParser());
-  app.use(express.static(path.join(__dirname, 'pinzclient/dist')));
-  //app.use('/pinz', express.static(__dirname+'/pinzclient/dist'));
+  // Use the dist dir that is built by Grunt
+  // this should be an env var (production or development)
+  //app.use(express.static(path.join(__dirname, 'pinzclient/dist')));
+  app.use(express.static(path.join(__dirname, '/pinzclient/app')));
   app.use('/ngapp', express.static(__dirname+'/ngapp'));
   app.use('/static', express.static(__dirname+'/static'));
-  
+
   app.get('/metadata', api.processMetadataRequest);
 	app.post('/data', api.processDataRequest);
 	
 	app.listen(port);
-  console.log();
   console.log('Listening on port ' + port);
 }

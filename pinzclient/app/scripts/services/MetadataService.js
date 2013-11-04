@@ -18,8 +18,10 @@ angular.module('pinzclientApp')
 		        method: 'GET',
 		        url: metadataUrl
 		    }).success(function (data) {
-		    	return data;
+                console.log('data', data);
+		    	callback(data);
 		   	});
+
     	}
     }
   });
