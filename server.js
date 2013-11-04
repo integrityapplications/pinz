@@ -33,10 +33,11 @@ function start(port) {
   app.use(express.static(path.join(__dirname, '/pinzclient/app')));
   app.use('/ngapp', express.static(__dirname+'/ngapp'));
   app.use('/static', express.static(__dirname+'/static'));
-
+  
   app.get('/metadata', api.processMetadataRequest);
 	app.post('/data', api.processDataRequest);
 	
 	app.listen(port);
+  console.log();
   console.log('Listening on port ' + port);
 }
