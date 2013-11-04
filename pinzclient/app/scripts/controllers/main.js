@@ -9,6 +9,9 @@ angular.module('pinzclientApp')
     ];
 
     Metadataservice.setUrl('/metadata');
-    var data = Metadataservice.getMetadata();
-    $scope.numDataFeeds = data.length;
+    Metadataservice.getMetadata(function(data) {
+    	console.log('received data');
+	    $scope.numDataFeeds = data.length;	
+    });
+    
   });

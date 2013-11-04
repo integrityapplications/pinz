@@ -105,6 +105,7 @@ function processDataRequest(req, res) {
 }
 
 function processMetadataRequest(req, res) {
+	console.log('process metadata request ', req.headers);
 	GLOBAL.dbHandle.collection('metadata').find().toArray(function(err , docs) {
 		if (err) {
 			res.send(err.status, err);
