@@ -1,6 +1,7 @@
 ## Using yeoman to scaffold angular, bootstrap, etc 
 
 [Kickstart your development with yeoman, grunt and bower](http://www.sitepoint.com/kickstart-your-angularjs-development-with-yeoman-grunt-and-bower/) - an overview of doing this from scratch. Slightly different than this part of the pinz.
+
 [How to update and include Bootstrap 3 in an Angular and yeoman app](http://stackoverflow.com/questions/18422020/how-to-update-and-include-twitter-bootstrap-3-on-webapp-or-yo-angular) - yeoman's angular generators use bootstrap 2 by default, so if you need 3 you need to do a few different things.
 
 ### Other Resources
@@ -19,8 +20,8 @@ If you want to 'restart' follow these steps. If you just want to use this, see b
 > bower install --save angular-strap
 
 then follow instructions from above SO post:
-npm install --save-dev grunt-bower-install
-grunt bower-install
+	npm install --save-dev grunt-bower-install
+	grunt bower-install
 
 Your index.html should have CSS that looks something like:
     <!-- build:css(.tmp) styles/main.css -->
@@ -66,7 +67,7 @@ Instructions for development and testing.
 #### Front End Only via Grunt
 
 To run the grunt-based development server (and only edit/test the html/javascript on the client), run
-    grunt server
+	grunt server
 
 This will open it in a browser, give you live reloading (change a js/html file and it will reload for you), etc. This won't allow you to test the api (yet).
 
@@ -78,16 +79,15 @@ Easy option
 
 This will kick off the node server that hosts the API and the client. nodemon will watch your filesystem for changes, so if you edit/save a file it should restart node.
 You can also just run 
-    npm start
+	```npm start```
 or
-    node server.js
+   ```node server.js```
 
-If you want to run the artifacts that are built via grunt (minified and uglified JS), run
-    grunt build
+If you want to run the artifacts that are built via grunt (minified and uglified JS), run ```grunt build```
 This will produce build files in /dist.
 Edit your server.js file to point to "/pinzclient/dist" as a static source so that node can serve up these files.
 Then run 
-    npm start
+	npm start
 or
-    nodemon server.js 
+	nodemon server.js 
 to run the server.
