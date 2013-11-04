@@ -5,6 +5,8 @@ http://stackoverflow.com/questions/18422020/how-to-update-and-include-twitter-bo
 
 === Steps to Recreate
 
+If you want to 'restart' follow these steps. If you just want to use this, see below.
+
 > yo
 (install the angular generator, then run it. Choose 'N' when it asks if you want Bootstrap)
 
@@ -44,3 +46,11 @@ The JS should look something like:
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <!-- endbuild -->
+
+=== Using the yeoman generated scaffold
+
+    npm install -g yo grunt-cli bower
+
+That will install yeoman, grunt and bower. 
+Then just run npm install as you normally would. 
+Then run grunt bower-install
