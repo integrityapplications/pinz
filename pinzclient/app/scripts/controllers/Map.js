@@ -1,0 +1,28 @@
+'use strict';
+
+angular.module('pinzclientApp')
+  .controller('MapCtrl', function ($scope) {
+    $scope.mapversion = 0.1;
+
+    function initLeaflet() {
+	    var cLat = -37.81, cLon = 144.93;
+	    var map = L.map('map',{  fullscreenControl: true }).setView([cLat, cLon], 11 ); 
+
+	    //L.control.mousePosition().addTo(map);
+	    var tileLayer = 
+	    L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
+	      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+	      maxZoom: 18,
+	      minZoom: 2
+	      //maxBounds: L.LatLngBounds( L.LatLng(-90,-180), L.LatLng(90,180) ) // sw, ne
+	    });
+	    map.addLayer( tileLayer );
+	    //var baseLayers = {
+	    //"CloudMade": tileLayer
+	    //};
+	
+    }
+
+    initLeaflet();
+    
+  });
