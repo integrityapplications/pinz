@@ -75,11 +75,10 @@ This will open it in a browser, give you live reloading (change a js/html file a
 #### Full Stack Testing
 
 Easy option
-    ```
+   
     npm install -g nodemon
-    
     nodemon server.js
-    ```
+    
 
 This will kick off the node server that hosts the API and the client. nodemon will watch your filesystem for changes, so if you edit/save a file it should restart node.
 You can also just run 
