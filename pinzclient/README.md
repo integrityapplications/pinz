@@ -68,16 +68,18 @@ Instructions for development and testing.
 #### Front End Only via Grunt
 
 To run the grunt-based development server (and only edit/test the html/javascript on the client), run
-	grunt server
+	```grunt server```
 
 This will open it in a browser, give you live reloading (change a js/html file and it will reload for you), etc. This won't allow you to test the api (yet).
 
 #### Full Stack Testing
 
 Easy option
+    ```
     npm install -g nodemon
     nodemon server.js
-
+    ```
+    
 This will kick off the node server that hosts the API and the client. nodemon will watch your filesystem for changes, so if you edit/save a file it should restart node.
 You can also just run 
 	```npm start```
