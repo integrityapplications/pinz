@@ -57,8 +57,9 @@ The JS should look something like:
     npm install -g yo grunt-cli bower
 
 That will install yeoman, grunt and bower. 
-Then just run npm install as you normally would. 
-Then run grunt bower-install
+Then just run ```npm install``` as you normally would.
+Then run ```bower install``` to install the bower dependencies. 
+Then run ```grunt bower-install``` to insert those into the html.
 
 ### Development and testing
 
