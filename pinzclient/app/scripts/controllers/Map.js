@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pinzclientApp')
-  .controller('MapCtrl', function ($scope) {
+  .controller('MapCtrl', function ($scope, $timeout, dataService, Metadataservice) {
     $scope.mapversion = 0.1;
 
     function initLeaflet() {
@@ -24,5 +24,51 @@ angular.module('pinzclientApp')
     }
 
     initLeaflet();
+
+    $scope.cancelDataFeed = null;
+
+    function updateData(query) {
+    	console.log("start data feed");
+    	console.log(dataService.getData(query));
+    	$scope.cancelDataFeed = $timeout(function() {
+	      updateData(query);
+	      $scope.statusMessage = "polling for data...";
+	    }, 2000);
+
+    }
+
+	$scope.startDataFeed = function() {
+		buildQuery(function(query) {
+			console.log('start the data feed with query ', query);
+			updateData(query);
+		});
+	}
+
+	$scope.stopDataFeed = function() {
+		console.log('stop the data feed');
+		$timeout.cancel($scope.cancelDataFeed);
+		$scope.statusMessage = "stopped";
+	}
+
+    // get data from service
+
+    function buildQuery(callback) {
+    	// This is a stub for the real function that handles the returned JSON from the data-api
+    	// At the mo, mock it up with something from metadata collection
+    	var queryToSend = [];
+
+    	Metadataservice.getMetadata().success(function (data) {
+    		// result of hitting /metadata
+    		// array of description JSON
+    		data.forEach(function(item, index) {
+    			var dataSourceOpts = {
+    				"src": item._id,
+    			}
+    			queryToSend.push(dataSourceOpts);
+    		});
+    		console.log("query is ", queryToSend);
+    		callback(queryToSend);
+    	});
+    }
     
   });
