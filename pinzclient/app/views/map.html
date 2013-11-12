@@ -3,8 +3,11 @@
   <div class="row">
     <div class="col-md-1">
       <h3>{{mapversion}}</h3>
+      <input type="text" length="30" ng-model="city" placeholder="Melbourne" />
     </div>
-    <div ng-leaflet></div> <!-- gets replaced by ngLeaflet directive -->
+    <div class="col-md-6">
+        <div ng-leaflet pinz="city"></div> <!-- gets replaced by ngLeaflet directive -->
+    </div> 
   </div>
 
   <div class="row">
