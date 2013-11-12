@@ -3,6 +3,7 @@
 angular.module('pinzclientApp')
   .controller('MapCtrl', function ($scope, $timeout, dataService, Metadataservice) {
     $scope.mapversion = 0.1;
+    //$scope.city = "Melbourne";
 
     function initLeaflet() {
 	    var cLat = -37.81, cLon = 144.93;
@@ -57,7 +58,7 @@ angular.module('pinzclientApp')
     	// At the mo, mock it up with something from metadata collection
     	var queryToSend = [];
 
-    	Metadataservice.getMetadata().success(function (data) {
+    	Metadataservice.getMetadata(function (data) {
     		// result of hitting /metadata
     		// array of description JSON
     		data.forEach(function(item, index) {
