@@ -63,12 +63,12 @@ describe('Service: Metadataservice', function () {
   });
 
   it('should return url', function () {
-    expect(Metadataservice.getUrl()).toBe("http://localhost:3000/metadata");
+    expect(Metadataservice.getUrl()).toBe("/metadata");
   });
 
   it('should set the url and return it', function() {
     Metadataservice.setUrl('/metadata');
-    expect(Metadataservice.getUrl()).toBe('/metadata');
+    expect(Metadataservice.getUrl()).toBe("/metadata");
   });
 
   it('should get data from the url', function() {
