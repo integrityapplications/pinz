@@ -15,7 +15,7 @@ angular.module('pinzclientApp')
 	    	data:query,
 	    	headers:headersCfg
 	    }).success(function (data) {
-	    	$log.log("data received ", data);
+	    	$log.log("data received, updating scope");
 
 	        // clear the error messages
 	        $rootScope.statusMessage = 'success';

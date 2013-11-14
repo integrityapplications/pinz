@@ -12,9 +12,9 @@ describe('Directive: ngLeaflet', function () {
     scope = $rootScope.$new();
   }));
 
-  it('should make hidden element visible', inject(function ($compile) {
+  it('should draw a map on the page', inject(function ($compile) {
     element = angular.element('<ng-leaflet></ng-leaflet>');
     element = $compile(element)(scope);
-    expect(element.text()).toBe('this is the ngLeaflet directive');
+    expect(element.id()).toBe('map');
   }));
 });
