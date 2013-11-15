@@ -6,12 +6,17 @@
 
   <div class="row">
     <div class="col-md-12">
-      <ul>
-        <li ng-model="dataSource" ng-repeat="src in dataSources">
-          id: {{src._id}} 
-        </li>
-      </ul>
-    </div>
+    	<ul class="nav nav-tabs">
+		  <li class="active"><a href="#">Geospatial</a></li>
+		  <li ng-model="dataSource" ng-repeat="src in dataSources">
+          	<a href="#{{src._id}}">{{src._id}}</a>
+          </li>
+		</ul>
+		<div class="tab-content">
+		    <div ng-repeat="src in dataSources" class="tab-pane" id="{{src._id}}">
+		      <p>{{src.desc}}</p>
+		    </div>
+		</div>
       
   </div>
 </div> <!-- end container -->
