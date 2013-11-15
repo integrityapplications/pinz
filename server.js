@@ -4,7 +4,7 @@ var express = require('express');
 var api = require('./api');
 var path = require('path');
 
-var mongoUrl = "mongodb://localhost:27017/observabledb";
+var mongoUrl = "mongodb://localhost:27017/pinz";
 if(argv.mongoUrl) mongoUrl = argv.mongoUrl;
 
 var serverPort = 3000;
