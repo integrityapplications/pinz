@@ -9,13 +9,13 @@
     	<ul class="nav nav-tabs">
 		  <li class="active"><a href="#">Geospatial</a></li>
 		  <li ng-model="dataSource" ng-repeat="src in dataSources">
-          	<a href="#{{src._id}}">{{src._id}}</a>
+          	<a href="#{{src._id}}" data-toggle="tab" target="_self">{{src._id}}</a>
           </li>
 		</ul>
 		<div class="tab-content">
-		    <div ng-repeat="src in dataSources" class="tab-pane" id="{{src._id}}">
-		      <p>{{src.desc}}</p>
-		    </div>
+			<div class="tab-pane fade" ng-repeat="src in dataSources" id="{{src._id}}">
+				{{src.desc}}
+			</div>
 		</div>
       
   </div>
