@@ -15,6 +15,10 @@ angular.module('pinzclientApp', [
         templateUrl: 'views/map.html',
         controller: 'MapCtrl'
       })
+      .when('/query', {
+        templateUrl: 'views/query.html',
+        controller: 'QueryCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
