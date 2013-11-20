@@ -28,9 +28,14 @@
 
           <div class="row panel-body" ng-repeat="(attrIdx, attr) in source.attrs" id="{{source._id + "_" + attr.name}}">
 
-            {{attr.name + "::\t\t" + attr.desc}}</br>
+            <div class="col-md-2">
+              {{attr.name}}
+            </div>
+            <div class="col-md-6">
+              {{attr.desc}}
+            </div>
 
-            <div ng-model=attr ng-if="(attr.type=='string' && attr.values)">
+            <div class="col-md-4 pull-right" ng-model=attr ng-if="(attr.type=='string' && attr.values)">
               <select class="select" ng-model=dataQuery[srcIdx].attrs[attrIdx].v ng-options="value for value in source.attrs[attrIdx].values"></select>
               <span>{{dataQuery[srcIdx].attrs[attrIdx].v}}</span>
 
@@ -39,14 +44,13 @@
               <!-- I got wierd behaviour when I used unnamed index vars in the ng-repeat with $parent.$index and $index both incremented when a ng-if success case was executed.  Might be deliberate, but it surprised me... -->
             </div>
 
-            <div ng-model=attr ng-if="(attr.type=='string') && !attr.values">
+            <div class="col-md-4 pull-right" ng-model=attr ng-if="(attr.type=='string') && !attr.values">
               <input type="text" ng-model=dataQuery[srcIdx].attrs[attrIdx].v></br>
             </div>
 
-            <div ng-model=attr ng-if="attr.type=='number'">
+            <div class="col-md-4 pull-right" ng-model=attr ng-if="attr.type=='number'">
               Min<input type="range" ng-model=dataQuery[srcIdx].attrs[attrIdx].low></br>
               Max<input type="range" ng-model=dataQuery[srcIdx].attrs[attrIdx].high></br>
-              
             </div>
           </div>
 
