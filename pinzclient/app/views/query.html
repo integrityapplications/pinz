@@ -4,19 +4,65 @@
       <h2>Choose your data</h2>
   </div>
 
+
   <div class="row">
     <div class="col-md-12">
     	<ul class="nav nav-tabs">
-		  <li class="active"><a href="#">Geospatial</a></li>
-		  <li ng-model="dataSource" ng-repeat="src in dataSources">
-          	<a href="#{{src._id}}" data-toggle="tab" target="_self">{{src._id}}</a>
-          </li>
-		</ul>
-		<div class="tab-content">
-			<div class="tab-pane fade" ng-repeat="src in dataSources" id="{{src._id}}">
-				{{src.desc}}
-			</div>
+		    <li class="active"><a href="#">Geospatial</a></li>
+		    <li ng-model="dataSource" ng-repeat="src in dataSources">
+          	<a href="#{{src._id}}" data-toggle="tab" target="_self">{{"Source " + src._id}}</a>
+        </li>
+		  </ul>
+
+		  <div class="tab-content">
+
+			 <div class="tab-pane fade" ng-repeat="src in dataSources" id="{{src._id}}">
+
+          <div class="row">
+            <div class="panel-heading">
+              <h3 class="panel-title">{{src._id + " has " + src.attrs.length + " attributes::"}}</h3>
+            </div>
+          </div>
+
+          <div class="row panel-body">
+            
+            <p class="col-md-2">{{src.attrs[0].name}}</p>
+            <p class="col-md-4">{{src.attrs[0].desc}}</p>
+
+            <div class="col-md-4 pull-right">
+              <p>Min
+                <input class="pull-right" type="text" ng-model=dataQuery[0].attrs[0].v>
+                {{dataQuery[0].attrs[0].v}}
+              </p>
+            </div>
+          </div>
+
+
+        <div class="row panel-body">
+            <p class="col-md-2">{{src.attrs[2].name}}</p>
+            <p class="col-md-4">{{src.attrs[2].desc}}</p>
+          
+            <div class="col-md-4 pull-right">
+              <p>Min
+                <input class="pull-right" type="range" ng-model=dataQuery[0].attrs[1].low>
+                {{dataQuery[0].attrs[1].low}}
+              </p>
+              </p>
+            </div>
+
+            <div class="col-md-4 pull-right">
+              <p>Max
+                <input class="pull-right" type="range" ng-model=dataQuery[0].attrs[1].high>
+                {{dataQuery[0].attrs[1].high}}
+              </p>
+            </div>
+          </div>
+
+      </div>
+        
 		</div>
-      
+  
   </div>
+  </div>
+
 </div> <!-- end container -->
