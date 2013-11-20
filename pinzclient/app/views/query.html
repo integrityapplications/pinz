@@ -7,63 +7,51 @@
 
   <div class="row">
     <div class="col-md-12">
-    	<ul class="nav nav-tabs">
-		    <li class="active"><a href="#">Geospatial</a></li>
-		    <li ng-model="dataSource" ng-repeat="src in dataSources">
-          	<a href="#{{src._id}}" data-toggle="tab" target="_self">{{"Source " + src._id}}</a>
-        </li>
-		  </ul>
 
-		  <div class="tab-content">
+      <ul class="nav nav-tabs">
+          <li class="active"><a href="#">Geospatial</a></li>
+          <li ng-model="dataSource" ng-repeat="src in dataSources">
+            <a href="#{{src._id}}" data-toggle="tab" target="_self">{{"Source " + src._id}}</a>
+          </li>
+      </ul>
+
+      <div class="tab-content">
 
         <!-- Need some way of doing the repeat operation in and indexed fashion so we can bind to the correct part of the dataQuery object in the scope -->
-			 <div class="tab-pane fade" ng-repeat="src in dataSources" id="{{src._id}}">
+        <div class="tab-pane fade" ng-repeat="(srcIdx , source) in dataSources" id="{{source._id}}">
 
           <div class="row">
             <div class="panel-heading">
-              <h3 class="panel-title">{{src._id + " has " + src.attrs.length + " attributes::"}}</h3>
+              <h3 class="panel-title">{{source._id + " has " + source.attrs.length + " attributes::"}}</h3>
             </div>
           </div>
 
-          <div class="row panel-body" ng-repeat="attr in src.attrs" id="{{src._id + attr.name}}">
-            {{attr.name + "::\t" + attr.desc}}
+          <div class="row panel-body" ng-repeat="(attrIdx, attr) in source.attrs" id="{{source._id + "_" + attr.name}}">
 
-            <div ng-model=attr.type ng-if="attr.type=='string'">
-              {{console.log(attr.type == 'string')}}
-              <input type="text">
+            {{attr.name + "::\t\t" + attr.desc}}</br>
+
+            <div ng-model=attr ng-if="attr.type=='string'">
+              <input type="text" ng-model=dataQuery[srcIdx].attrs[attrIdx].v></br>
+              <!-- {{"After input element added:: parentIdx = " + srcIdx + " , childIdx = " + attrIdx}}</br> -->
+              <!-- I got wierd behaviour when I used unnamed index vars in the ng-repeat with $parent.$index and $index both incremented when a ng-if success case was executed.  Might be deliberate, but it surprised me... -->
             </div>
-            <div ng-model=attr.type ng-if="attr.type=='number'">
-              {{console.log(attr.type == 'number')}}</br>
-              Min<input type="range"></br>
-              Max<input type="range">
+
+            <div ng-model=attr ng-if="attr.type=='number'">
+              Min<input type="range" ng-model=dataQuery[srcIdx].attrs[attrIdx].low></br>
+              Max<input type="range" ng-model=dataQuery[srcIdx].attrs[attrIdx].high></br>
+              <!-- {{"After input element added:: parentIdx = " + srcIdx + " , childIdx = " + attrIdx}}</br> -->
             </div>
           </div>
-
-
-<!--         <div class="row panel-body">
-            <p class="col-md-2">{{src.attrs[2].name}}</p>
-            <p class="col-md-4">{{src.attrs[2].desc}}</p>
-          
-            <div class="col-md-4 pull-right">
-              <p>Min
-                <input class="pull-right" type="range" ng-model=dataQuery[0].attrs[1].low>
-                {{dataQuery[0].attrs[1].low}}
-              </p>
-            </div>
-
-            <div class="col-md-4 pull-right">
-              <p>Max
-                <input class="pull-right" type="range" ng-model=dataQuery[0].attrs[1].high>
-                {{dataQuery[0].attrs[1].high}}
-              </p>
-            </div>
-        </div> -->
 
       </div>
         
-		</div>
+    </div>
   
   </div>
   </div>
+
+  <span>
+    {{dataQuery}}
+  </span>
 
 </div> <!-- end container -->
