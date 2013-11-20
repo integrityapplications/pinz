@@ -36,7 +36,7 @@
             </div>
 
             <div class="col-md-4 pull-right" ng-model=attr ng-if="(attr.type=='string' && attr.values)">
-              <select class="select" ng-model=dataQuery[srcIdx].attrs[attrIdx].v ng-options="value for value in source.attrs[attrIdx].values"></select>
+              <select class="select" ng-model=dataQuery[srcIdx].attrs[attrIdx].v ng-options="value for value in source.attrs[attrIdx].values" width="150" style="width: 150px"></select>
               <span>{{dataQuery[srcIdx].attrs[attrIdx].v}}</span>
 
               <!-- {{"After input element added:: parentIdx = " + srcIdx + " , childIdx = " + attrIdx}}</br> -->
