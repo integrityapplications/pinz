@@ -7,17 +7,19 @@ angular.module('pinzclientApp')
 
     Metadataservice.getMetadata(function(dataSources) {
     	$scope.dataSources = dataSources;
-    	$scope.dataQuery = createDefaultQuery($scope.dataSources);
+    	$scope.dataQuery = createDefaultQuery($scope);
 
     }); 
     
   });
 
-function createDefaultQuery(sources) {
+function createDefaultQuery(scope) {
 
 	var defaultQuery = [];
-
+	if(scope.dataQuery == null) {
     	// now set up initial query object from metadata
+    	var sources = scope.dataSources;
+
 	    console.log(sources.length + " data sources");
 	    var idx;
 	    for(idx=0 ; idx < sources.length; ++idx) {
@@ -54,5 +56,7 @@ function createDefaultQuery(sources) {
 	    console.log("Query over " + defaultQuery.length + " sources");
 	    console.log(JSON.stringify(defaultQuery));
 	    return defaultQuery;
-
+	} else {
+		return $scope.dataQuery;
+	}
 }
