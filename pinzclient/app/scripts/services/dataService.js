@@ -1,11 +1,15 @@
 'use strict';
 
+console.log("I'm alive!");
+
 angular.module('pinzclientApp')
 .service('dataService', function dataService($http, $log, $rootScope) {
     // AngularJS will instantiate a singleton by calling "new" on this function
+    var query = {};
     var ds = {};
+    var dataQuery = {};
     ds.getData = function(query) {
-		$log.log('Retrieving data with this ', query);
+		$log.log('Retrieving data with this ', JSON.stringify(query));
 
 		var headersCfg = {"content-type":"application/json"};
 	    // Now post'em
@@ -32,7 +36,16 @@ angular.module('pinzclientApp')
 	    });
 
 	}
+
+	ds.setQuery = function(query) {
+		console.log("data service query is ", JSON.stringify(query));
+		dataQuery = query;
+	}
+	ds.getDataQuery = function() {
+		return dataQuery;
+	} 
     return ds;
+    
 });
 
 	

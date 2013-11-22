@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pinzclientApp')
-  .controller('MainCtrl', ['$scope', 'Metadataservice', function($scope, Metadataservice) {
+  .controller('MainCtrl', ['$scope', 'Metadataservice', 'dataService', function($scope, Metadataservice, dataService) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -14,5 +14,6 @@ angular.module('pinzclientApp')
 	    $scope.numDataFeeds = data.length;
 	    $scope.pinzMetadata = data;
     });
+   console.log('dataService dataQuery ', dataService.dataQuery);
     
   }]);

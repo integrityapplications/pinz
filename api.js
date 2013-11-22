@@ -5,6 +5,8 @@ function processDataRequest(req, res) {
 
 	var inputs = req.body;
 
+	console.log("request body ", req.body);
+
 	if (!(inputs instanceof Array)) {
 		res.send(400, "Bad Request, POST body expected to contain JSON array.");
 		return;

@@ -37,7 +37,9 @@
     "karma-phantomjs-launcher": "~0.1.0",
     "karma": "~0.10.4",
     "karma-ng-html2js-preprocessor": "~0.1.0",
-    "grunt-bower-install": "~0.6.1"
+    "grunt-bower-install": "~0.6.1",
+    "bower": "~1.2.7",
+    "grunt-bower-requirejs": "~0.7.1"
   },
   "engines": {
     "node": ">=0.8.0"

@@ -1,1 +1,1 @@
-curl -i -H 'content-type:application/json' http://localhost:3000/metadata
+curl -i -H 'content-type:application/json' http://localhost:9000/metadata
