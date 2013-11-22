@@ -33,13 +33,12 @@ angular.module('pinzclientApp')
     return {
       restrict: 'A',
       scope: {
-              pinz: '=',
-              metadata: '='
+              pinz: '='
       },	
       template: '<div id="map"></div>',
       link: function postLink(scope, element, attrs) {
         //element.text('this is the ngLeaflet directive');
-        console.log('init leaflet with $rootScope metadata ', scope.metadata);
+        //console.log('init leaflet with $rootScope metadata ', scope.metadata);
         var overlays = null;
         var markers = new Array();
 

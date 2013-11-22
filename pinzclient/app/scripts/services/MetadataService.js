@@ -21,7 +21,6 @@ angular.module('pinzclientApp')
                 console.log("success");
                 successCallback(data);
             });
-
     	}
     }
   });

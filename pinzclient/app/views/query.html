@@ -35,8 +35,8 @@
               {{attr.desc}}
             </div>
 
-            <div class="col-md-4 pull-right" ng-model=attr ng-if="(attr.type=='string' && attr.values)">
-              <select class="select" ng-model=dataQuery[srcIdx].attrs[attrIdx].v ng-options="value for value in source.attrs[attrIdx].values" width="150" style="width: 150px"></select>
+            <div class="col-md-4 pull-right" ng-model="attr" ng-if="(attr.type=='string' && attr.values)">
+              <select class="select" ng-model="dataQuery[srcIdx].attrs[attrIdx].v" ng-options="value for value in source.attrs[attrIdx].values" ng-change="change(attr)" width="150" style="width: 150px"></select>
               <span>{{dataQuery[srcIdx].attrs[attrIdx].v}}</span>
 
               <!-- {{"After input element added:: parentIdx = " + srcIdx + " , childIdx = " + attrIdx}}</br> -->
@@ -44,13 +44,13 @@
               <!-- I got wierd behaviour when I used unnamed index vars in the ng-repeat with $parent.$index and $index both incremented when a ng-if success case was executed.  Might be deliberate, but it surprised me... -->
             </div>
 
-            <div class="col-md-4 pull-right" ng-model=attr ng-if="(attr.type=='string') && !attr.values">
-              <input type="text" ng-model=dataQuery[srcIdx].attrs[attrIdx].v></br>
+            <div class="col-md-4 pull-right" ng-model="attr" ng-if="(attr.type=='string') && !attr.values">
+              <input type="text" ng-model="dataQuery[srcIdx].attrs[attrIdx].v"></br>
             </div>
 
-            <div class="col-md-4 pull-right" ng-model=attr ng-if="attr.type=='number'">
-              Min<input type="range" ng-model=dataQuery[srcIdx].attrs[attrIdx].low></br>
-              Max<input type="range" ng-model=dataQuery[srcIdx].attrs[attrIdx].high></br>
+            <div class="col-md-4 pull-right" ng-model="attr" ng-if="attr.type=='number'">
+              Min<input type="range" ng-model="dataQuery[srcIdx].attrs[attrIdx].low"></br>
+              Max<input type="range" ng-model="dataQuery[srcIdx].attrs[attrIdx].high"></br>
             </div>
           </div>
 
@@ -61,11 +61,11 @@
   </div>
 
   <div class=well col-md-6>
-    {{dataQuery}}
+    <pre>{{dataQuery | json}}</pre>
   </div>
   <div class="row"></div>
   <div class="row">
-    <button class="btn btn-primary btn-lg" style="margin-top: 1em;"ng-click=>Send me to the server!</button>
+    <button class="btn btn-primary btn-lg" style="margin-top: 1em;"ng-click=><a href="/#/map">Send me to the map!</a></button>
   </div>
 
 </div> <!-- end container -->

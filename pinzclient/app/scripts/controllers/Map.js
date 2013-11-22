@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pinzclientApp')
-  .controller('MapCtrl', function ($scope, $timeout, dataService, Metadataservice) {
+  .controller('MapCtrl', function ($log, $scope, $timeout, dataService, Metadataservice) {
     $scope.mapversion = 0.1;
     $scope.startingCity = "Melbourne";
 
@@ -41,10 +41,13 @@ angular.module('pinzclientApp')
     }
 
 	$scope.startDataFeed = function() {
-		buildQuery(function(query) {
-			console.log('start the data feed with query ', query);
-			updateData(query);
-		});
+		// buildQuery(function(query) {
+			console.log('start the data feed with query ', dataService.dataQuery);
+            console.log('is it in parent? ', $scope.$parent.rootDataQuery);
+		// 	updateData(query);
+		// });
+        $scope.dataQuery = dataService.dataQuery; // Need serious thought!
+        updateData($scope.dataQuery);
 	}
 
 	$scope.stopDataFeed = function() {
@@ -55,23 +58,23 @@ angular.module('pinzclientApp')
 
     // get data from service
 
-    function buildQuery(callback) {
-    	// This is a stub for the real function that handles the returned JSON from the data-api
-    	// At the mo, mock it up with something from metadata collection
-    	var queryToSend = [];
+    // function buildQuery(callback) {
+    // 	// This is a stub for the real function that handles the returned JSON from the data-api
+    // 	// At the mo, mock it up with something from metadata collection
+    // 	var queryToSend = [];
 
-    	Metadataservice.getMetadata(function (data) {
-    		// result of hitting /metadata
-    		// array of description JSON
-    		data.forEach(function(item, index) {
-    			var dataSourceOpts = {
-    				"src": item._id,
-    			}
-    			queryToSend.push(dataSourceOpts);
-    		});
-    		console.log("query is ", queryToSend);
-    		callback(queryToSend);
-    	});
-    }
+    // 	Metadataservice.getMetadata(function (data) {
+    // 		// result of hitting /metadata
+    // 		// array of description JSON
+    // 		data.forEach(function(item, index) {
+    // 			var dataSourceOpts = {
+    // 				"src": item._id,
+    // 			}
+    // 			queryToSend.push(dataSourceOpts);
+    // 		});
+    // 		console.log("query is ", queryToSend);
+    // 		callback(queryToSend);
+    // 	});
+    // }
     
   });
