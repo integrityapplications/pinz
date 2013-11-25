@@ -1,10 +1,12 @@
 'use strict';
 
 var map;
+var leafletError;
 
 angular.module('pinzclientApp')
   .directive('ngLeaflet', function () {
   	//var map; 
+    console.log('ngleaflet directive is active');
 
   	function initLeaflet() {
 	    var cLat = -37.81, cLon = 144.93;
@@ -29,16 +31,41 @@ angular.module('pinzclientApp')
     }
 
     var lMap = initLeaflet();
+    console.log('map size ', lMap.getSize())
 
     return {
       restrict: 'A',
       scope: {
               pinz: '='
       },	
-      template: '<div id="map"></div>',
+      template: '<div id="leafletData"></div>',
+      compile: function compile(tElement, tAttrs, transclude) {
+        return {
+          //pre: function preLink(scope, iElement, iAttrs, controller) {  },
+          post: function postLink(scope, iElement, iAttrs, controller) { 
+            console.log('post link compile', lMap);
+            if (lMap === null || typeof lMap === "undefined") {
+              console.log('map is undefined, re init');
+              lMap = initLeaflet();
+            } else {
+              /* dirty dirty hacking */
+              console.log('map is hidden but alive: ', map.getSize());
+              try {
+                map = initLeaflet();
+              } catch (e) {
+                // gulp
+                // TODO - FIX THIS
+                console.error('Swalled an error: ', e.message);
+              }
+              
+            }
+          }
+        }
+      },
       link: function postLink(scope, element, attrs) {
         //element.text('this is the ngLeaflet directive');
-        //console.log('init leaflet with $rootScope metadata ', scope.metadata);
+        console.log('postLink() of leaflet dir called');
+
         var overlays = null;
         var markers = new Array();
 

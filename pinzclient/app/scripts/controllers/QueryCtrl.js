@@ -21,6 +21,8 @@ angular.module('pinzclientApp')
 		var defaultQuery = [];
     	var sources = $scope.dataSources;
 	    var idx;
+	    var dayInMs = 24 * 60 * 60 * 1000;
+	    var daysBackInMs = 90 * dayInMs;
 
 	    for(idx=0 ; idx < sources.length; ++idx) {
 	    	var source =  sources[idx];
@@ -30,7 +32,7 @@ angular.module('pinzclientApp')
 	        sourceQuery.geo_within = [];
 
 	        sourceQuery.time_within = {
-	            start : new Date(),
+	            start : new Date(new Date().getTime() - daysBackInMs),
 	            end : new Date()
 	        };
 	        
