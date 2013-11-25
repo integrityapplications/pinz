@@ -1,0 +1,1 @@
+[{"src":"A","geo_within":[],"time_within":{"start":"2013-11-25T18:11:58.634Z","end":"2013-11-25T18:11:58.634Z"},"attrs":[{"k":"color","v":"green"},{"k":"animal","v":"croc"},{"k":"weight","low":0,"high":100}]},{"src":"B","geo_within":[],"time_within":{"start":"2013-11-25T18:11:58.634Z","end":"2013-11-25T18:11:58.634Z"},"attrs":[{"k":"level","low":"38","high":100}]}]
