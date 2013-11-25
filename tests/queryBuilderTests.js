@@ -132,6 +132,21 @@ describe( 'queryBuilder.buildGeoWithinQuery()' , function() {
 			Error
 		);
 	});
+
+	it('query area larger than hemisphere' , function() {
+		assert.throws(
+			function() {
+				queryBuilder.buildGeoWithinQuery([
+					40.0, -100.0,
+					40.0, 100.0,
+					10.0, 100.0,
+					10.0, -100.0,
+					40.0, -100.0
+				]);
+			},
+			Error
+		);
+	});
 });
 
 
@@ -222,6 +237,17 @@ describe('buildQuery.buildMongoQuery()' , function() {
 		var query = queryBuilder.buildMongoQuery(input);
 		assert.equal(
 			'{"geos.loc":{"$geoWithin":{"$geometry":{"type":"Polygon","coordinates":[[[-55,40],[-30,40],[-30,10],[-55,10],[-55,40]]]}}}}' , 
+			JSON.stringify(query, null, "").split("\n").join(""));
+	});
+
+	it('geo_within, ignore empty array' , function() {
+		var input = {
+			"src" : "A",
+			"geo_within" : []
+		};
+		var query = queryBuilder.buildMongoQuery(input);
+		assert.equal(
+			'{}' , 
 			JSON.stringify(query, null, "").split("\n").join(""));
 	});
 
