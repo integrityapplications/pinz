@@ -12,7 +12,8 @@
     "bootswatch": "~3.0.0",
     "angular-strap": "~0.7.7",
     "leaflet-dist": "~0.6.4",
-    "angular-route": "~1.2.1"
+    "angular-route": "~1.2.1",
+    "d3": "3.3.10"
   },
   "devDependencies": {
     "angular-mocks": "~1.2",
