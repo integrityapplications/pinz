@@ -6,7 +6,7 @@ angular.module('pinzclientApp')
     Metadataservice.getMetadata(function(dataSources) {
     	$scope.dataSources = dataSources;
     	if($scope.dataQuery === null || typeof $scope.dataQuery === "undefined") {
-    		$scope.dataQuery = createDefaultQuery();
+    		createDefaultQuery();
     	}
 
     });
