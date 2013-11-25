@@ -35,7 +35,7 @@ var sources = [
 ]
 var samplesPerUpdate = 1000;
 var updateSec = 10;
-var mongoUrl = "mongodb://127.0.0.1:27017/pinz";
+var mongoUrl = "mongodb://localhost:27017/pinz";
 
 if (argv.updateSec) updateSec = argv.updateSec;
 if (argv.samplesPerUpdate) samplesPerUpdate = argv.samplesPerUpdate;

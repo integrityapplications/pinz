@@ -4,7 +4,7 @@ var request = require('request');
 var xml2js = require('xml2js');
 var usgs =  require('./usgsObservable');
 
-var mongoUrl = "mongodb://localhost:27017/observabledb";
+var mongoUrl = "mongodb://localhost:27017/pinz";
 
 mongo.connect(mongoUrl , function(err, db) {
 	if(err) {
@@ -16,21 +16,23 @@ mongo.connect(mongoUrl , function(err, db) {
 	console.log("Connected to mongoDB @ " + mongoUrl);
 	GLOBAL.dbHandle = db;
 
-	pollAtomFeed(db);
+	insertMetadataDoc();
+
+	pollAtomFeed('http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.atom');
 	setInterval(function() {
-		pollAtomFeed();
+		pollAtomFeed('http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom');
 	}, 300000);
 });
 
 
-function pollAtomFeed() {
+function pollAtomFeed(url) {
 	var atomXml = null;
 	var earthquakes = [];
 	console.log("polling server for data...");
 	async.series([
 		//Make HTTP request
 		function(callback) {
-			request('http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom', function (error, response, body) {
+			request(url, function (error, response, body) {
 				if (response.statusCode !== 200) {
 					callback("Unable to HTTP GET earthquakes, status: " +  response.statusCode + ", error: " + error);
 				} else {
@@ -59,23 +61,42 @@ function pollAtomFeed() {
 		//write earthquake observables to database
 		function(callback) {
 			async.forEach(earthquakes, function(earthquake, insertCallback) {
-				console.log(JSON.stringify(earthquake, null, "\t"));
-				
-				GLOBAL.dbHandle.collection("earthquake").insert(earthquake , function(err, objects) {
+				GLOBAL.dbHandle.collection("earthquake").update({id:earthquake.id}, earthquake, {upsert: true}, function(err, objects) {
 					if(err) {
-						console.log("WARN :: Error persisting earthquake observable::\n" + JSON.stringify(earthquake , null, 4));
+						insertCallback("Unable to insert earthquake " + earthquake.id);
 					} else {
-						console.log("INFO :: Successfully persisted earthquake observable");
+						insertCallback();
 					}
 				});
-
-				insertCallback();
 			}, function(err) {
-				callback();
+				callback(err);
 			});
 		}
 	], function(err) {
 		if (err) console.log(err);
 		console.log("Next polling inverval in 5 minutes. Sit tight...");
     });
+}
+
+function insertMetadataDoc() {
+	var metadataDoc = {
+		_id : "earthquake" ,
+		desc : "Human readable data definition for source A - what it is, where it comes from, kind of info it contains.",
+		attrs : [
+			{
+				name : "title" ,
+				type : "string"
+			} ,
+			{
+				name : "magnitude" ,
+				type : "number"
+			}
+		]
+	}
+	console.log("Adding earthquake metadata document");
+	GLOBAL.dbHandle.collection("metadata").update({_id:"earthquake"}, metadataDoc, {upsert: true}, function(err, objects) {
+		if(err) {
+			console.log("Unable to insert metadata document");
+		}
+	});
 }
