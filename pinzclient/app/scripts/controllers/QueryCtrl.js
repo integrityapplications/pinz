@@ -91,9 +91,14 @@ angular.module('pinzclientApp')
 				
 				var attribute = srcQuery.attrs[attrIdx];
 				console.log("\t\tAttribute " + attrIdx + " = " + JSON.stringify(attribute));
-				if((attribute != null) && ("v" in attribute) && (attribute.v != null)) {
-					console.log("\t\tAdding attribute " + attrIdx + " = " + JSON.stringify(attribute));
-					tempAttrs.push(attribute);
+				if(attribute != null) {
+					if(("v" in attribute) && (attribute.v != null)) {
+						console.log("\t\tAdding attribute " + attrIdx + " = " + JSON.stringify(attribute));
+						tempAttrs.push(attribute);
+					} else if(("low" in attribute) && (attribute.low != null) && ("high" in attribute) && (attribute.high != null)) {
+						console.log("\t\tAdding attribute " + attrIdx + " = " + JSON.stringify(attribute));
+						tempAttrs.push(attribute);
+					}
 				}
 			}
 			// only add attrs if we actually have some values
