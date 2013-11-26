@@ -55,11 +55,19 @@ function buildGeoWithinQuery(coords) {
 		&& coords[1] !== coords[coords.length-1])  throw new Error("Coordinates array does not define closed polygon, first and last point are not the same");
 
 	var outerRing = [];
+	var minLon = 181;
+	var maxLon = -181;
 	for (var i=0; i<coords.length; i+=2) {
 		var lat = coords[i];
 		var lon = coords[i+1];
 		outerRing.push([lon, lat]);
+		if (lon < minLon) minLon = lon;
+		if (lon > maxLon) maxLon = lon;
 	}
+
+	//as of mongo 2.4.8, geoWithin does not support queries larger than hemi
+	//simple solution is to throw error, better solution is to split into two queries...(maybe next release!)
+	if ((maxLon - minLon) > 180) throw new Error("Geowithin query spans hemisphere, results are indeterminate.");
 
 	return {
 			"$geoWithin" : {
@@ -110,7 +118,7 @@ function buildMongoQuery(query) {
 
 	if('time_inserted' in query) mongoQuery._id = buildTimeInsertedQuery(query.time_inserted);
 	if('time_within' in query) mongoQuery.t = buildTimeQuery(query.time_within);
-	if('geo_within' in query) mongoQuery["geos.loc"] = buildGeoWithinQuery(query.geo_within);
+	if('geo_within' in query && query.geo_within.length > 0) mongoQuery["geos.loc"] = buildGeoWithinQuery(query.geo_within);
 	if('attrs' in query) {
 		var all = [];
 		query.attrs.forEach(function(attr, index){

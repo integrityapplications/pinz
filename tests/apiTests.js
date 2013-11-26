@@ -1,6 +1,29 @@
 var assert = require('assert');
 var api = require('./../api');
 
+var nativeDoc = {
+	id : 'id1',
+	src : 'source1',
+	t : new Date(2013,5,13),
+	attrs : [
+		{
+			k : 'domainAttr1' ,
+			v : 'someValue1'
+		},
+		{
+			k : 'domainAttr2',
+			v : 1 ,
+			u : 'MPH'
+		}
+	],
+	geos : []
+};
+
+function deepCopy(original) {
+	var deepCopy = JSON.parse(JSON.stringify(original));
+	return deepCopy;
+}
+
 describe( 'api.processDataRequest', function() {
 
 	var res = {
@@ -54,10 +77,24 @@ describe( 'api.processDataRequest', function() {
 		assert.equal("500", res.status);
 	});
 
-	it('Valid POST', function() {
+	it('invalid post, unable to build query', function() {
+		var invalidRequest = {
+			body : [
+				{
+					"src": "source1",
+					"time_within": {"start": "notValidFormat", "end" : "2013-09-13T16:00:30"}
+				}
+			]
+		};
+		api.processDataRequest(invalidRequest, res);
+		assert.equal(res.status, "400");
+		assert.equal(res.body, "Bad Request, Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: notValidFormat");
+	});
+
+	it('Valid POST, Accept pinz-json', function() {
 		var curosrMock = {
 			limit: function(num) { return this;},
-			toArray: function(callback) { callback(null, ["obsMock1", "obsMock2", "obsMock3"]);}
+			toArray: function(callback) { callback(null, [nativeDoc, nativeDoc, nativeDoc]);}
 		};
 		var collectionMock = {
 			find: function(query) { return curosrMock;}
@@ -66,9 +103,32 @@ describe( 'api.processDataRequest', function() {
 			collection: function(name) { return collectionMock;}
 		};
 
+		validRequest.headers.Accept = 'pinz-json';
 		api.processDataRequest(validRequest, res);
 		assert.equal("200", res.status);
 		assert.equal(6, res.body.length);
+		assert.equal("domainAttr1", res.body[0].attrs[0].k);
+		assert.equal("someValue1", res.body[0].attrs[0].v);
+	});
+
+	it('Valid POST, Accept application-json', function() {
+		var curosrMock = {
+			limit: function(num) { return this;},
+			toArray: function(callback) { callback(null, [deepCopy(nativeDoc), deepCopy(nativeDoc)]);}
+		};
+		var collectionMock = {
+			find: function(query) { return curosrMock;}
+		};
+		GLOBAL.dbHandle = { 
+			collection: function(name) { return collectionMock;}
+		};
+
+		validRequest.headers.Accept = 'application/json';
+		api.processDataRequest(validRequest, res);
+		assert.equal("200", res.status);
+		assert.equal(4, res.body.length);
+		//ensure native documents converted to client friendly documents
+		assert.equal("someValue1", res.body[0].attrs.domainAttr1.v);
 	});
 });
 
@@ -105,156 +165,9 @@ describe( 'api.processMetadataRequest', function() {
 
 
 describe( 'api.convertPinzObsToRegularJson' , function() {
-
-	it('Null pinz observable gives null result' , function(){
-		assert.equal( null,  api.convertPinzObsToRegularJson(null));
-	});
-
-	it('Invalid obs gives empty object result' , function(){
-		result = api.convertPinzObsToRegularJson({ 'fred' : 'bloggs'});
-		assert.deepEqual({} , result);
-	});
-
 	it('Legitimate pinz-obs gives valid observable JSON' , function(){
-		testDate = new Date(2013,5,13);
-		testPinzObs = {
-	  		id : 'obsId1',
-	  		src : 'obsSource1',
-	  		t : testDate,
-	  		attrs : [
-		    	{
-		   		   k : 'domainAttr_1' ,
-		   		   v : 'someValue1'
-		    	},
-		    	{
-		      		k : 'domainAttr_2',
-		      		v : 1 ,
-		      		u : 'MPH'
-		    	}
-		  	],
-			geos : [
-				{
-	  				id : 'geolocationID_obs1',
-	  				loc : {
-	    					type : 'Point',
-	    					coordinates : [-60, 30]
-	  				}
-				}
-			]
-	};
-		testPrint = '{"id":"obsId1","src":"obsSource1","t":"2013-06-13T06:00:00.000Z","domainAttr_1":{"v":"someValue1"},"domainAttr_2":{"v":1,"u":"MPH"},"geos":[{"id":"geolocationID_obs1","loc":{"type":"Point","coordinates":[-60,30]}}]}';
-		assert.equal(testPrint , JSON.stringify(api.convertPinzObsToRegularJson(testPinzObs)));
-
+		var transformedDoc = api.convertPinzObsToRegularJson(deepCopy(nativeDoc));
+		assert.equal(1, transformedDoc.attrs.domainAttr2.v);
+		assert.equal('MPH', transformedDoc.attrs.domainAttr2.u);
 	});
 });
-
-
-
-
-
-describe( 'api.convertPinzObsArrayToRegularJson' , function() {
-
-
-	it('Null input returns null' , function() {
-		result = api.convertPinzObsArrayToRegularJson(null);
-		assert.equal(null , result);
-	});
-
-	it('Empty obs array returns null' , function() {
-		result = api.convertPinzObsArrayToRegularJson([]);
-		assert.equal(null , result);
-	});
-
-	it('Valid pinzJson gives correctly formed obs array' , function() {
-		// Seems months are zero-indexed in this constructor!
-		var testDate = new Date(2013,5,13);
-		var testData = [
-			{
-		  		id : 'obsId1',
-		  		src : 'obsSource1',
-		  		t : testDate,
-		  		attrs : [
-				    	{
-				   		   k : 'domainAttr_1' ,
-				   		   v : 'someValue1'
-				    	},
-				    	{
-				      		k : 'domainAttr_2',
-				      		v : 1 ,
-				      		u : 'MPH'
-				    	}
-				  	],
-		  			geos : [
-		    				{
-		      					id : 'geolocationID_obs1',
-		      					loc : {
-		        						type : 'Point',
-		        						coordinates : [-60, 30]
-		      						}
-		    				}
-		  			]
-			} ,
-
-			{
-		  		id : 'obsId2',
-		  		src : 'obsSource1',
-		  		t : testDate,
-		  		attrs : [
-				    	{
-				   		   k : 'domainAttr_1' ,
-				   		   v : 'someOtherValue1'
-				    	},
-				    	{
-				      		k : 'domainAttr_2',
-				      		v : 3 ,
-				      		u : 'MPH'
-				    	}
-				  	],
-		  			geos : [
-		    				{
-		      					id : 'geolocationID_obs2',
-		      					loc : {
-		        						type : 'Point',
-		        						coordinates : [-65, 35]
-		      						}
-		    				}
-		  			]
-			} ,
-
-			{
-		  		id : 'obsId3',
-		  		src : 'obsSource1',
-		  		t : testDate,
-		  		attrs : [
-				    	{
-				   		   k : 'domainAttr_1' ,
-				   		   v : 'yetAnotherValue1'
-				    	},
-				    	{
-				      		k : 'domainAttr_3',
-				      		v : 85 ,
-				      		u : 'Kg'
-				    	}
-				  	],
-		  			geos : [
-		    				{
-		      					id : 'geolocationID_obs3',
-		      					loc : {
-		        						type : 'Point',
-		        						coordinates : [-63, 36]
-		      						}
-		    				}
-		  			]
-			}
-		];
-
-
-		var printResult = '[{"id":"obsId1","src":"obsSource1","t":"2013-06-13T06:00:00.000Z","domainAttr_1":{"v":"someValue1"},"domainAttr_2":{"v":1,"u":"MPH"},"geos":[{"id":"geolocationID_obs1","loc":{"type":"Point","coordinates":[-60,30]}}]},{"id":"obsId2","src":"obsSource1","t":"2013-06-13T06:00:00.000Z","domainAttr_1":{"v":"someOtherValue1"},"domainAttr_2":{"v":3,"u":"MPH"},"geos":[{"id":"geolocationID_obs2","loc":{"type":"Point","coordinates":[-65,35]}}]},{"id":"obsId3","src":"obsSource1","t":"2013-06-13T06:00:00.000Z","domainAttr_1":{"v":"yetAnotherValue1"},"domainAttr_3":{"v":85,"u":"Kg"},"geos":[{"id":"geolocationID_obs3","loc":{"type":"Point","coordinates":[-63,36]}}]}]';
-		// modify data in place
-		api.convertPinzObsArrayToRegularJson(testData);
-
-		assert.deepEqual(printResult , JSON.stringify(testData));
-	});
-
-});
-	
