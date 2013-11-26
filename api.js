@@ -28,7 +28,7 @@ function processDataRequest(req, res) {
 			callback({status:400, msg:"Bad Request, " + queryBuilderError.message});
 		}
 		if (query) {
-			GLOBAL.dbHandle.collection(input.src).find(query).limit(5000).toArray(function(err , docs) {
+			GLOBAL.dbHandle.collection(input.src).find(query).limit(1000).toArray(function(err , docs) {
 				if (err) {
 					console.log("Unable to query Mongo collection: " + input.src + ", Exception: " + err);
 					callback({status:500, msg:"Server Error"});
@@ -44,7 +44,7 @@ function processDataRequest(req, res) {
 			});
 
 			if ('true' === req.headers['pinz-debug-query']) {
-				GLOBAL.dbHandle.collection(input.src).find(query).limit(5000).explain(function(err , results) {
+				GLOBAL.dbHandle.collection(input.src).find(query).limit(1000).explain(function(err , results) {
 					console.log("request body ", req.body);
 					console.log("Query: " + JSON.stringify(query, null, ' '));
 					console.log("Explain: " + JSON.stringify(results, null, ' '));

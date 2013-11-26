@@ -1,6 +1,6 @@
 [
 	{
-		"src" : "A",
+		"src" : "animal",
 
 		"geo_within" : [
 			40.0, -55.0,
@@ -26,7 +26,7 @@
 		]
 	},
 	{
-		"src" : "B",
+		"src" : "tempature_reading",
 		"geo_within" : [
 			40.0, -55.0,
 			40.0, -30.0,

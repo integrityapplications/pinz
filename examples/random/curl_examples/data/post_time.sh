@@ -1,1 +1,0 @@
-curl -X POST -d  @postTimeExample.json -H 'content-type:application/json' http://localhost:3000/data
