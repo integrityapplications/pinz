@@ -6,45 +6,34 @@ module.exports.buildTimeQuery=buildTimeQuery
 module.exports.buildMongoQuery=buildMongoQuery
 module.exports.buildAttributeQuery=buildAttributeQuery
 
-function buildTimeQuery(time) {
-	if (!('start' in time)) throw new Error("Required property start not provided");
-	if( !('end' in time) ) throw new Error("Required property end not provided");
-	
-	var start = new Date(time.start);
-	if (isNaN(start.getTime())) {
-		throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + time.start);
+function buildTimeQuery(input) {
+	var query = {};
+	if ('start' in input) {
+		var start = new Date(input.start);
+		if (isNaN(start.getTime())) {
+			throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + input.start);
+		}
+		query.$gte = start;
 	}
 
-	var end = new Date(time.end);
-	if (isNaN(end.getTime())) {
-		throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + time.end);
+	var end = null;
+	if('end' in input) {
+		var end = new Date(input.end);
+		if (isNaN(end.getTime())) {
+			throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + input.end);
+		}
+		query.$lte = end;
 	}
 
-	return { 
-		$gte : start , 
-		$lte : end 
-	};
+	if (Object.keys(query).length === 0) throw new Error("Required fields 'start' or 'end' not found");
+
+	return query;
 }
 
-function buildTimeInsertedQuery(time){
-	if (!('start' in time)) throw new Error("Required property start not provided");
-
-	var start = new Date(time.start);
-	if (isNaN(start.getTime())) {
-		throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + time.start);
-	}
-
-	var end = null; // end is an optional parameter
-	if( ('end' in time) ) {
-		end = new Date(time.end);
-		if (isNaN(end.getTime())) {
-			throw new Error("Invalid date format, expecting: 'yyyy-mm-ddTHH:MM:SS', you provided: " + time.end);
-		}
-	}
-
-	var query = {};
-	if (start) query.$gte = objectIdFromDate(start);
-	if (end) query.$lte = objectIdFromDate(end);
+function buildTimeInsertedQuery(input){
+	var query = buildTimeQuery(input);
+	if ('$gte' in query) query.$gte = objectIdFromDate(query.$gte);
+	if ('$lte' in query) query.$lte = objectIdFromDate(query.$lte);
 	return query;
 }
 
