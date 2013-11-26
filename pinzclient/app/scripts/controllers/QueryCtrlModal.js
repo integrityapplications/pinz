@@ -15,6 +15,7 @@ angular.module('modalApp')
     	$scope.dataSources = dataSources;
     	if($scope.userQuery === null || typeof $scope.userQuery === "undefined") {
     		createDefaultQuery();
+    		createEmptyDataQuery();
     	}
 
     });
@@ -61,6 +62,17 @@ angular.module('modalApp')
 	    
 		$scope.userQuery = defaultQuery;
 		console.log("User query set to:\n" + JSON.stringify($scope.userQuery));
+	}
+
+	function createEmptyDataQuery() {
+		var srcIdx;
+		var tempDataQuery = [];
+		for(srcIdx=0; srcIdx < $scope.dataSources.length; srcIdx++) {
+			var sourceQuery = {};
+			tempDataQuery.push( { src : $scope.dataSources[srcIdx]._id} );
+		}
+		$scope.dataQuery = tempDataQuery;
+		console.log("Starter dataQuery set to:\n" + JSON.stringify($scope.userQuery));
 	}
 
 	// run grunt tests for QueryCtrl
