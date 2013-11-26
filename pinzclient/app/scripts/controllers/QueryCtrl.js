@@ -97,15 +97,22 @@ angular.module('pinzclientApp')
 				console.log("\t\tAttribute " + attrIdx + " = " + JSON.stringify(attribute));
 				if(attribute != null) {
 					if(("v" in attribute) && (attribute.v != null)) {
-						console.log("\t\tAdding attribute " + attrIdx + " = " + JSON.stringify(attribute));
-						tempAttrs.push(attribute);
+
+						// if the attribute is an array, ensure it is not empty
+						if(attribute.v instanceof Array && attribute.v.length > 0) {
+							console.log("\t\tAdding attribute value array " + JSON.stringify(attribute.v));
+							tempAttrs.push(attribute);
+						} else if(typeof attribute.v == 'string') {
+							console.log("\t\tAdding string attribute " + attrIdx + " = " + JSON.stringify(attribute));
+							tempAttrs.push(attribute);
+						}
 					} else if(("low" in attribute) && (attribute.low != null) && ("high" in attribute) && (attribute.high != null)) {
 						// ref values from metadata
 						var attrRefLow = $scope.dataSources[srcIdx].attrs[attrIdx].low;
 						var attrRefHigh = $scope.dataSources[srcIdx].attrs[attrIdx].high;
 						console.log("\t\tComparing attr low/high to ref metadata values: refLow=" + attrRefLow + " , refHigh=" + attrRefHigh);
 						if(attribute.low != attrRefLow && attribute.high != attrRefHigh) {
-							console.log("\t\tAdding attribute " + attrIdx + " = " + JSON.stringify(attribute));
+							console.log("\t\tAdding number range attribute " + attrIdx + " = " + JSON.stringify(attribute));
 							tempAttrs.push(attribute);
 						}
 					}
