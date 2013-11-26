@@ -98,7 +98,7 @@ However, if the Accept header is set to Accept=application/json, a more "regular
 }
 ```
 
-###Note## Even in the transformed decuments, attribute data values are objects, capturing the value and the unit data.
+Note: Even in the transformed documents, attribute data values are objects, capturing the value and the unit data.
 
 ### POST contents
 
