@@ -12,15 +12,16 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         <!-- build:css(.tmp) styles/main.css -->
-        <link rel="stylesheet" href="/styles/snap.css">
            <!-- css from bower -->
            <!-- bower:css -->
            <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
            <link rel="stylesheet" href="bower_components/bootstrap-datepicker/css/datepicker.css" />
            <link rel="stylesheet" href="bower_components/bootstrap-timepicker/css/bootstrap-timepicker.min.css" />
            <link rel="stylesheet" href="bower_components/bootstrap-select/bootstrap-select.css" />
+           <link rel="stylesheet" href="bower_components/snapjs/snap.css" />
            <link rel="stylesheet" href="bower_components/angular-snap/angular-snap.css"/>
            <!-- endbower -->
+           <link rel="stylesheet" href="/styles/pinzSnap.css">
         <!-- endbuild -->
         <link rel="stylesheet" href="bower_components/bootswatch/flatly/bootstrap.css" />
         <link rel="stylesheet" href="bower_components/leaflet-dist/leaflet.css" />
@@ -44,10 +45,20 @@
         <p>Maybe I've got some sweet navigation links.</p>
         <a href="/">Home</a>
       </div>
-
-      <div snap-content id="content">
+      <div snap-content snap-options="opts" id="content">
         <p>Hello! {{contentText}}</p>
-        <button snap-toggle="left">Toggle Snap</button>
+        <button class="btn btn-primary btn-lg" snap-toggle="left">Toggle Snap</button>
+        <h3>Above the leaflet dir</h3>
+        <div ng-leaflet></div>
+
+        <div class="row">
+          <div id="map" style="height: 480px;" class="col-md-8"></div>
+          <p>Map caption</p>
+        </div>
+
+        <h2>more below the leaflet dir...</h2>
+
+        
       </div>
 
     </div>
@@ -81,9 +92,9 @@
         <script src="scripts/services/MetadataService.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/Map.js"></script>
-        <script src="scripts/controllers/QueryCtrl.js"></script>
-        <script src="scripts/directives/ngLeaflet.js"></script>
-        <script src="scripts/directives/simple.js"></script -->
+        <script src="scripts/controllers/QueryCtrl.js"></script -->
+        <script src="scripts/directives/leafletSnap.js"></script>
+        <!-- script src="scripts/directives/simple.js"></script -->
         <!-- endbuild -->
 </body>
 </html>

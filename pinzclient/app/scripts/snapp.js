@@ -9,6 +9,8 @@ snap.controller('SnapCtrl', ['$scope', function($scope) {
   $scope.contentText = "Lorem snapsum";
 
   $scope.opts = {
-    disable: 'right'
+    disable: 'right',
+    maxPosition: 481,
+    minPosition: -481
   };
 }]);
