@@ -61,16 +61,61 @@ function processDataRequest(req, res) {
 }
 
 function processMetadataRequest(req, res) {
-	GLOBAL.dbHandle.collection('metadata').find().toArray(function(err , docs) {
-		if (err) {
-			res.send(err.status, err);
-		} else {
-			console.log('returning ', docs.length, ' docs.');
-			res.json(docs);
+	var results = [];
+	async.series([
+		function(callback) {
+			GLOBAL.dbHandle.collection('metadata').find().toArray(function(err , docs) {
+				if (err) {
+					callback({status:500, msg:"Server Error"});
+				} else {
+					results = docs;
+					callback();
+				}
+			});
+		},
+		function(callback) {
+			augmentMetadata(results, callback)
 		}
-	});
+	], function(err) {
+		if (err) {
+			res.send(err.status, err.msg);
+		} else {
+			res.json(results);
+		}
+    });
 }
 
+function augmentMetadata(docs, callback) {
+	async.forEach(docs, function(doc, forEachCallback) {
+		async.series([
+			//Augment metadata document with timestamp of oldest observable in collection
+			function(augmentCallback) {
+				GLOBAL.dbHandle.collection(doc._id).find().sort({t: 1}).limit(1).toArray(function(err , results) {
+					if (!err) doc.oldest = results[0].t;
+					augmentCallback();
+				});
+			},
+			//Augment metadata document with timestamp of newest observable in collection
+			function(augmentCallback) {
+				GLOBAL.dbHandle.collection(doc._id).find().sort({t: -1}).limit(1).toArray(function(err , results) {
+					if (!err) doc.newest = results[0].t;
+					augmentCallback();
+				});
+			},
+			//Augment metadata document with number of observables in collection
+			function(augmentCallback) {
+				GLOBAL.dbHandle.collection(doc._id).find().count(function (err, count) {
+					if (!err) doc.count = count;
+					augmentCallback();
+				});
+			}
+		], function(err) {
+			forEachCallback(err)
+		});
+	}, function(err) {
+		callback(err);
+	});
+}
 
 function convertPinzObsToRegularJson(nativeDoc) {
 	var attrs = {};
