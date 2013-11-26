@@ -13,13 +13,16 @@
     "angular-strap": "~0.7.7",
     "leaflet-dist": "~0.6.4",
     "angular-route": "~1.2.1",
-    "d3": "3.3.10"
+    "d3": "3.3.10",
+    "angular-snapjs": "~1.0.1",
+    "snapjs": "*"
   },
   "devDependencies": {
     "angular-mocks": "~1.2",
     "angular-scenario": "~1.2"
   },
   "resolutions": {
-    "bootstrap": "~3.0.0"
+    "bootstrap": "~3.0.0",
+    "angular": "1.2.1"
   }
 }

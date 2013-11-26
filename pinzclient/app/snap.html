@@ -1,0 +1,89 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="/styles/snap.css">
+           <!-- css from bower -->
+           <!-- bower:css -->
+           <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+           <link rel="stylesheet" href="bower_components/bootstrap-datepicker/css/datepicker.css" />
+           <link rel="stylesheet" href="bower_components/bootstrap-timepicker/css/bootstrap-timepicker.min.css" />
+           <link rel="stylesheet" href="bower_components/bootstrap-select/bootstrap-select.css" />
+           <link rel="stylesheet" href="bower_components/angular-snap/angular-snap.css"/>
+           <!-- endbower -->
+        <!-- endbuild -->
+        <link rel="stylesheet" href="bower_components/bootswatch/flatly/bootstrap.css" />
+        <link rel="stylesheet" href="bower_components/leaflet-dist/leaflet.css" />
+
+</head>
+  <body ng-app="snapApp">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!--[if lt IE 9]>
+      <script src="bower_components/es5-shim/es5-shim.js"></script>
+      <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <!-- div class="container" ng-view=""></div -->
+    <div class="container" ng-controller="SnapCtrl">
+      <div snap-drawer>
+        <p>I'm a drawer!</p>
+        <p>Maybe I've got some sweet navigation links.</p>
+        <a href="/">Home</a>
+      </div>
+
+      <div snap-content id="content">
+        <p>Hello! {{contentText}}</p>
+        <button snap-toggle="left">Toggle Snap</button>
+      </div>
+
+    </div>
+
+    <script src="bower_components/angular/angular.js"></script>
+
+        <!-- build:js scripts/modules.js -->
+        <script src="bower_components/angular-resource/angular-resource.js"></script>
+        <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+        <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+        <script src="bower_components/angular-route/angular-route.js"></script>
+        <!-- endbuild -->
+
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+          <!-- bower:js -->
+          <script src="bower_components/jquery/jquery.js"></script>
+          <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+          <script src="bower_components/autotype/index.js"></script>
+          <script src="bower_components/leaflet-dist/leaflet.js"></script>
+          <script src="bower_components/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
+          <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+          <script src="bower_components/bootstrap-select/bootstrap-select.js"></script>
+          <script src="bower_components/angular-strap/dist/angular-strap.min.js"></script>
+          <script src="bower_components/d3/d3.js"></script>
+          <script src="bower_components/snapjs/snap.js"></script>
+          <script src="bower_components/angular-snap/angular-snap.js"></script>
+          <!-- endbower -->
+
+        <script src="scripts/snapp.js"></script>
+        <!-- script src="scripts/services/dataService.js"></script>
+        <script src="scripts/services/MetadataService.js"></script>
+        <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/Map.js"></script>
+        <script src="scripts/controllers/QueryCtrl.js"></script>
+        <script src="scripts/directives/ngLeaflet.js"></script>
+        <script src="scripts/directives/simple.js"></script -->
+        <!-- endbuild -->
+</body>
+</html>
