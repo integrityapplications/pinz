@@ -17,7 +17,7 @@
 
       <div class="tab-content">
 
-        <!-- Need some way of doing the repeat operation in and indexed fashion so we can bind to the correct part of the dataQuery object in the scope -->
+        <!-- Two way bind to user input & set data query on button click event -->
         <div class="tab-pane fade" ng-repeat="(srcIdx , source) in dataSources" id="{{source._id}}">
 
           <div class="row">
@@ -36,8 +36,8 @@
             </div>
 
             <div class="col-md-4 pull-right" ng-model="attr" ng-if="(attr.type=='string' && attr.values)">
-              <select class="select" ng-model="dataQuery[srcIdx].attrs[attrIdx].v" ng-options="value for value in source.attrs[attrIdx].values" ng-change="change(attr)" width="150" style="width: 150px"></select>
-              <span>{{dataQuery[srcIdx].attrs[attrIdx].v}}</span>
+              <select class="select" ng-model="userQuery[srcIdx].attrs[attrIdx].v" ng-options="value for value in source.attrs[attrIdx].values" ng-change="change(attr)" width="150" style="width: 150px"></select>
+              <span>{{userQuery[srcIdx].attrs[attrIdx].v}}</span>
 
               <!-- {{"After input element added:: parentIdx = " + srcIdx + " , childIdx = " + attrIdx}}</br> -->
               <!-- {{"After input element added:: parentIdx = " + $parent.$index + " , childIdx = " + $index}}</br> -->
@@ -45,12 +45,12 @@
             </div>
 
             <div class="col-md-4 pull-right" ng-model="attr" ng-if="(attr.type=='string') && !attr.values">
-              <input type="text" ng-model="dataQuery[srcIdx].attrs[attrIdx].v"></br>
+              <input type="text" ng-model="userQuery[srcIdx].attrs[attrIdx].v"></br>
             </div>
 
             <div class="col-md-4 pull-right" ng-model="attr" ng-if="attr.type=='number'">
-              Min<input type="range" ng-model="dataQuery[srcIdx].attrs[attrIdx].low"></br>
-              Max<input type="range" ng-model="dataQuery[srcIdx].attrs[attrIdx].high"></br>
+              Min<input type="range" ng-model="userQuery[srcIdx].attrs[attrIdx].low"></br>
+              Max<input type="range" ng-model="userQuery[srcIdx].attrs[attrIdx].high"></br>
             </div>
           </div>
 
@@ -61,13 +61,16 @@
   </div>
 
   <div class=well col-md-6>
-    <pre>{{dataQuery | json}}</pre>
+    <pre>{{userQuery | json}}</pre>
   </div>
   <div class="row"></div>
   <div class="row">
-    <button class="btn btn-primary btn-lg" style="margin-top: 1em;"ng-click=><a href="/#/map">Send me to the map!</a></button>
+    <button class="btn btn-primary btn-lg pull-left" style="margin-top: 1em;" ng-click="saveUserQuery()">
+      <a href="/#/map">Send me to the map!</a>
+    </button>
+    <button class="btn btn-primary btn-lg pull-right" style="margin-top: 1em;" ng-click="saveUserQuery()">
+      Save query
+    </button>
   </div>
-
-  <simple></simple>
 
 </div> <!-- end container -->

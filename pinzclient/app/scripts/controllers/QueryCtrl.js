@@ -3,9 +3,16 @@
 angular.module('pinzclientApp')
   .controller('QueryCtrl', function($scope, Metadataservice, dataService) {
     
+  	// a data object to store user input
+	$scope.userQuery = null;
+
+	// a 'validated' object that is sent to the server.  Only contains properties that have been edited/set by user.
+	$scope.dataQuery = {};
+
+
     Metadataservice.getMetadata(function(dataSources) {
     	$scope.dataSources = dataSources;
-    	if($scope.dataQuery === null || typeof $scope.dataQuery === "undefined") {
+    	if($scope.userQuery === null || typeof $scope.userQuery === "undefined") {
     		createDefaultQuery();
     	}
 
@@ -41,21 +48,68 @@ angular.module('pinzclientApp')
 	        for(attrsIdx=0; attrsIdx < source.attrs.length; ++attrsIdx) {
 	        	var attribute = source.attrs[attrsIdx];
 	            if(attribute.type == 'string') {
-	                sourceQuery.attrs.push({ k : attribute.name , v : [""]});
+	                sourceQuery.attrs.push({ k : attribute.name , v : []});
 	            } else if (attribute.type == 'number') {
-	                if(attribute.min && attribute.max) {
-	                    sourceQuery.attrs.push({ k : attribute.name , low : attribute.min , high : attribute.max});
-	                } else {
-	                    sourceQuery.attrs.push({ k : attribute.name , low : 0 , high : 100});
-	                }
-	            }
-	        }
-	        defaultQuery.push(sourceQuery);
-	    }
-
-	    $scope.dataQuery = defaultQuery;
-	    console.log("Data query set to:\n" + JSON.stringify($scope.dataQuery));
+                	sourceQuery.attrs.push({ k : attribute.name , low : null , high : null});
+                    // sourceQuery.attrs.push({ k : attribute.name , low : 0 , high : 100});
+                }
+            }
+        	defaultQuery.push(sourceQuery);
+        }
+	    
+		$scope.userQuery = defaultQuery;
+		console.log("User query set to:\n" + JSON.stringify($scope.userQuery));
 	}
+
+
+	$scope.saveUserQuery = function() {
+		var tempDataQuery = [];
+		var srcIdx;
+		for(srcIdx = 0; srcIdx < $scope.userQuery.length;srcIdx++) {
+			
+			var tempSrcQuery = {};
+			var srcQuery = $scope.userQuery[srcIdx];
+		
+			// note server-side validation strips a empty array for time_within
+			if(("time_within" in srcQuery) && (srcQuery.time_within != null)) {
+				if(("start" in srcQuery.time_within) && ("end" in srcQuery.time_within)) {
+					// we can have validation on the values in here, for now just leave
+					tempSrcQuery.time_within = srcQuery.time_within;
+				}
+			}
+
+			// note server-side validation strips empty time_within array
+			if(("geo_within" in srcQuery) && (srcQuery.geo_within != null) && (srcQuery.geo_within.length > 0)) {
+				tempSrcQuery.geo_within = srcQuery.geo_within;	
+			}
+
+			// now deal with attributes
+			var attrIdx;
+			var tempAttrs = [];
+			for(attrIdx = 0; attrIdx < srcQuery.attrs.length; attrIdx++) {
+				
+				var attribute = srcQuery.attrs[attrIdx];
+				if((attribute != null) && ("type" in attribute) && (attribute.type != null)) {
+					if(("v" in attribute) && (attribute.v != null)) {
+						tempAttrs.push(attribute);
+					}
+				}
+			}
+			// only add attrs if we actually have some values
+			if(tempAttrs.length > 0) {
+				tempSrcQuery.attrs = tempAttrs;
+			}
+
+			console.log("\tAdding " + JSON.stringify(tempSrcQuery) + " to tempDataQuery");
+			tempDataQuery.push(tempSrcQuery);
+		}
+
+		console.log("Setting the $scope.dataQuery to be the cleaned up tempDataQuery..." + JSON.stringify(tempDataQuery));
+		$scope.dataQuery = tempDataQuery;
+		tempDataQuery = null;
+		console.log("Query that is sent to the server::\n" + JSON.stringify($scope.dataQuery));
+	}
+
 });
 
 
