@@ -25,7 +25,7 @@ angular.module('modalApp')
             currentRunTime = now;
 	        updateData(query, currentRunTime);
             $scope.statusMessage = "polling for data...";
-	    }, 2000);
+	    }, 15000);
 
     }
 
