@@ -26,7 +26,7 @@
             </div>
           </div>
 
-          <div class="row panel-body" ng-repeat="(attrIdx, attr) in source.attrs" id="{{source._id + "_" + attr.name}}">
+          <div class="row well panel-body" ng-repeat="(attrIdx, attr) in source.attrs" id="{{source._id + "_" + attr.name}}">
 
             <div class="col-md-2">
               {{attr.name}}
@@ -61,11 +61,15 @@
   </div>
 
   <div class=well col-md-6>
-    <pre>{{userQuery | json}}</pre>
+    <pre>{{userQuery}}</pre>
   </div>
+  <div class=well col-md-6>
+    <pre>{{dataQuery}}</pre>
+  </div>
+
   <div class="row"></div>
   <div class="row">
-    <button class="btn btn-primary btn-lg pull-left" style="margin-top: 1em;" ng-click="saveUserQuery()">
+    <button class="btn btn-primary btn-lg pull-left" style="margin-top: 1em;" ng-click>
       <a href="/#/map">Send me to the map!</a>
     </button>
     <button class="btn btn-primary btn-lg pull-right" style="margin-top: 1em;" ng-click="saveUserQuery()">
