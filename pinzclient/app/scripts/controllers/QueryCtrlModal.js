@@ -92,7 +92,7 @@ angular.module('modalApp')
 			if(("time_within" in srcQuery) && (srcQuery.time_within != null)) {
 				if(("start" in srcQuery.time_within) && ("end" in srcQuery.time_within)) {
 					// we can have validation on the values in here, for now just leave
-					tempSrcQuery.time_within = { start : srcQuery.time_within.start} }
+					tempSrcQuery.time_within = { start : srcQuery.time_within.start}
 				}
 			}
 
