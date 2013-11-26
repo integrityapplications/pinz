@@ -68,8 +68,12 @@ angular.module('pinzclientApp')
 		for(srcIdx = 0; srcIdx < $scope.userQuery.length;srcIdx++) {
 			
 			var tempSrcQuery = {};
+
 			var srcQuery = $scope.userQuery[srcIdx];
 		
+			// gotta have a source name
+			tempSrcQuery.src = srcQuery.src;
+
 			// note server-side validation strips a empty array for time_within
 			if(("time_within" in srcQuery) && (srcQuery.time_within != null)) {
 				if(("start" in srcQuery.time_within) && ("end" in srcQuery.time_within)) {
