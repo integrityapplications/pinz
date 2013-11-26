@@ -61,7 +61,7 @@ angular.module('pinzclientApp')
 		console.log("User query set to:\n" + JSON.stringify($scope.userQuery));
 	}
 
-
+	// run grunt tests for QueryCtrl
 	$scope.saveUserQuery = function() {
 		var tempDataQuery = [];
 		var srcIdx;
@@ -86,13 +86,14 @@ angular.module('pinzclientApp')
 			// now deal with attributes
 			var attrIdx;
 			var tempAttrs = [];
+
 			for(attrIdx = 0; attrIdx < srcQuery.attrs.length; attrIdx++) {
 				
 				var attribute = srcQuery.attrs[attrIdx];
-				if((attribute != null) && ("type" in attribute) && (attribute.type != null)) {
-					if(("v" in attribute) && (attribute.v != null)) {
-						tempAttrs.push(attribute);
-					}
+				console.log("\t\tAttribute " + attrIdx + " = " + JSON.stringify(attribute));
+				if((attribute != null) && ("v" in attribute) && (attribute.v != null)) {
+					console.log("\t\tAdding attribute " + attrIdx + " = " + JSON.stringify(attribute));
+					tempAttrs.push(attribute);
 				}
 			}
 			// only add attrs if we actually have some values
