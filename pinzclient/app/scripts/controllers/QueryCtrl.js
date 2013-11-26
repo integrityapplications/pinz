@@ -100,8 +100,14 @@ angular.module('pinzclientApp')
 						console.log("\t\tAdding attribute " + attrIdx + " = " + JSON.stringify(attribute));
 						tempAttrs.push(attribute);
 					} else if(("low" in attribute) && (attribute.low != null) && ("high" in attribute) && (attribute.high != null)) {
-						console.log("\t\tAdding attribute " + attrIdx + " = " + JSON.stringify(attribute));
-						tempAttrs.push(attribute);
+						// ref values from metadata
+						var attrRefLow = $scope.dataSources[srcIdx].attrs[attrIdx].low;
+						var attrRefHigh = $scope.dataSources[srcIdx].attrs[attrIdx].high;
+						console.log("\t\tComparing attr low/high to ref metadata values: refLow=" + attrRefLow + " , refHigh=" + attrRefHigh);
+						if(attribute.low != attrRefLow && attribute.high != attrRefHigh) {
+							console.log("\t\tAdding attribute " + attrIdx + " = " + JSON.stringify(attribute));
+							tempAttrs.push(attribute);
+						}
 					}
 				}
 			}
