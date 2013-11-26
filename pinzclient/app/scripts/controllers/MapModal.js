@@ -18,11 +18,9 @@ angular.module('modalApp')
             var now = new Date();
             query.forEach(function (source, index) {
                 console.log('query src: ', source.src);
-                console.log('start: ', source.time_within.start, ' end ', source.time_within.end);
-                source.time_within.end = currentRunTime;
+                console.log('start: ', source.time_within.start);
                 source.time_inserted = {};
                 source.time_inserted.start = currentRunTime;
-                source.time_inserted.end = now;
             });
             currentRunTime = now;
 	        updateData(query, currentRunTime);
@@ -42,7 +40,7 @@ angular.module('modalApp')
             dq.forEach(function(source, index) {
                 console.log('source.src: ', source.src);
                 console.log(' start: ', source.time_within.start, ' end ', source.time_within.end);
-                currentRunTime = source.time_within.end;
+                //currentRunTime = source.time_within.end;
             })
             $scope.realDataQuery = dataService.dataQuery; // Need serious thought!
             updateData($scope.realDataQuery, currentRunTime);

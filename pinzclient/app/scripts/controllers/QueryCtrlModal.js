@@ -21,9 +21,9 @@ angular.module('modalApp')
     });
     
     $scope.$watch(function() {
-    	return $scope.userQuery }
+    	return $scope.dataQuery }
     	, function(newVal, oldVal) {
-    		console.log('new query value: ', newVal);
+    		console.log('new dataQuery value: ', JSON.stringify(newVal));
     	dataService.setQuery(newVal);
 	}, true);
     
