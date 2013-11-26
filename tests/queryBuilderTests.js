@@ -6,32 +6,34 @@ var queryBuilder = require('./../queryBuilder');
 describe( 'queryBuilder.buildTimeQuery()' , function() {
 	it('queryBuilder should return valid MongoDB query' , function() {
 		var query = queryBuilder.buildTimeQuery({ "start" :  "2013-09-12T00:00:00", "end" : "2013-09-12T12:00:00" });
+		console.log("Query: " + JSON.stringify(query, null, ' '));
 		assert.equal( "2013-09-12T00:00:00.000Z" , query.$gte.toISOString() );
 		assert.equal( "2013-09-12T12:00:00.000Z" , query.$lte.toISOString() );
 	});
+
+	it('queryBuilder start only' , function() {
+		var query = queryBuilder.buildTimeQuery({"start" :  "2013-09-12T00:00:00"});
+		assert.equal( "2013-09-12T00:00:00.000Z" , query.$gte.toISOString() );
+	});
+
+	it('queryBuilder end only' , function() {
+		var query = queryBuilder.buildTimeQuery({"end" : "2013-09-12T12:00:00" });
+		assert.equal( "2013-09-12T12:00:00.000Z" , query.$lte.toISOString() );
+	});
 	
-	it('expected member start not provided', function() {
+	it('start or end not provided', function() {
 		assert.throws(
 			function() {
-				queryBuilder.buildTimeQuery({ "end" : "2013-09-12T00:00:00" });
+				queryBuilder.buildTimeQuery({});
 			},
 			Error
 		);
 	});
-	
-	it('expected member end not provided', function() {
-		assert.throws(
-			function() {
-				queryBuilder.buildTimeQuery({ "start" : "2013-09-12T00:00:00" });
-			},
-			Error
-		);
-	});
-	
+
 	it('invalid date format: start', function() {
 		assert.throws(
 			function() {
-				queryBuilder.buildTimeQuery({ "start" :  "invalid date format" , "end" : "2013-09-12T00:00:00" });
+				queryBuilder.buildTimeQuery({ "start" :  "invalid date format"});
 			},
 			Error
 		);
@@ -40,7 +42,7 @@ describe( 'queryBuilder.buildTimeQuery()' , function() {
 	it('invalid date format: end', function() {
 		assert.throws(
 			function() {
-				queryBuilder.buildTimeQuery({ "end" :  "invalid date format" , "start" : "2013-09-12T12:00:00" });
+				queryBuilder.buildTimeQuery({ "end" :  "invalid date format"});
 			},
 			Error
 		);
@@ -48,13 +50,18 @@ describe( 'queryBuilder.buildTimeQuery()' , function() {
 });
 
 describe('queryBuilder.buildTimeInsertedQuery()' , function() {
-	it("queryBuilder should return valid MongoDB query: start only" , function(){
-		var query = queryBuilder.buildTimeInsertedQuery( { "start" :  "2013-09-12T00:00:00" } );
+	it("queryBuilder start only" , function(){
+		var query = queryBuilder.buildTimeInsertedQuery({"start" : "2013-09-12T00:00:00" });
 		assert.equal(query.$gte.toHexString(), "523104000000000000000000");
 	});
 
+	it("queryBuilder end only" , function(){
+		var query = queryBuilder.buildTimeInsertedQuery({"end" : "2013-12-12T00:00:00"});
+		assert.equal(query.$lte.toHexString(), "52a8fc800000000000000000");
+	});
+
 	it("queryBuilder should return valid MongoDB query" , function(){
-		var query = queryBuilder.buildTimeInsertedQuery( { "start" :  "2013-09-12T00:00:00" , "end" :  "2013-12-12T00:00:00"} );
+		var query = queryBuilder.buildTimeInsertedQuery({"start" : "2013-09-12T00:00:00" , "end" : "2013-12-12T00:00:00"});
 		assert.equal(query.$gte.toHexString(), "523104000000000000000000");
 		assert.equal(query.$lte.toHexString(), "52a8fc800000000000000000");
 	});
@@ -67,14 +74,6 @@ describe('queryBuilder.buildTimeInsertedQuery()' , function() {
 		);
 	});
 
-	it("Input must contain 'start' property" , function() {
-		assert.throws(
-			function() {
-				queryBuilder.buildTimeInsertedQuery( { "end" :  "invalid date format" } , Error);
-			}
-		);
-	});
-
 	it("invalid date format: start" , function() {
 		assert.throws(
 			function() {
@@ -83,7 +82,7 @@ describe('queryBuilder.buildTimeInsertedQuery()' , function() {
 		);
 	});
 
-	it("invalid date format: end (optional)" , function() {
+	it("invalid date format: end" , function() {
 		assert.throws(
 			function() {
 				queryBuilder.buildTimeInsertedQuery( { "end" :  "invalid date format" } , Error);

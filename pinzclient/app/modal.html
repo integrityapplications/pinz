@@ -12,20 +12,20 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         <!-- build:css(.tmp) styles/main.css -->
-        <link rel="stylesheet" href="/styles/main.css">
            <!-- css from bower -->
            <!-- bower:css -->
            <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-           <link rel="stylesheet" href="bower_components/bootstrap-datepicker/css/datepicker.css" />
+           <!--link rel="stylesheet" href="bower_components/bootstrap-datepicker/css/datepicker.css" />
            <link rel="stylesheet" href="bower_components/bootstrap-timepicker/css/bootstrap-timepicker.min.css" />
-           <link rel="stylesheet" href="bower_components/bootstrap-select/bootstrap-select.css" />
+           <link rel="stylesheet" href="bower_components/bootstrap-select/bootstrap-select.css" /-->
            <!-- endbower -->
+           <link rel="stylesheet" href="/styles/pinzModal.css">
         <!-- endbuild -->
         <link rel="stylesheet" href="bower_components/bootswatch/flatly/bootstrap.css" />
         <link rel="stylesheet" href="bower_components/leaflet-dist/leaflet.css" />
 
 </head>
-  <body ng-app="pinzclientApp">
+  <body ng-app="modalApp">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -36,7 +36,36 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div class="container" ng-view=""></div>
+    <!-- div class="container" ng-view=""></div -->
+    <div class="container" ng-controller="ModalCtrl">
+
+        <div class="row">
+          <div class="col-md-2 col-md-offset-5">
+            <!-- Button to trigger modal -->
+            <button type="button" class="btn btn-primary btn-lg" bs-modal="'views/modal-template.html'">Query For Data</button>
+          </div>
+        </div>
+        <div class="row">
+          <div ng-leaflet></div>
+          <div id="map" style="height: 480px;" class="col-md-8"></div>
+          <p>Map caption</p>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <h2>I'm a 4 column div.</h2>
+          </div>
+          <div class="col-md-12">
+            <h2>I'm a 8 column div.</h2>
+            <div class="well">
+              <p>A bunch of text in a well.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
 
     <script src="bower_components/angular/angular.js"></script>
 
@@ -56,19 +85,20 @@
           <script src="bower_components/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
           <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
           <script src="bower_components/bootstrap-select/bootstrap-select.js"></script>
-          <script src="bower_components/angular-strap/dist/angular-strap.min.js"></script>
+          <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
           <script src="bower_components/d3/d3.js"></script>
           <!-- endbower -->
 
-        <script src="scripts/app.js"></script>
-        <script src="scripts/services/dataService.js"></script>
+        <script src="scripts/modal.js"></script>
+        <script src="scripts/controllers/Modal.js"></script>
+        <script src="scripts/directives/leafletModal.js"></script>
+        <!-- script src="scripts/services/dataService.js"></script>
         <script src="scripts/services/MetadataService.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/Map.js"></script>
-        <script src="scripts/controllers/QueryCtrl.js"></script>
-        <script src="scripts/directives/ngLeaflet.js"></script>
-        <script src="scripts/directives/simple.js"></script>
-        <script src="scripts/controllers/Modal.js"></script>
+        <script src="scripts/controllers/QueryCtrl.js"></script -->
+        <!-- script src="scripts/directives/leafletSnap.js"></script> -->
+        <!-- script src="scripts/directives/simple.js"></script -->
         <!-- endbuild -->
 </body>
 </html>

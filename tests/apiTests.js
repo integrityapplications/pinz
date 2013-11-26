@@ -132,7 +132,7 @@ describe( 'api.processDataRequest', function() {
 	});
 });
 
-describe( 'api.processMetadataRequest', function() {
+/*describe( 'api.processMetadataRequest', function() {
 
 	var res = {
 		send: function(status, body) {
@@ -161,7 +161,7 @@ describe( 'api.processMetadataRequest', function() {
 		assert.equal("200", res.status);
 		assert.equal(3, res.body.length);
 	});
-});
+});*/
 
 
 describe( 'api.convertPinzObsToRegularJson' , function() {

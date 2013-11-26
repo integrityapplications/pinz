@@ -29,7 +29,7 @@ angular.module('pinzclientApp')
     	var sources = $scope.dataSources;
 	    var idx;
 	    var dayInMs = 24 * 60 * 60 * 1000;
-	    var daysBackInMs = 90 * dayInMs;
+	    var daysBackInMs = 7 * dayInMs;
 
 	    for(idx=0 ; idx < sources.length; ++idx) {
 	    	var source =  sources[idx];
