@@ -6,18 +6,17 @@
 
 
   <div class="row">
-    <div class="col-md-12">
 
+    <div class="col-md-12">
       <ul class="nav nav-tabs">
           <li class="active"><a href="#">Geospatial</a></li>
           <li ng-model="dataSource" ng-repeat="src in dataSources">
             <a href="#{{src._id}}" data-toggle="tab" target="_self">{{"Source " + src._id}}</a>
           </li>
       </ul>
-
+      
       <div class="tab-content">
-
-        <!-- Need some way of doing the repeat operation in and indexed fashion so we can bind to the correct part of the dataQuery object in the scope -->
+        
         <div class="tab-pane fade" ng-repeat="(srcIdx , source) in dataSources" id="{{source._id}}">
 
           <div class="row">
@@ -26,48 +25,57 @@
             </div>
           </div>
 
-          <div class="row panel-body" ng-repeat="(attrIdx, attr) in source.attrs" id="{{source._id + "_" + attr.name}}">
+          <div class="row well panel-body" ng-repeat="(attrIdx, attr) in source.attrs" id="{{source._id + "_" + attr.name}}">
 
             <div class="col-md-2">
-              {{attr.name}}
+              <strong>{{attr.name}}</strong>
             </div>
+
             <div class="col-md-6">
               {{attr.desc}}
             </div>
 
             <div class="col-md-4 pull-right" ng-model="attr" ng-if="(attr.type=='string' && attr.values)">
-              <select class="select" ng-model="dataQuery[srcIdx].attrs[attrIdx].v" ng-options="value for value in source.attrs[attrIdx].values" ng-change="change(attr)" width="150" style="width: 150px"></select>
-              <span>{{dataQuery[srcIdx].attrs[attrIdx].v}}</span>
-
-              <!-- {{"After input element added:: parentIdx = " + srcIdx + " , childIdx = " + attrIdx}}</br> -->
-              <!-- {{"After input element added:: parentIdx = " + $parent.$index + " , childIdx = " + $index}}</br> -->
-              <!-- I got wierd behaviour when I used unnamed index vars in the ng-repeat with $parent.$index and $index both incremented when a ng-if success case was executed.  Might be deliberate, but it surprised me... -->
+              <select class="select" ng-model="userQuery[srcIdx].attrs[attrIdx].v" ng-options="value for value in source.attrs[attrIdx].values" ng-change="change(attr)" width="175" style="width: 175px"></select>
             </div>
 
             <div class="col-md-4 pull-right" ng-model="attr" ng-if="(attr.type=='string') && !attr.values">
-              <input type="text" ng-model="dataQuery[srcIdx].attrs[attrIdx].v"></br>
+              <input type="text" ng-model="userQuery[srcIdx].attrs[attrIdx].v"></br>
             </div>
 
             <div class="col-md-4 pull-right" ng-model="attr" ng-if="attr.type=='number'">
-              Min<input type="range" ng-model="dataQuery[srcIdx].attrs[attrIdx].low"></br>
-              Max<input type="range" ng-model="dataQuery[srcIdx].attrs[attrIdx].high"></br>
+              <div style="margin-bottom: 1em;">
+                <span class="col-md-2">Min</span><input type="text" ng-model="userQuery[srcIdx].attrs[attrIdx].low" placeholder={{dataSources[srcIdx].attrs[attrIdx].low}}><br>
+              </div>
+              <div style="margin-top: 1em;">
+                <span class="col-md-2">Max</span><input type="text" ng-model="userQuery[srcIdx].attrs[attrIdx].high" placeholder={{dataSources[srcIdx].attrs[attrIdx].high}}><br>
+              </div>
             </div>
+
           </div>
 
       </div>
+
     </div>
   
   </div>
   </div>
 
   <div class=well col-md-6>
-    <pre>{{dataQuery | json}}</pre>
+    <pre>{{userQuery}}</pre>
   </div>
-  <div class="row"></div>
-  <div class="row">
-    <button class="btn btn-primary btn-lg" style="margin-top: 1em;"ng-click=><a href="/#/map">Send me to the map!</a></button>
+  <div class=well col-md-6>
+    <pre>{{dataQuery}}</pre>
   </div>
 
-  <simple></simple>
+  <div class="row"></div>
+  <div class="row">
+    <button class="btn btn-primary btn-lg pull-left" style="margin-top: 1em;" ng-click>
+      <a href="/#/map">Send me to the map!</a>
+    </button>
+    <button class="btn btn-primary btn-lg pull-right" style="margin-top: 1em;" ng-click="saveUserQuery()">
+      Save query
+    </button>
+  </div>
 
 </div> <!-- end container -->
