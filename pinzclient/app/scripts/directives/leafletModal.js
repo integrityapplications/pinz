@@ -10,7 +10,7 @@ angular.module('modalApp')
 
   	function initLeaflet() {
 	    var cLat = -37.81, cLon = 144.93;
-	    map = L.map('map',{  fullscreenControl: true }).setView([cLat, cLon], 11 ); 
+	    map = L.map('map',{  fullscreenControl: true }).setView([cLat, cLon], 2 ); 
 
 	    //L.control.mousePosition().addTo(map);
 	    var tileLayer = 

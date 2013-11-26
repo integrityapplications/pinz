@@ -19,9 +19,12 @@
            <link rel="stylesheet" href="bower_components/bootstrap-timepicker/css/bootstrap-timepicker.min.css" />
            <link rel="stylesheet" href="bower_components/bootstrap-select/bootstrap-select.css" /-->
            <!-- endbower -->
+
+           <link rel="stylesheet" href="bower_components/bootswatch/flatly/bootstrap.css" />
            <link rel="stylesheet" href="/styles/pinzModal.css">
+           
         <!-- endbuild -->
-        <link rel="stylesheet" href="bower_components/bootswatch/flatly/bootstrap.css" />
+        
         <link rel="stylesheet" href="bower_components/leaflet-dist/leaflet.css" />
 
 </head>
@@ -42,30 +45,40 @@
         <div class="row">
           <div class="col-md-2 col-md-offset-5">
             <!-- Button to trigger modal -->
-            <button type="button" class="btn btn-primary btn-lg" bs-modal="'views/modal-template.html'">Query For Data</button>
+            <button type="button" class="btn btn-primary btn-lg" bs-modal="'views/query-modal-template.html'">Query For Data</button>
           </div>
-        </div>
-        <div class="row">
-          <div ng-leaflet></div>
-          <div id="map" style="height: 480px;" class="col-md-8"></div>
-          <p>Map caption</p>
         </div>
 
-        <div class="row">
-          <div class="col-md-4">
-            <h2>I'm a 4 column div.</h2>
-          </div>
-          <div class="col-md-12">
-            <h2>I'm a 8 column div.</h2>
-            <div class="well">
-              <p>A bunch of text in a well.</p>
+        <div ng-controller="MapCtrl">
+          <div class="row">
+          
+            <div class="col-md-1">
+              <h3>{{mapversion}}</h3>
             </div>
+            <div class="col-md-6">
+                <div ng-leaflet pinz="pinzData"></div> <!-- gets replaced by ngLeaflet directive -->
+            </div> 
           </div>
-        </div>
 
-      </div>
+          <div class="row"> 
+            <div id="map" style="height: 480px;" class="col-md-12"></div>
+          </div>
 
-    </div>
+          <div class="row">
+            <div class="btn-group" style="margin-top: 1em;">
+            <button type="button" ng-click="startDataFeed()" class="btn btn-lg btn-success">Start</button>
+            <button type="button" ng-click="stopDataFeed()" class="btn btn-lg btn-danger">Stop</button>
+          </div>
+          <p>{{statusMessage}}</p>
+
+          </div>
+
+          <div class="row">
+            <div class="well col-md-6">{{pinzData | json:'  '}}</div>
+          </div>
+        </div> <!-- end map ctrl -->
+
+    </div> <!-- end modal ctrl -->
 
     <script src="bower_components/angular/angular.js"></script>
 
@@ -85,18 +98,18 @@
           <script src="bower_components/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
           <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
           <script src="bower_components/bootstrap-select/bootstrap-select.js"></script>
-          <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
           <script src="bower_components/d3/d3.js"></script>
           <!-- endbower -->
-
+          <!-- a patched angular strap to support bootstrap 3 modals -->
+          <script src="scripts/directives/patched/angular-strap-modal-bootstrap3.js"></script>
         <script src="scripts/modal.js"></script>
         <script src="scripts/controllers/Modal.js"></script>
         <script src="scripts/directives/leafletModal.js"></script>
-        <!-- script src="scripts/services/dataService.js"></script>
-        <script src="scripts/services/MetadataService.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/Map.js"></script>
-        <script src="scripts/controllers/QueryCtrl.js"></script -->
+        <script src="scripts/services/dataServiceModal.js"></script>
+        <script src="scripts/services/MetadataServiceModal.js"></script>
+        <!-- script src="scripts/controllers/main.js"></script -->
+        <script src="scripts/controllers/MapModal.js"></script>
+        <script src="scripts/controllers/QueryCtrlModal.js"></script>
         <!-- script src="scripts/directives/leafletSnap.js"></script> -->
         <!-- script src="scripts/directives/simple.js"></script -->
         <!-- endbuild -->
