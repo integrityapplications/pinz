@@ -19,9 +19,12 @@
            <link rel="stylesheet" href="bower_components/bootstrap-timepicker/css/bootstrap-timepicker.min.css" />
            <link rel="stylesheet" href="bower_components/bootstrap-select/bootstrap-select.css" /-->
            <!-- endbower -->
+
+           <link rel="stylesheet" href="bower_components/bootswatch/flatly/bootstrap.css" />
            <link rel="stylesheet" href="/styles/pinzModal.css">
+           
         <!-- endbuild -->
-        <link rel="stylesheet" href="bower_components/bootswatch/flatly/bootstrap.css" />
+        
         <link rel="stylesheet" href="bower_components/leaflet-dist/leaflet.css" />
 
 </head>
@@ -85,10 +88,10 @@
           <script src="bower_components/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
           <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
           <script src="bower_components/bootstrap-select/bootstrap-select.js"></script>
-          <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
           <script src="bower_components/d3/d3.js"></script>
           <!-- endbower -->
-
+          <!-- a patched angular strap to support bootstrap 3 modals -->
+          <script src="scripts/directives/patched/angular-strap-modal-bootstrap3.js"></script>
         <script src="scripts/modal.js"></script>
         <script src="scripts/controllers/Modal.js"></script>
         <script src="scripts/directives/leafletModal.js"></script>
