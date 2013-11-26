@@ -20,7 +20,7 @@ angular.module('pinzclientApp')
     });
     
     $scope.$watch(function() {
-    	return $scope.userQuery }
+    	return $scope.dataQuery }
     	, function(newVal, oldVal) {
     	dataService.setQuery(newVal);
 	}, true);
@@ -91,6 +91,7 @@ angular.module('pinzclientApp')
 				if(("start" in srcQuery.time_within) && ("end" in srcQuery.time_within)) {
 					// we can have validation on the values in here, for now just leave
 					tempSrcQuery.time_within = srcQuery.time_within;
+					// tempSrcQuery.time_within = { time_within : { start : srcQuery.time_within.start} }
 				}
 			}
 
