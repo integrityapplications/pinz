@@ -1,26 +1,18 @@
 'use strict';
 
-angular.module('pinzclientApp', [
-  'ngCookies',
-  'ngResource',
-  'ngSanitize',
-  'ngRoute'
-])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
-      .when('/map', {
-        templateUrl: 'views/map.html',
-        controller: 'MapCtrl'
-      })
-      .when('/query', {
-        templateUrl: 'views/query.html',
-        controller: 'QueryCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
-      });
-  });
+var snap = angular.module('modalApp', [
+  '$strap.directives'
+]);
+
+snap.controller('ModalCtrl', ['$scope', '$modal', function($scope, $modal) {
+
+  $scope.modal = {content: 'Hello Modal', saved: false};
+  console.log('modal ctrl is alive');
+
+  $scope.parentController = function(dismiss) {
+    console.warn(arguments);
+    // do something
+    dismiss();
+  }
+
+}]);

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pinzclientApp')
+angular.module('modalApp')
   .controller('MapCtrl', function ($log, $scope, $timeout, dataService, Metadataservice) {
     $scope.mapversion = 0.1;
     $scope.startingCity = "Melbourne";
@@ -17,17 +17,15 @@ angular.module('pinzclientApp')
     	$scope.cancelDataFeed = $timeout(function() {
             var now = new Date();
             query.forEach(function (source, index) {
-                console.log('query src: ', source.src);
-                console.log('start: ', source.time_within.start, ' end ', source.time_within.end);
-                source.time_within.end = currentRunTime;
+                //console.log('query src: ', source.src);
+                //console.log('time_within: ', source.time_within);
                 source.time_inserted = {};
                 source.time_inserted.start = currentRunTime;
-                source.time_inserted.end = now;
             });
             currentRunTime = now;
 	        updateData(query, currentRunTime);
             $scope.statusMessage = "polling for data...";
-	    }, 2000);
+	    }, 15000);
 
     }
 
@@ -35,15 +33,8 @@ angular.module('pinzclientApp')
         if (dataService.dataQuery === null || typeof dataService.dataQuery === "undefined") {
             alert('Please enter a query first.');
         } else {
-    		console.log('start the data feed with query ', dataService.dataQuery);
-
             var dq = dataService.dataQuery;
             var currentRunTime = new Date()
-            dq.forEach(function(source, index) {
-                console.log('source.src: ', source.src);
-                console.log(' start: ', source.time_within.start, ' end ', source.time_within.end);
-                currentRunTime = source.time_within.end;
-            })
             $scope.realDataQuery = dataService.dataQuery; // Need serious thought!
             updateData($scope.realDataQuery, currentRunTime);
         }

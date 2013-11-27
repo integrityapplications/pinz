@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('pinzclientApp')
+angular.module('modalApp')
   .controller('QueryCtrl', function($scope, Metadataservice, dataService) {
+  	console.log("QueryCtrl (Modal) is active");
     
   	// a data object to store user input
 	$scope.userQuery = null;
@@ -22,8 +23,9 @@ angular.module('pinzclientApp')
     $scope.$watch(function() {
     	return $scope.dataQuery }
     	, function(newVal, oldVal) {
-    	dataService.setQuery(newVal);
-	}, true);
+    		dataService.setQuery(newVal);
+		}, 
+		true);
     
 	function createDefaultQuery() {
 		var defaultQuery = [];
@@ -59,7 +61,6 @@ angular.module('pinzclientApp')
         }
 	    
 		$scope.userQuery = defaultQuery;
-		console.log("User query set to:\n" + JSON.stringify($scope.userQuery));
 	}
 
 	function createEmptyDataQuery() {
@@ -70,7 +71,6 @@ angular.module('pinzclientApp')
 			tempDataQuery.push( { src : $scope.dataSources[srcIdx]._id} );
 		}
 		$scope.dataQuery = tempDataQuery;
-		console.log("Starter dataQuery set to:\n" + JSON.stringify($scope.userQuery));
 	}
 
 	// run grunt tests for QueryCtrl
@@ -90,8 +90,7 @@ angular.module('pinzclientApp')
 			if(("time_within" in srcQuery) && (srcQuery.time_within != null)) {
 				if(("start" in srcQuery.time_within) && ("end" in srcQuery.time_within)) {
 					// we can have validation on the values in here, for now just leave
-					tempSrcQuery.time_within = srcQuery.time_within;
-					// tempSrcQuery.time_within = { time_within : { start : srcQuery.time_within.start} }
+					tempSrcQuery.time_within = { start : srcQuery.time_within.start}
 				}
 			}
 
@@ -107,25 +106,20 @@ angular.module('pinzclientApp')
 			for(attrIdx = 0; attrIdx < srcQuery.attrs.length; attrIdx++) {
 				
 				var attribute = srcQuery.attrs[attrIdx];
-				console.log("\t\tAttribute " + attrIdx + " = " + JSON.stringify(attribute));
 				if(attribute != null) {
 					if(("v" in attribute) && (attribute.v != null)) {
 
 						// if the attribute is an array, ensure it is not empty
 						if(attribute.v instanceof Array && attribute.v.length > 0) {
-							console.log("\t\tAdding attribute value array " + JSON.stringify(attribute.v));
 							tempAttrs.push(attribute);
 						} else if(typeof attribute.v == 'string') {
-							console.log("\t\tAdding string attribute " + attrIdx + " = " + JSON.stringify(attribute));
 							tempAttrs.push(attribute);
 						}
 					} else if(("low" in attribute) && (attribute.low != null) && ("high" in attribute) && (attribute.high != null)) {
 						// ref values from metadata
 						var attrRefLow = $scope.dataSources[srcIdx].attrs[attrIdx].low;
 						var attrRefHigh = $scope.dataSources[srcIdx].attrs[attrIdx].high;
-						console.log("\t\tComparing attr low/high to ref metadata values: refLow=" + attrRefLow + " , refHigh=" + attrRefHigh);
 						if(attribute.low != attrRefLow && attribute.high != attrRefHigh) {
-							console.log("\t\tAdding number range attribute " + attrIdx + " = " + JSON.stringify(attribute));
 							tempAttrs.push(attribute);
 						}
 					}
@@ -136,14 +130,11 @@ angular.module('pinzclientApp')
 				tempSrcQuery.attrs = tempAttrs;
 			}
 
-			console.log("\tAdding " + JSON.stringify(tempSrcQuery) + " to tempDataQuery");
 			tempDataQuery.push(tempSrcQuery);
 		}
 
-		console.log("Setting the $scope.dataQuery to be the cleaned up tempDataQuery..." + JSON.stringify(tempDataQuery));
 		$scope.dataQuery = tempDataQuery;
 		tempDataQuery = null;
-		console.log("Query that is sent to the server::\n" + JSON.stringify($scope.dataQuery));
 	}
 
 });

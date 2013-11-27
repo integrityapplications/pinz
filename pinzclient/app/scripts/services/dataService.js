@@ -2,14 +2,14 @@
 
 console.log("I'm alive!");
 
-angular.module('pinzclientApp')
+angular.module('modalApp')
 .service('dataService', function dataService($http, $log, $rootScope) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var query = {};
     var ds = {};
 
     ds.getData = function(query) {
-		$log.log('Retrieving data with this ', JSON.stringify(query));
+		//$log.log('Retrieving data with this ', JSON.stringify(query));
 
 		var headersCfg = {"content-type":"application/json"};
 	    // Now post'em
@@ -22,8 +22,9 @@ angular.module('pinzclientApp')
 	    	$log.log("data received, updating scope");
 
 	        // clear the error messages
-	        $rootScope.statusMessage = 'success';
+	        $rootScope.statusMessage = 'success (' + data.length + ' pinz received)!';
 	        $rootScope.pinzData = data;
+	        //console.debug("Data received: ", data);
 	        
 	    }).error(function (data, status) {
 	    	if (status === 404) {
@@ -38,7 +39,6 @@ angular.module('pinzclientApp')
 	}
 
 	ds.setQuery = function(query) {
-		console.log("data service query is ", JSON.stringify(query));
 		ds.dataQuery = query;
 	}
 

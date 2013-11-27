@@ -55,7 +55,7 @@
         <div ng-controller="MapCtrl">
           <div class="row">
             <div class="col-md-6">
-                <div ng-leaflet pinz="pinzData"></div> <!-- gets replaced by ngLeaflet directive -->
+                <div pinz-leaflet pinz="pinzData"></div> <!-- gets replaced by ngLeaflet directive -->
             </div> 
           </div>
 
@@ -102,14 +102,14 @@
           <!-- a patched angular strap to support bootstrap 3 modals -->
           <script src="scripts/directives/patched/angular-strap-modal-bootstrap3.js"></script>
           <script src="scripts/external/Leaflet-Coordinates/dist/Leaflet.Coordinates-0.1.4.src.js"></script>
-        <script src="scripts/modal.js"></script>
-        <script src="scripts/controllers/Modal.js"></script>
-        <script src="scripts/directives/leafletModal.js"></script>
-        <script src="scripts/services/dataServiceModal.js"></script>
-        <script src="scripts/services/MetadataServiceModal.js"></script>
+        <script src="scripts/app.js"></script>
+        <script src="scripts/controllers/Main.js"></script>
+        <script src="scripts/directives/pinzLeaflet.js"></script>
+        <script src="scripts/services/dataService.js"></script>
+        <script src="scripts/services/MetadataService.js"></script>
         <!-- script src="scripts/controllers/main.js"></script -->
-        <script src="scripts/controllers/MapModal.js"></script>
-        <script src="scripts/controllers/QueryCtrlModal.js"></script>
+        <script src="scripts/controllers/Map.js"></script>
+        <script src="scripts/controllers/QueryCtrl.js"></script>
         <!-- script src="scripts/directives/leafletSnap.js"></script> -->
         <!-- script src="scripts/directives/simple.js"></script -->
         <!-- endbuild -->

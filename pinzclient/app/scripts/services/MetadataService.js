@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pinzclientApp')
+angular.module('modalApp')
   .service('Metadataservice', function Metadataservice($http, $log) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var metadataUrl = "/metadata";
