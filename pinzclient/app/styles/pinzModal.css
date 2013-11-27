@@ -22,3 +22,9 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   }
 }
+
+.leaflet-control-coordinates {
+  background-color: #000;
+  background-color: rgba(0,0,0,0.6);
+  cursor: pointer;
+}

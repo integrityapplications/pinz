@@ -17,8 +17,8 @@ angular.module('modalApp')
     	$scope.cancelDataFeed = $timeout(function() {
             var now = new Date();
             query.forEach(function (source, index) {
-                console.log('query src: ', source.src);
-                console.log('start: ', source.time_within.start);
+                //console.log('query src: ', source.src);
+                //console.log('time_within: ', source.time_within);
                 source.time_inserted = {};
                 source.time_inserted.start = currentRunTime;
             });
@@ -33,15 +33,8 @@ angular.module('modalApp')
         if (dataService.dataQuery === null || typeof dataService.dataQuery === "undefined") {
             alert('Please enter a query first.');
         } else {
-    		console.log('start the data feed with query ', dataService.dataQuery);
-
             var dq = dataService.dataQuery;
             var currentRunTime = new Date()
-            dq.forEach(function(source, index) {
-                console.log('source.src: ', source.src);
-                console.log(' start: ', source.time_within.start, ' end ', source.time_within.end);
-                //currentRunTime = source.time_within.end;
-            })
             $scope.realDataQuery = dataService.dataQuery; // Need serious thought!
             updateData($scope.realDataQuery, currentRunTime);
         }

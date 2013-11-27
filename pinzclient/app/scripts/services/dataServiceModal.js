@@ -24,6 +24,7 @@ angular.module('modalApp')
 	        // clear the error messages
 	        $rootScope.statusMessage = 'success';
 	        $rootScope.pinzData = data;
+	        console.debug("Data received: ", data);
 	        
 	    }).error(function (data, status) {
 	    	if (status === 404) {
@@ -38,7 +39,7 @@ angular.module('modalApp')
 	}
 
 	ds.setQuery = function(query) {
-		console.log("data service query is ", JSON.stringify(query));
+		//console.log("data service query is ", JSON.stringify(query));
 		ds.dataQuery = query;
 	}
 
