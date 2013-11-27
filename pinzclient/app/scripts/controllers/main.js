@@ -21,7 +21,10 @@ angular.module('modalApp')
 	});
   };
 
-  if (!$scope.queryOpened) {
-  	$scope.showModal();
-  }
+  angular.element(document).ready(function() {
+     if (!$scope.queryOpened) {
+        $scope.showModal();
+    }   
+  })
+ 
 });
