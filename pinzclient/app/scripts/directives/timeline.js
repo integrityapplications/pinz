@@ -50,6 +50,23 @@ function generateTimeline(containerId, rawData) {
 				.attr("width", 1)
 				.attr("height", preparedData.barHeight);
 	});
+
+	//Add brush
+	var brush = d3.svg.brush()
+		.x(xScale)
+		.on("brush", brushMoveHandler);
+	timeline.append("g")
+		.attr("class", "brush")
+		.call(brush)
+		.selectAll("rect")
+			.attr("height", preparedData.height);
+
+	function brushMoveHandler() {
+		var extent = brush.extent();
+		var brushStart = extent[0].getTime();
+		var brushStop = extent[1].getTime();
+		//use brush time(s) to filter map
+	}
 }
 
 function prepareData(rawData, containerWidth) {
