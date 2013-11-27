@@ -102,8 +102,10 @@ angular.module('modalApp')
 	         				});
 	         			}
 
+	         			var myIcon = L.divIcon({className: 'my-div-icon'});
+
 	         			pinzLayerGroup[0].addLayer(
-	         				new L.Marker([lat, lon]).bindPopup(popupText));
+	         				new L.Marker([lat, lon], {icon: myIcon}).bindPopup(popupText));
 	         		});
 	         		//L.marker([lat,lon]).addTo(map).bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
 	         	
