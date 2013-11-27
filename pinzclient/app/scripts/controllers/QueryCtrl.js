@@ -61,6 +61,8 @@ angular.module('modalApp')
         }
 	    
 		$scope.userQuery = defaultQuery;
+
+		$scope.testArray = [ "Bill" , "Fred" , "John" , "Eric" , "Bobby" , "Chuck"];
 	}
 
 	function createEmptyDataQuery() {
@@ -119,7 +121,7 @@ angular.module('modalApp')
 						// ref values from metadata
 						var attrRefLow = $scope.dataSources[srcIdx].attrs[attrIdx].low;
 						var attrRefHigh = $scope.dataSources[srcIdx].attrs[attrIdx].high;
-						if(attribute.low != attrRefLow && attribute.high != attrRefHigh) {
+						if(attribute.low != attrRefLow || attribute.high != attrRefHigh) {
 							tempAttrs.push(attribute);
 						}
 					}
