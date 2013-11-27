@@ -26,6 +26,8 @@ function generateTimeline(containerId, rawData) {
 		.domain([preparedData.min, preparedData.max])
 		.range([0, preparedData.width]);
 
+	var trimmedData = trimData(preparedData.data, xScale);
+
 	var timeline = d3.select(containerId)
 		.append("svg:svg")
 			.attr("width", preparedData.width + preparedData.sideMargin)
@@ -34,6 +36,20 @@ function generateTimeline(containerId, rawData) {
 			.attr("transform", "translate(" + preparedData.sideMargin + "," + preparedData.topMargin + ")");
 
 	addChartJunk(timeline, xScale, preparedData);
+
+	preparedData.sources.forEach(function(dataType, dataTypeIndx) {
+		timeline.selectAll("rect")
+			.data(trimmedData[dataType])
+			.enter().append("svg:rect")
+				.attr("x", function(d, i) {
+					return xScale(d.time)
+				})
+				.attr("y", function(d, i) {
+					return dataTypeIndx * (preparedData.barHeight + preparedData.barHeight/2);
+				})
+				.attr("width", 1)
+				.attr("height", preparedData.barHeight);
+	});
 }
 
 function prepareData(rawData, containerWidth) {
@@ -56,14 +72,14 @@ function prepareData(rawData, containerWidth) {
 			time: date
 		});
 	});
-
-	//TODO don't need all the data on timeline, only what is viewable to the eye
-
+	
 	var topMargin = 20;
 	var sideMargin = 8 * longestSrcNameLength;
 	var barHeight = 10;
+	var sources = Object.keys(sortedData).sort();
 	return {
 		data: sortedData,
+		sources: sources,
 		min: min,
 		max: max,
 		hours: (max - min) / 3600000,
@@ -71,14 +87,31 @@ function prepareData(rawData, containerWidth) {
 		sideMargin: sideMargin,
 		width: containerWidth - sideMargin,
 		barHeight: barHeight,
-		height: ((barHeight + barHeight/2) * Object.keys(sortedData).length) + topMargin + barHeight/2
+		height: ((barHeight + barHeight/2) * sources.length) + topMargin + barHeight/2
 	}
 }
 
+//Don't need to display all the data on timeline, only what is viewable to the eye
+function trimData(data, scale) {
+	var trimmedData = {};
+	Object.keys(data).forEach(function(dataType) {
+		trimmedData[dataType] = [];
+		data[dataType].forEach(function(datum) {
+			var pixel = parseInt(scale(datum.time),10);
+			if (typeof trimmedData[dataType][pixel] === 'undefined')  trimmedData[dataType][pixel] = datum
+		});
+		trimmedData[dataType] = trimmedData[dataType].filter(function(e){return e}); 
+		//alert(dataType + ": " + data[dataType].length + " trimmed to " + trimmedData[dataType].length);
+	});
+	return trimmedData;
+}
+
 function addChartJunk(timeline, xScale, preparedData) {
+	var numTicks = 4
+	var months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
 	//Display source labels (y-axis labels)
 	timeline.selectAll("text")
-		.data(Object.keys(preparedData.data))
+		.data(preparedData.sources)
 		.enter().append("svg:text")
 			.attr("x", 0)
 			.attr("dx", -1 * preparedData.sideMargin)
@@ -92,7 +125,7 @@ function addChartJunk(timeline, xScale, preparedData) {
 
 	//Display x-axis lines
 	timeline.selectAll("line")
-		.data(xScale.ticks(10))
+		.data(xScale.ticks(numTicks))
 		.enter().append("svg:line")
 			.attr("x1", xScale)
 			.attr("x2", xScale)
@@ -102,7 +135,7 @@ function addChartJunk(timeline, xScale, preparedData) {
 
 	//Display x-axis labels
 	timeline.selectAll(".axisLabel")
-		.data(xScale.ticks(10))
+		.data(xScale.ticks(numTicks))
 		.enter().append("svg:text")
 			.attr("class", "axisLabel")
 			.attr("x", xScale)
@@ -112,17 +145,6 @@ function addChartJunk(timeline, xScale, preparedData) {
 			.style("fill", "#666")
 			.style("font-size", "0.8em")
 			.text(function(d, i) {
-				return d.getUTCHours();
+				return d.toISOString().substring(0, 19);
 			});
 }
-
-var sampleDate = [
-	{
-		src: "earthquake",
-		t: new Date()
-	},
-	{
-		src: "animal",
-		t: new Date()
-	}
-]
