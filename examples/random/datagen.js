@@ -45,7 +45,7 @@ var tempDef = {
 
 var sources = [animalDef, tempDef];
 
-var samplesPerUpdate = 1000;
+var samplesPerUpdate = 100;
 var updateSec = 10;
 var mongoUrl = "mongodb://localhost:27017/pinz";
 
