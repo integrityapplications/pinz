@@ -12,20 +12,26 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         <!-- build:css(.tmp) styles/main.css -->
-        <link rel="stylesheet" href="/styles/main.css">
            <!-- css from bower -->
            <!-- bower:css -->
            <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-           <link rel="stylesheet" href="bower_components/bootstrap-datepicker/css/datepicker.css" />
+           <!--link rel="stylesheet" href="bower_components/bootstrap-datepicker/css/datepicker.css" />
            <link rel="stylesheet" href="bower_components/bootstrap-timepicker/css/bootstrap-timepicker.min.css" />
-           <link rel="stylesheet" href="bower_components/bootstrap-select/bootstrap-select.css" />
+           <link rel="stylesheet" href="bower_components/bootstrap-select/bootstrap-select.css" /-->
            <!-- endbower -->
+
+            <link rel="stylesheet" href="bower_components/leaflet-dist/leaflet.css" />
+        <link rel="stylesheet" href="scripts/external/Leaflet-Coordinates/dist/Leaflet.Coordinates-0.1.4.css" />
+
+           <link rel="stylesheet" href="bower_components/bootswatch/flatly/bootstrap.css" />
+           <link rel="stylesheet" href="/styles/pinzModal.css">
+           
         <!-- endbuild -->
-        <link rel="stylesheet" href="bower_components/bootswatch/flatly/bootstrap.css" />
-        <link rel="stylesheet" href="bower_components/leaflet-dist/leaflet.css" />
+        
+
 
 </head>
-  <body ng-app="pinzclientApp">
+  <body ng-app="modalApp">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -36,7 +42,42 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div class="container" ng-view=""></div>
+    <!-- div class="container" ng-view=""></div -->
+    <div class="container" ng-controller="ModalCtrl">
+
+        <div class="row">
+          <div class="col-md-2 col-md-offset-5">
+            <!-- Button to trigger modal -->
+            <button type="button" class="btn btn-primary btn-lg" ng-click="showModal()">Query For Data</button>
+          </div>
+        </div>
+
+        <div ng-controller="MapCtrl">
+          <div class="row">
+            <div class="col-md-6">
+                <div ng-leaflet pinz="pinzData"></div> <!-- gets replaced by ngLeaflet directive -->
+            </div> 
+          </div>
+
+          <div class="row"> 
+            <div id="map" style="height: 480px;" class="col-md-12"></div>
+          </div>
+
+          <div class="row">
+            <div class="btn-group" style="margin-top: 1em;">
+            <button type="button" ng-click="startDataFeed()" class="btn btn-lg btn-success">Start</button>
+            <button type="button" ng-click="stopDataFeed()" class="btn btn-lg btn-danger">Stop</button>
+          </div>
+          <p>{{statusMessage}}</p>
+
+          </div>
+
+          <!-- div class="row">
+            <div class="well col-md-6">{{pinzData | json:'  '}}</div>
+          </div -->
+        </div> <!-- end map ctrl -->
+
+    </div> <!-- end modal ctrl -->
 
     <script src="bower_components/angular/angular.js"></script>
 
@@ -56,19 +97,21 @@
           <script src="bower_components/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
           <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
           <script src="bower_components/bootstrap-select/bootstrap-select.js"></script>
-          <script src="bower_components/angular-strap/dist/angular-strap.min.js"></script>
           <script src="bower_components/d3/d3.js"></script>
           <!-- endbower -->
-
-        <script src="scripts/app.js"></script>
-        <script src="scripts/services/dataService.js"></script>
-        <script src="scripts/services/MetadataService.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/Map.js"></script>
-        <script src="scripts/controllers/QueryCtrl.js"></script>
-        <script src="scripts/directives/ngLeaflet.js"></script>
-        <script src="scripts/directives/simple.js"></script>
-        <!-- <script src="scripts/controllers/Modal.js"></script> -->
+          <!-- a patched angular strap to support bootstrap 3 modals -->
+          <script src="scripts/directives/patched/angular-strap-modal-bootstrap3.js"></script>
+          <script src="scripts/external/Leaflet-Coordinates/dist/Leaflet.Coordinates-0.1.4.src.js"></script>
+        <script src="scripts/modal.js"></script>
+        <script src="scripts/controllers/Modal.js"></script>
+        <script src="scripts/directives/leafletModal.js"></script>
+        <script src="scripts/services/dataServiceModal.js"></script>
+        <script src="scripts/services/MetadataServiceModal.js"></script>
+        <!-- script src="scripts/controllers/main.js"></script -->
+        <script src="scripts/controllers/MapModal.js"></script>
+        <script src="scripts/controllers/QueryCtrlModal.js"></script>
+        <!-- script src="scripts/directives/leafletSnap.js"></script> -->
+        <!-- script src="scripts/directives/simple.js"></script -->
         <!-- endbuild -->
 </body>
 </html>
