@@ -78,7 +78,7 @@
               <select class="select" ng-model="userQuery[srcIdx].attrs[attrIdx].v" ng-options="value for value in source.attrs[attrIdx].values"  width="175" style="width: 175px"></select>
 
               <div class="fuelux" id="myFirstPillbox">
-                <div id="MyPillbox" class="pillbox">
+                <div id="MyPillbox" class="well pillbox">
                   <ul>
                     <li ng-repeat="(valueIdx, value) in source.attrs[attrIdx].values" class="status-warning">{{value}}</li>
                   </ul>
