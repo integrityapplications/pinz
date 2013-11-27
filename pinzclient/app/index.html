@@ -72,6 +72,12 @@
           </div>
 
           <div class="row">
+            <div class="col-md-12 col-lg-12">
+              <div id="timeline" pinz-timeline pinz="pinzData"></div>
+            </div>
+          </div>
+
+          <div class="row">
             <div class="btn-group" style="margin-top: 1em;">
             <button type="button" ng-click="startDataFeed()" class="btn btn-lg btn-success">Start</button>
             <button type="button" ng-click="stopDataFeed()" class="btn btn-lg btn-danger">Stop</button>
@@ -117,6 +123,7 @@
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/directives/pinzLeaflet.js"></script>
+        <script src="scripts/directives/timeline.js"></script>
         <script src="scripts/services/dataService.js"></script>
         <script src="scripts/services/MetadataService.js"></script>
         <!-- script src="scripts/controllers/main.js"></script -->
