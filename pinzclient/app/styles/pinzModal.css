@@ -28,3 +28,8 @@
   background-color: rgba(0,0,0,0.6);
   cursor: pointer;
 }
+
+.my-div-icon {
+  background: #31A354;
+  border: 1px solid #666;
+}
