@@ -113,6 +113,8 @@ angular.module('modalApp')
 			var attrIdx;
 			var tempAttrs = [];
 
+
+				// if there are no v
 			for(attrIdx = 0; attrIdx < srcQuery.attrs.length; attrIdx++) {
 				
 				var attribute = srcQuery.attrs[attrIdx];
@@ -121,34 +123,32 @@ angular.module('modalApp')
 
 					if(("v" in attribute) && (attribute.v != null)) {
 
-						// if the attribute is an array, ensure it is not empty
-						if(attribute.v instanceof Array && attribute.v.length > 0) {
-							//and that it doesnt match reference list (if so, no need to query)
-							if(("values" in $scope.dataSources[srcIdx].attrs[attrIdx])) {
-								console.log("contains values proper - check values");
-								if(attribute.length != $scope.dataSources[srcIdx].attrs[attrIdx].values.length) {
-									console.log("contains same number of values as ref list");
-									tempAttrs.push({
-										"k" : attribute.k,
-										"v" : attribute.v
-									});
-									console.log("\tAdded new attribute to tempAttr array: " + tempAttrs);
-								}
-							} else {
-								console.log("String prop has no preset values; add input values");
-								tempAttrs.push({
-									"k" : attribute.k,
-									"v" : attribute.v
-								});
-								console.log("\tAdded new attribute to tempAttr array: " + tempAttrs);
+						// if an array with fixed values, assume set by pillbox
+						if((attribute.v instanceof Array) == true && ("values" in $scope.dataSources[srcIdx].attrs[attrIdx])) {
+							// we have a preset dealt with by a pillbox
+							// if the dataQuery value isn't blank, add to tempQuery.  If it is blank, just ignore it
+							if(($scope.dataQuery[srcIdx].attrs[attrIdx].v instanceof Array)
+								&& ($scope.dataQuery[srcIdx].attrs[attrIdx].v.length > 0)
+								&& ($scope.dataQuery[srcIdx].attrs[attrIdx].v.length != $scope.dataSources[srcIdx].attrs[attrIdx].values.length)
+								) {
+
+								tempAttrs = $scope.dataQuery[srcIdx].attrs[attrIdx].v;
 							}
-						} else if(typeof attribute.v == 'string') {
+						} else {
+							console.log("String prop has no preset values; add input values");
 							tempAttrs.push({
-									"k" : attribute.k,
-									"v" : attribute.v
+								"k" : attribute.k,
+								"v" : attribute.v
 							});
-							console.log("\tAdded new attribute to tempAttr array: " + tempAttrs);
 						}
+					// if we have just a string, add to array value list
+					} else if(typeof attribute.v == 'string') {
+						tempAttrs.push({
+								"k" : attribute.k,
+								"v" : attribute.v
+						});
+						console.log("\tAdded new attribute to tempAttr array: " + tempAttrs);
+
 					} else if(("low" in attribute) && (attribute.low != null) && ("high" in attribute) && (attribute.high != null)) {
 						// ref values from metadata
 						var attrRefLow = $scope.dataSources[srcIdx].attrs[attrIdx].low;
