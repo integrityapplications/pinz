@@ -132,7 +132,10 @@ angular.module('modalApp')
 								&& ($scope.dataQuery[srcIdx].attrs[attrIdx].v.length != $scope.dataSources[srcIdx].attrs[attrIdx].values.length)
 								) {
 
-								tempAttrs = $scope.dataQuery[srcIdx].attrs[attrIdx].v;
+								tempAttrs.push({
+									"k" : attribute.k,
+									"v" : $scope.dataQuery[srcIdx].attrs[attrIdx].v
+								});
 							}
 						} else {
 							console.log("String prop has no preset values; add input values");
@@ -226,38 +229,22 @@ angular.module('modalApp')
 		}
 
 		if(valueInDataQuery == false) {
-			// remove value from userQuery AND add to data query and remove from userQuery
-
-			// First, the userQuery removal
-			console.log(lastSelectVal + " NOT already in dataQuery - make sure it is removed from userQuery");
-
+			// remove value from userQuery AND add to data query
 			var valIdxInUserQuery = $scope.userQuery[srcIdx].attrs[attrIdx].v.indexOf(lastSelectVal);
-
-			console.log("OLD userQuery = " + $scope.userQuery[srcIdx].attrs[attrIdx].v);
 			$scope.userQuery[srcIdx].attrs[attrIdx].v.splice(valIdxInUserQuery, 1); // should reduce the userQuery attr by that value
-			console.log("NEW userQuery = " + $scope.userQuery[srcIdx].attrs[attrIdx].v);
-
-			// now deal with dataQuery
-			console.log("OLD dataQuery attr vals = " + $scope.dataQuery[srcIdx].attrs[attrIdx].v);
-			$scope.dataQuery[srcIdx].attrs[attrIdx].v.push(lastSelectVal);
-			console.log("NEW dataQuery attr vals = " + $scope.dataQuery[srcIdx].attrs[attrIdx].v);
+			$scope.dataQuery[srcIdx].attrs[attrIdx].v.push(lastSelectVal); // add to dataQuery
 
 		} else {
-
-			console.log(lastSelectVal + " WAS in dataQuery, make sure it is removed userQuery and added to dataQuery");
-
+			// just remove from userQuery
 			var valIdxInUserQuery = $scope.userQuery[srcIdx].attrs[attrIdx].v.indexOf(lastSelectVal);
-			console.log("OLD userQuery = " + $scope.userQuery[srcIdx].attrs[attrIdx].v);
 			$scope.userQuery[srcIdx].attrs[attrIdx].v.splice(valIdxInUserQuery, 1); // should reduce the userQuery attr by that value
-			console.log("NEW userQuery = " + $scope.userQuery[srcIdx].attrs[attrIdx].v);
 		}
 	}
 
 	$scope.pillboxClickUpdate = function(srcIdx, attrIdx, valueIdx) {
-		console.log("pillbox clicked source" + srcIdx + " attrIdx=" + attrIdx + " valueIdx=" + valueIdx);
+		console.log("pillbox <<" + $scope.dataQuery[srcIdx].attrs[attrIdx].v[valueIdx]+ ">> clicked.  Remove value from dataQuery, add to userQuery");
 		var valClicked = $scope.dataQuery[srcIdx].attrs[attrIdx].v[valueIdx];
-
-		console.log("Clicked value " + valClicked + " at value index " + valueIdx + "\nNow removing from dataQuery and adding to userQuery");
+		
 		$scope.dataQuery[srcIdx].attrs[attrIdx].v.splice(valueIdx , 1);
 
 		var valInUserQuery = false;
@@ -268,11 +255,9 @@ angular.module('modalApp')
 				break;
 			}
 		}
-
 		if(valInUserQuery == false) {
 			$scope.userQuery[srcIdx].attrs[attrIdx].v.push(valClicked);
 		}
-
 	}
 
 });
