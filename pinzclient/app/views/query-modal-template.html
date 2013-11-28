@@ -21,13 +21,12 @@
           <li><a href="#geo" data-toggle="tab" target="_self">Geospatial</a></li>
           
           <li ng-model="dataSource" ng-repeat="src in dataSources">
-            <a href="#{{src._id}}" data-toggle="tab" target="_self">{{"Source " + src._id}}</a>
+            <a href="#{{src._id}}" data-toggle="tab" target="_self">{{src._id}}</a>
           </li>
 
       </ul>
 
       <!-- Guide tab -->
-      
       <div class="tab-content">
 
         <div id="guide" class="tab-pane active">
@@ -43,6 +42,7 @@
             </div>
         </div>
 
+        <!-- Geo view -->
         <div id="geo" class="tab-pane">
             <div class="row">
               <div class="panel-heading">
@@ -60,7 +60,6 @@
               <!-- add an info box -->
               <p class="lead"><strong>{{source._id}}:</strong> {{source.desc}}</p>
               <p>Oldest:{{source.oldest}}, Newest:{{source.newest}}, Count:{{source.count}}</p>
-              <!--<h3 class="panel-title">{{"Source " + source._id + " provides " + source.desc + " and contains a total of " + source.count + " observables.\nOldest observabled: " + source.oldest + "\nNewest observable: " + source.newest + "Data source has " + attrs.length + " attributes."}}</h3>-->
             </div>
           </div>
 
@@ -74,22 +73,26 @@
               {{attr.desc}}
             </div>
 
-            <div class="col-md-4 pull-right" ng-model="attr" ng-if="(attr.type=='string' && attr.values)">
-              <select class="select" ng-model="userQuery[srcIdx].attrs[attrIdx].v" ng-options="value for value in source.attrs[attrIdx].values"  width="175" style="width: 175px"></select>
 
-              <div class="fuelux" id="myFirstPillbox">
-                <div id="MyPillbox" class="well pillbox">
+            <div class="col-md-2 pull-right" ng-if="(attr.type == 'string' && attr.values)">
+
+              <select class="select" ng-model="userQuery[srcIdx].attrs[attrIdx].lastSelectedValue" ng-options="value for value in userQuery[srcIdx].attrs[attrIdx].v"  width="175" style="width: 175px" ng-change="selectboxUpdate(srcIdx, attrIdx)"></select>
+
+              <div class="fuelux">
+                <div class="well pillbox">
                   <ul>
-                    <li ng-repeat="(valueIdx, value) in source.attrs[attrIdx].values" class="status-warning">{{value}}</li>
+                    <li ng-repeat="(valueIdx, value) in dataQuery[srcIdx].attrs[attrIdx].v" class="status-success" ng-click="pillboxClickUpdate(srcIdx, attrIdx, valueIdx)">
+                        {{value}}
+                    </li>
+
                   </ul>
                 </div>
               </div>
-
             </div>
 
-            <div class="col-md-4 pull-right" ng-model="attr" ng-if="attr.type =='string' && Array.isArray(attr.values)">
-              <input type="text" ng-model="userQuery[srcIdx].attrs[attrIdx].v"></br>
-            </div>
+            <!-- <div class="col-md-4 pull-right" ng-model="attr" ng-if="attr.type =='string' && Array.isArray(attr.values)"> -->
+              <!-- <input type="text" ng-model="userQuery[srcIdx].attrs[attrIdx].v"> -->
+            <!-- </div> -->
 
             <div class="col-md-4 pull-right" ng-model="attr" ng-if="attr.type=='number'">
               <div style="margin-bottom: 1em;">
