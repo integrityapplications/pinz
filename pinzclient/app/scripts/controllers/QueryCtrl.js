@@ -57,7 +57,6 @@ angular.module('modalApp')
 	                sourceQuery.attrs.push({ k : attribute.name , v : []});
 	            } else if (attribute.type == 'number') {
                 	sourceQuery.attrs.push({ k : attribute.name , low : null , high : null});
-                    // sourceQuery.attrs.push({ k : attribute.name , low : 0 , high : 100});
                 }
             }
         	defaultQuery.push(sourceQuery);
@@ -73,14 +72,12 @@ angular.module('modalApp')
 		for(srcIdx=0; srcIdx < $scope.dataSources.length; srcIdx++) {
 			var tempAttrs = [];
 			var attrIdx;
-			console.log("Source" + srcIdx + " has " + $scope.dataSources[srcIdx].attrs.length + " attrs");
 			for(attrIdx = 0 ; attrIdx < $scope.dataSources[srcIdx].attrs.length; attrIdx++) {
 				tempAttrs.push({});
 			}
 			tempDataQuery.push( { src : $scope.dataSources[srcIdx]._id , attrs : tempAttrs } );
 		}
 		$scope.dataQuery = tempDataQuery;
-		console.log("Starting dataQuery = " + JSON.stringify($scope.dataQuery));
 	}
 
 	// run grunt tests for QueryCtrl
@@ -113,8 +110,6 @@ angular.module('modalApp')
 			var attrIdx;
 			var tempAttrs = [];
 
-
-				// if there are no v
 			for(attrIdx = 0; attrIdx < srcQuery.attrs.length; attrIdx++) {
 				
 				var attribute = srcQuery.attrs[attrIdx];
@@ -138,7 +133,6 @@ angular.module('modalApp')
 								});
 							}
 						} else {
-							console.log("String prop has no preset values; add input values");
 							tempAttrs.push({
 								"k" : attribute.k,
 								"v" : attribute.v
@@ -150,7 +144,6 @@ angular.module('modalApp')
 								"k" : attribute.k,
 								"v" : attribute.v
 						});
-						console.log("\tAdded new attribute to tempAttr array: " + tempAttrs);
 
 					} else if(("low" in attribute) && (attribute.low != null) && ("high" in attribute) && (attribute.high != null)) {
 						// ref values from metadata
@@ -163,7 +156,6 @@ angular.module('modalApp')
 								"low" : attribute.low ,
 								"high" : attribute.high
 							});
-							console.log("\tAdded new attribute to tempAttr array: " + JSON.stringify(tempAttrs));
 						}
 					}
 				}
@@ -180,39 +172,19 @@ angular.module('modalApp')
 		$scope.dataQuery = tempDataQuery;
 
 		tempDataQuery = null;
-		console.log("New dataQuery::\n" + JSON.stringify($scope.dataQuery));
+
+		console.log("dataQuery = " + JSON.stringify($scope.dataQuery));
 	}
 
 
 	$scope.selectboxUpdate = function(srcIdx, attrIdx) {
-		console.log("changed value = " + $scope.userQuery[srcIdx].attrs[attrIdx].lastSelectedValue);
+		
 		var lastSelectVal = $scope.userQuery[srcIdx].attrs[attrIdx].lastSelectedValue;
-
 		console.log("The last value selected:: " + lastSelectVal);
-		// add to dataQuery
+
 		var valueInDataQuery = false;
 		var dataAttrIdx;
 
-		// does the dataQuery even have an attribute?
-		// if( ('attrs' in $scope.dataQuery[srcIdx]) == false) {
-		// 	$scope.dataQuery[srcIdx].attrs = [];
-		// 	$scope.dataQuery[srcIdx].attrs.push(
-		// 		{
-		// 			"k" : $scope.userQuery[srcIdx].attrs[attrIdx].k,
-		// 			"v" : [ lastSelectVal]
-		// 		});
-		// } else if($scope.dataQuery[srcIdx].attrs.length < 0) {
-		// 	$scope.dataQuery[srcIdx].attrs.push(
-		// 		{
-		// 			"k" : $scope.userQuery[srcIdx].attrs[attrIdx].k,
-		// 			"v" : [ lastSelectVal]
-		// 		});
-		// }
-
-		console.log("What is src" + srcIdx + " attrs? " + JSON.stringify($scope.dataQuery[srcIdx].attrs));
-		console.log("What is src" + srcIdx + " attrIdx" + attrIdx + "? " + JSON.stringify($scope.dataQuery[srcIdx].attrs[attrIdx]));
-
-		// deal with empty 
 		if("v" in $scope.dataQuery[srcIdx].attrs[attrIdx]) {
 			for(dataAttrIdx = 0; dataAttrIdx < $scope.dataQuery[srcIdx].attrs[attrIdx].v.length; dataAttrIdx++) {
 				if($scope.dataQuery[srcIdx].attrs[attrIdx].v[dataAttrIdx] == lastSelectVal) {
