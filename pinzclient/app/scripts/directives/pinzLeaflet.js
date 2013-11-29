@@ -41,6 +41,24 @@ angular.module('modalApp')
 
     var lMap = initLeaflet();
 
+    function putPinzOnMap(latestData, overlays) {
+	    latestData.forEach(function(item, index) {
+			var lon = item.geos[0].loc.coordinates[0],
+				lat = item.geos[0].loc.coordinates[1];
+			var popupText = item.id + " occurred at "+ item.t;
+			
+			if (typeof item.attrs !== "undefined") {
+				Object.keys(item.attrs).forEach(function(attr, attrIndex) {
+					popupText += "<br>";
+					popupText += attr + " : " + item.attrs[attr].v;
+				});
+			}
+
+			var myIcon = L.divIcon({className: 'my-div-icon'});
+			overlays[item.src].addLayer(new L.Marker([lat, lon], {icon: myIcon}).bindPopup(popupText));
+		});
+	}	     
+
     return {
       restrict: 'A',
       template: '<div id="pinzLeafletData"></div>',
@@ -66,53 +84,47 @@ angular.module('modalApp')
          		}
          		var sources = {},
          			colours = ['red','green','blue'];
+
+         		latestPinz.forEach(function(item, index) {
+	         		if (!sources[item.src]) { 
+	         			sources[item.src] = 0;
+	         		}
+	         		sources[item.src] += 1;
+	         	});
+
+         		// Clear existing layers TODO: make this better
+	         	Object.keys(sources).forEach(function(item, index) {
+	         		if(pinzLayerGroup[index] !== null && typeof pinzLayerGroup[index] !== "undefined") {
+	         			pinzLayerGroup[index].clearLayers();
+	         		}
+	         	});
+
+	         	var latestData = angular.copy(latestPinz);
          		
-         		// Just a hack for now, this should come from real data not
-         		// metadata. But shows multiple layers with a name of src
-         		// and how many items were received.
          		if (!overlays) {
          			overlays = {};
-         			latestPinz.forEach(function(item, index) {
-	         			if (!sources[item.src]) { 
-	         				sources[item.src] = 0;
-	         			}
-	         			sources[item.src] += 1;
-	         		});
-         			console.log("what are our data sources? ", sources);
+         			
 	         		//var markers = new Array();
 	         		Object.keys(sources).forEach(function(item, index) {
 	         			// create a layer for each data source
+	         			console.log('source: ', item);
 	         			pinzLayerGroup[index] = new L.LayerGroup();
+	         			console.log('layer group: ', pinzLayerGroup[index]);
 	         			// add this to the overlays object
 	         			console.log("src name ", item, "index", index);
-	         			overlays[item + sources[item].toString()] = pinzLayerGroup[index];
+	         			overlays[item] = pinzLayerGroup[index];
 
 	         		});
          			L.control.layers(null, overlays, {collapsed:false}).addTo( map );
 
-	         		latestPinz.forEach(function(item, index) {
-	         			var lon = item.geos[0].loc.coordinates[0],
-	         				lat = item.geos[0].loc.coordinates[1];
-	         			var popupText = item.id + " occurred at "+ item.t;
-	         			
-	         			if (typeof item.attrs !== "undefined") {
-	         				Object.keys(item.attrs).forEach(function(attr, attrIndex) {
-	         					popupText += "<br>";
-	         					popupText += attr + " : " + item.attrs[attr].v;
-	         				});
-	         			}
-
-	         			var myIcon = L.divIcon({className: 'my-div-icon'});
-
-	         			pinzLayerGroup[0].addLayer(
-	         				new L.Marker([lat, lon], {icon: myIcon}).bindPopup(popupText));
-	         		});
+	         		putPinzOnMap(latestData, overlays);   		
 	         		//L.marker([lat,lon]).addTo(map).bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
 	         	
+         		} else {	
+         			putPinzOnMap(latestData, overlays); 
          		}
-
 	         
-         	 }
+         	}
         })
       }
     };

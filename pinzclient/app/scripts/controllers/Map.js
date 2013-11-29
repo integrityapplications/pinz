@@ -7,6 +7,8 @@ angular.module('modalApp')
 
     $scope.cancelDataFeed = null;
     $scope.updateCount = 0;
+
+    var refreshInMs = 5000;
     var lastRun = new Date();
     var currRun = new Date();
 
@@ -25,7 +27,7 @@ angular.module('modalApp')
             currentRunTime = now;
 	        updateData(query, currentRunTime);
             $scope.statusMessage = "polling for data...";
-	    }, 15000);
+	    }, refreshInMs);
 
     }
 
