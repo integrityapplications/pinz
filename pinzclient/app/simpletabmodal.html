@@ -1,0 +1,159 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <!-- build:css(.tmp) styles/main.css -->
+           <!-- css from bower -->
+           <!-- bower:css -->
+           <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+           <!--link rel="stylesheet" href="bower_components/bootstrap-datepicker/css/datepicker.css" />
+           <link rel="stylesheet" href="bower_components/bootstrap-timepicker/css/bootstrap-timepicker.min.css" />
+           <link rel="stylesheet" href="bower_components/bootstrap-select/bootstrap-select.css" /-->
+           <!-- endbower -->
+
+        <link rel="stylesheet" href="bower_components/leaflet-dist/leaflet.css" />
+        <style>
+
+        
+          .modal-content {
+              width: 600px;
+              padding-top: 30px;
+              padding-bottom: 30px;
+              -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+                      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+          }
+        
+        </style>
+            
+        <link rel="stylesheet" href="bower_components/bootswatch/flatly/bootstrap.css" />
+        
+        <!-- endbuild -->
+        
+</head>
+  <body>
+
+    <div class="container">
+      <!-- Button trigger modal -->
+      <div class="row">
+        <div class="col-md-12">
+          <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+            Launch demo modal
+          </button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+
+          <ul class="nav nav-tabs">
+              <li class="active">
+                <a href="#home" data-toggle="tab" target="_self">Home</a>
+              </li>
+              <li>
+                <a href="#alt" data-toggle="tab">Alt</a>
+              </li>
+          </ul>
+
+        <!-- Guide tab -->
+          <div class="tab-content">
+
+            <div id="home" class="tab-pane active">
+                <div class="row">
+                  <div class="panel-heading">
+                    <div class="jumbotron">
+                      <h3>HOME</h3>
+                      <p class="lead">Home tab<p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+             <div id="alt" class="tab-pane active">
+                <div class="row">
+                  <p>Alt tab content</p>
+                </div>
+            </div>
+
+          </div> <!-- end tab content -->
+        </div>
+      </div>
+
+
+      <!-- Modal -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+
+              <!-- BEGIN MODAL BODY -->
+               <div class="row">
+                <div class="col-md-12">
+                  one row
+                </div>
+               </div>
+               <div class="row">
+                <div class="col-md-12">
+                <!-- Guide tab -->
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                      <a href="#guide" data-toggle="tab" target="_self">Guide</a>
+                    </li>
+                    <li>
+                      <a href="#helper" data-toggle="tab">Help</a>
+                    </li>
+                </ul>
+                  <div class="tab-content">
+
+                    <div id="guide" class="tab-pane active">
+                        <div class="row">
+                          <div class="panel-heading">
+                              <p class="lead">Near-real time visualisation of geo-spatial data.<p>
+                          </div>
+                        </div>
+                    </div>
+
+                     <div id="helper" class="tab-pane active">
+                        <div class="row">
+                          <p>Some helping stuff</p>
+                        </div>
+                    </div>
+       
+                  </div> <!-- end tab content -->
+                </div>
+              </div>
+              <!-- END MODAL BODY -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+    </div> <!-- end container -->
+
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script>
+      $(document).ready(function() {
+        
+          console.log("open the modal");
+         
+      });
+    </script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+         
+</body>
+</html>
