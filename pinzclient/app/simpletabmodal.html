@@ -45,7 +45,7 @@
       <!-- Button trigger modal -->
       <div class="row">
         <div class="col-md-12">
-          <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+          <button class="btn btn-primary btn-lg modal-btn" data-toggle="modal" data-target="#myModal">
             Launch demo modal
           </button>
         </div>
@@ -107,7 +107,7 @@
                <div class="row">
                 <div class="col-md-12">
                 <!-- Guide tab -->
-                <ul class="nav nav-tabs">
+                <ul id="modal-tabs" class="nav nav-tabs">
                     <li class="active">
                       <a href="#guide" data-toggle="tab" target="_self">Guide</a>
                     </li>
@@ -115,7 +115,7 @@
                       <a href="#helper" data-toggle="tab">Help</a>
                     </li>
                 </ul>
-                  <div class="tab-content">
+                  <div id="modal-tab-content" class="tab-content">
 
                     <div id="guide" class="tab-pane active">
                         <div class="row">
@@ -148,8 +148,19 @@
     <script src="bower_components/jquery/jquery.js"></script>
     <script>
       $(document).ready(function() {
-        
+          var count = 0;
           console.log("open the modal");
+          $(document).on("click", ".modal-btn", function() {
+            $("#modal-tabs").append('<li><a href="#new-tab' + count + '" data-toggle="tab">' + count + '</a></li>');
+            var tabContent = '<div id="new-tab' 
+                              + count.toString() 
+                              + '" class="tab-pane"><div class="row"><p>lorem ipsum ' 
+                              + count 
+                              + '</p></div></div>';
+            console.log("tab content: ", tabContent);
+            $("#modal-tab-content").append(tabContent);
+            count++;
+          });
          
       });
     </script>
