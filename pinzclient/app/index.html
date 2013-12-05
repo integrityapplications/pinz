@@ -15,18 +15,12 @@
            <!-- css from bower -->
            <!-- bower:css -->
            <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-           <!--link rel="stylesheet" href="bower_components/bootstrap-datepicker/css/datepicker.css" />
+           <link rel="stylesheet" href="bower_components/bootstrap-datepicker/css/datepicker.css" />
            <link rel="stylesheet" href="bower_components/bootstrap-timepicker/css/bootstrap-timepicker.min.css" />
-           <link rel="stylesheet" href="bower_components/bootstrap-select/bootstrap-select.css" /-->
+           <link rel="stylesheet" href="bower_components/bootstrap-select/bootstrap-select.css" />
+           
            <!-- endbower -->
-
-            <!-- <link rel="stylesheet" href="bower_components/fuelux/dist/css/fuelux.css"> -->
-            <!-- <link rel="stylesheet" href="bower_components/fuelux/dist/css/fuelux-responsive.css"> -->
-
-            <link href="bower_components/fuelux/dist/css/fuelux.css" rel="stylesheet" />
-            <link href="bower_components/fuelux/dist/css//fuelux-responsive.css" rel="stylesheet" />
             
-
         <link rel="stylesheet" href="bower_components/leaflet-dist/leaflet.css" />
             
         <link rel="stylesheet" href="scripts/external/Leaflet-Coordinates/release/Leaflet.Coordinates-0.1.4.css" />
@@ -44,7 +38,10 @@
           }
         </style>
 </head>
+  
+
   <body ng-app="modalApp">
+
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -56,14 +53,46 @@
 
     <!-- Add your site or application content here -->
     <!-- div class="container" ng-view=""></div -->
-    <div class="container" ng-controller="ModalCtrl">
 
-        <div class="row">
-          <div class="col-md-2 col-md-offset-5">
-            <!-- Button to trigger modal -->
-            <button type="button" class="btn btn-primary btn-lg" ng-click="showModal()">Query For Data</button>
-          </div>
+
+
+
+    <div class="container">
+
+      <div class="row">
+          <!-- Button trigger modal -->
+        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+          Launch demo modal
+        </button>
+
+      </div>
+
+        <div class="row" ng-controller="QueryCtrl">
+          <!-- Modal -->
+          <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+
+                <div class="modal-body">
+                  <div query-builder></div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button class="btn" ng-click="dismiss()">Close</button>
+                    <button class="btn btn-primary" ng-click="saveUserQuery(); dismiss()">Save changes</button>
+                </div>
+
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
+
+
         </div>
+
 
         <div ng-controller="MapCtrl">
           <div class="row">
@@ -98,7 +127,7 @@
 
     </div> <!-- end modal ctrl -->
 
-    <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
 
         <!-- build:js scripts/modules.js -->
         <script src="bower_components/angular-resource/angular-resource.js"></script>
@@ -118,22 +147,20 @@
           <script src="bower_components/bootstrap-select/bootstrap-select.js"></script>
           <script src="bower_components/d3/d3.js"></script>
 
-          <!-- <script src="bower_components/fuelux/dist/all.js"></script> -->
-          <script src="http://www.fuelcdn.com/fuelux-imh/2.4.0/loader.min.js" type="text/javascript"></script>
-
           <!-- endbower -->
-          <!-- a patched angular strap to support bootstrap 3 modals -->
-          <script src="scripts/directives/patched/angular-strap-modal-bootstrap3.js"></script>
+          
           <script src="scripts/external/Leaflet-Coordinates/release/Leaflet.Coordinates-0.1.4.src.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/directives/pinzLeaflet.js"></script>
         <script src="scripts/directives/timeline.js"></script>
         <script src="scripts/services/dataService.js"></script>
         <script src="scripts/services/MetadataService.js"></script>
-        <!-- script src="scripts/controllers/main.js"></script -->
         <script src="scripts/controllers/Map.js"></script>
         <script src="scripts/controllers/QueryCtrl.js"></script>
-        <!-- script src="scripts/directives/leafletSnap.js"></script> -->
+        <script src="scripts/directives/queryBuilder.js"></script>
+        
+        <!-- endbuild -->
+        
         
         <!-- endbuild -->
 </body>

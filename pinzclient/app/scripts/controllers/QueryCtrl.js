@@ -19,6 +19,11 @@ angular.module('modalApp')
     	}
 
     });
+
+    $scope.dismiss = function() {
+    	console.log("I'm trying to dismiss the modal!");
+    	$("#myModal").modal("toggle");
+    }
     
     $scope.$watch(function() {
     	return $scope.dataQuery }

@@ -1,17 +1,12 @@
-<!-- <div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-  <button class="btn btn-primary btn-lg">Go!</button>
-</div> -->
-
-<div class="modal-body" ng-controller="QueryCtrl">
-  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-  <div class="row">
+<div class="query-modal-template">
+  
+<!--   <div class="row">
     <div class="col-md-2 col-md-offset-4">
-      <button class="btn btn-primary btn-lg pull-left" style="margin-top: 1em;" ng-click="saveUserQuery();dismiss()">Map It!</button>
+      <button class="btn btn-primary btn-lg pull-left" style="margin-top: 1em;" ng-click="saveUserQuery()">Map It!</button>
     </div>
-  </div>
-  <div class="row">
+  </div> -->
 
+  <div class="row">
     <div class="col-md-12">
       <ul class="nav nav-tabs">
           <li class="active">
@@ -23,7 +18,6 @@
           <li ng-model="dataSource" ng-repeat="src in dataSources">
             <a href="#{{src._id}}" data-toggle="tab" target="_self">{{src._id}}</a>
           </li>
-
       </ul>
 
       <!-- Guide tab -->
@@ -105,19 +99,17 @@
           </div>
 
     </div>
+
   </div>
-</div>
-</div>
+
+  </div> <!-- End column-->
+
+  </div><!-- End content-tab div -->
   
-  <div class=well col-md-6>
-    <pre>{{userQuery}}</pre>
-  </div>
-  <div class=well col-md-6>
-    <pre>{{dataQuery}}</pre>
-  </div>
+<div class=well col-md-6>
+  <pre>{{userQuery}}</pre>
+</div>
 
-
-<div class="modal-footer">
-  <button class="btn" ng-click="dismiss()">Close</button>
-  <button class="btn btn-primary" ng-click="saveUserQuery();modal.saved=true;dismiss()">Save changes</button>
+<div class=well col-md-6>
+  <pre>{{dataQuery}}</pre>
 </div>
