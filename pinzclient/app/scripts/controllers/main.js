@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('modalApp')
+angular.module('modalApp', ['$strap.directives'])
   .controller('ModalCtrl', function ($scope, $modal, $q) {
 
   $scope.queryOpened = false;
