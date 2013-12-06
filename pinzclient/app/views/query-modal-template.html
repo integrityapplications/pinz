@@ -68,20 +68,22 @@
             </div>
 
 
-            <div class="col-md-2 pull-right" ng-if="(attr.type == 'string' && attr.values)">
+            <div class="pull-right" ng-if="(attr.type == 'string' && attr.values)">
 
-              <select class="select" ng-model="userQuery[srcIdx].attrs[attrIdx].lastSelectedValue" ng-options="value for value in userQuery[srcIdx].attrs[attrIdx].v"  width="175" style="width: 175px" ng-change="selectboxUpdate(srcIdx, attrIdx)"></select>
+              <!-- <div class="btn-group" data-toggle="buttons"}>
+                <label class="btn btn-info" ng-repeat="(valueIdx, value) in userQuery[srcIdx].attrs[attrIdx].v" ng-click="updateDataQuery(srcIdx, attrIdx, valueIdx)">
+                  <input type="checkbox">{{value}}</input>
+                </label>
+              </div> -->
 
-              <div class="fuelux">
-                <div class="well pillbox">
-                  <ul>
-                    <li ng-repeat="(valueIdx, value) in dataQuery[srcIdx].attrs[attrIdx].v" class="status-success" ng-click="pillboxClickUpdate(srcIdx, attrIdx, valueIdx)">
-                        {{value}}
-                    </li>
+              <checkbox-buttons
+                class="btn-group"
+                data-toggle="buttons-radio"
+                model="dataQuery[srcIdx].attrs[attrIdx].v"
+                options="attr.values">
+              </checkbox-buttons>
 
-                  </ul>
-                </div>
-              </div>
+
             </div>
 
             <!-- <div class="col-md-4 pull-right" ng-model="attr" ng-if="attr.type =='string' && Array.isArray(attr.values)"> -->

@@ -237,6 +237,12 @@ angular.module('modalApp')
 		}
 	}
 
+
+	$scope.updateDataQuery = function(srcIdx, attrIdx, valueIdx) {
+		console.log("Button click for src" + srcIdx + ", attr" + attrIdx + ", value" + valueIdx);
+	}
+
+
 });
 
 
