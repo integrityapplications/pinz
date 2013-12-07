@@ -6,7 +6,7 @@ angular.module('modalApp')
         return {
                 restrict: "E",
                 scope: { model: '=', options:'='},
-                controller: function($scope){
+                controller: function($scope, $element){
 
                     if($scope.model == null || typeof $scope.model === 'undefined') {
                         $scope.model = [];
@@ -46,20 +46,32 @@ angular.module('modalApp')
                             console.log("Clicked value WAS in query, so we need to remove value from query & reactivate button");
                             $scope.model.splice(queryValueIdx , 1);
                             $scope.optionInQuery = optionInQuery;
+                            
                         } else {
                             console.log("Clicked value WAS NOT in query, so we need to add to query & deactivate button");
                             if(clickedOption != null) {
-                                $scope.model.push(clickedOption);
-                                $scope.optionInQuery = optionInQuery;
+                                $scope.$apply(function(){
+                                    $scope.model.push(clickedOption);
+                                    $scope.optionInQuery = optionInQuery;
+                                });
                             }
                         }
-                        
+                        // Got to get to the bottom of the CSS
                     }
                 },
-                template: "<button type='button' class='btn btn-success' "+
-                            "ng-class='{active: option == optionInQuery}'"+
-                            "ng-repeat='option in options' "+
-                            "ng-click='activate(option)'>{{option}} "+
-                          "</button>"
+                template: "<button type='button' class='btn btn-success' " +
+                            //"ng-class='{activate: optionIsSelected}'" +
+                            "ng-repeat='option in options' " +
+                            "ng-click='activate(option)'>{{option}} " +
+                          "</button>",
+
+                link: function ($scope, element) {
+                    console.log('scope.optionInQuery: ', $scope.optionInQuery);
+                    element.on('click', function() {
+                        console.log("clicked button...");
+                        element.toggleClass('active');
+
+                    });
+                }
             }
 });

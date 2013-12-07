@@ -5,7 +5,7 @@ angular.module('modalApp')
   	console.log("QueryCtrl (Modal) is active");
     
   	// a data object to store user input
-	$scope.userQuery = null;
+	$scope.inputQuery = null;
 
 	// a 'validated' object that is sent to the server.  Only contains properties that have been edited/set by user.
 	$scope.dataQuery = {};
@@ -13,7 +13,7 @@ angular.module('modalApp')
 
     Metadataservice.getMetadata(function(dataSources) {
     	$scope.dataSources = dataSources;
-    	if($scope.userQuery === null || typeof $scope.userQuery === "undefined") {
+    	if($scope.inputQuery === null || typeof $scope.inputQuery === "undefined") {
     		createDefaultQuery();
     		createEmptyDataQuery();
     	}
@@ -67,7 +67,7 @@ angular.module('modalApp')
         	defaultQuery.push(sourceQuery);
         }
 	    
-		$scope.userQuery = defaultQuery;
+		$scope.inputQuery = defaultQuery;
 
 	}
 
@@ -89,11 +89,11 @@ angular.module('modalApp')
 	$scope.saveUserQuery = function() {
 		var tempDataQuery = [];
 		var srcIdx;
-		for(srcIdx = 0; srcIdx < $scope.userQuery.length;srcIdx++) {
+		for(srcIdx = 0; srcIdx < $scope.inputQuery.length;srcIdx++) {
 			
 			var tempSrcQuery = {};
 
-			var srcQuery = $scope.userQuery[srcIdx];
+			var srcQuery = $scope.inputQuery[srcIdx];
 		
 			// gotta have a source name
 			tempSrcQuery.src = srcQuery.src;
@@ -182,64 +182,81 @@ angular.module('modalApp')
 	}
 
 
-	$scope.selectboxUpdate = function(srcIdx, attrIdx) {
+	// $scope.selectboxUpdate = function(srcIdx, attrIdx) {
 		
-		var lastSelectVal = $scope.userQuery[srcIdx].attrs[attrIdx].lastSelectedValue;
-		console.log("The last value selected:: " + lastSelectVal);
+	// 	var lastSelectVal = $scope.inputQuery[srcIdx].attrs[attrIdx].lastSelectedValue;
+	// 	console.log("The last value selected:: " + lastSelectVal);
 
-		var valueInDataQuery = false;
-		var dataAttrIdx;
+	// 	var valueInDataQuery = false;
+	// 	var dataAttrIdx;
 
-		if("v" in $scope.dataQuery[srcIdx].attrs[attrIdx]) {
-			for(dataAttrIdx = 0; dataAttrIdx < $scope.dataQuery[srcIdx].attrs[attrIdx].v.length; dataAttrIdx++) {
-				if($scope.dataQuery[srcIdx].attrs[attrIdx].v[dataAttrIdx] == lastSelectVal) {
-					valueInDataQuery = true;
-					break;
-				}
-			}
-		} else {
-			$scope.dataQuery[srcIdx].attrs[attrIdx] = {
-				k : $scope.userQuery[srcIdx].attrs[attrIdx].k ,
-				v : [lastSelectVal]
-			};
-			valueInDataQuery = true;
-		}
+	// 	if("v" in $scope.dataQuery[srcIdx].attrs[attrIdx]) {
+	// 		for(dataAttrIdx = 0; dataAttrIdx < $scope.dataQuery[srcIdx].attrs[attrIdx].v.length; dataAttrIdx++) {
+	// 			if($scope.dataQuery[srcIdx].attrs[attrIdx].v[dataAttrIdx] == lastSelectVal) {
+	// 				valueInDataQuery = true;
+	// 				break;
+	// 			}
+	// 		}
+	// 	} else {
+	// 		$scope.dataQuery[srcIdx].attrs[attrIdx] = {
+	// 			k : $scope.inputQuery[srcIdx].attrs[attrIdx].k ,
+	// 			v : [lastSelectVal]
+	// 		};
+	// 		valueInDataQuery = true;
+	// 	}
 
-		if(valueInDataQuery == false) {
-			// remove value from userQuery AND add to data query
-			var valIdxInUserQuery = $scope.userQuery[srcIdx].attrs[attrIdx].v.indexOf(lastSelectVal);
-			$scope.userQuery[srcIdx].attrs[attrIdx].v.splice(valIdxInUserQuery, 1); // should reduce the userQuery attr by that value
-			$scope.dataQuery[srcIdx].attrs[attrIdx].v.push(lastSelectVal); // add to dataQuery
+	// 	if(valueInDataQuery == false) {
+	// 		// remove value from userQuery AND add to data query
+	// 		var valIdxInUserQuery = $scope.inputQuery[srcIdx].attrs[attrIdx].v.indexOf(lastSelectVal);
+	// 		$scope.inputQuery[srcIdx].attrs[attrIdx].v.splice(valIdxInUserQuery, 1); // should reduce the userQuery attr by that value
+	// 		$scope.dataQuery[srcIdx].attrs[attrIdx].v.push(lastSelectVal); // add to dataQuery
 
-		} else {
-			// just remove from userQuery
-			var valIdxInUserQuery = $scope.userQuery[srcIdx].attrs[attrIdx].v.indexOf(lastSelectVal);
-			$scope.userQuery[srcIdx].attrs[attrIdx].v.splice(valIdxInUserQuery, 1); // should reduce the userQuery attr by that value
-		}
-	}
+	// 	} else {
+	// 		// just remove from userQuery
+	// 		var valIdxInUserQuery = $scope.inputQuery[srcIdx].attrs[attrIdx].v.indexOf(lastSelectVal);
+	// 		$scope.inputQuery[srcIdx].attrs[attrIdx].v.splice(valIdxInUserQuery, 1); // should reduce the userQuery attr by that value
+	// 	}
+	// }
 
-	$scope.pillboxClickUpdate = function(srcIdx, attrIdx, valueIdx) {
-		console.log("pillbox <<" + $scope.dataQuery[srcIdx].attrs[attrIdx].v[valueIdx]+ ">> clicked.  Remove value from dataQuery, add to userQuery");
-		var valClicked = $scope.dataQuery[srcIdx].attrs[attrIdx].v[valueIdx];
+	// $scope.pillboxClickUpdate = function(srcIdx, attrIdx, valueIdx) {
+	// 	console.log("pillbox <<" + $scope.dataQuery[srcIdx].attrs[attrIdx].v[valueIdx]+ ">> clicked.  Remove value from dataQuery, add to userQuery");
+	// 	var valClicked = $scope.dataQuery[srcIdx].attrs[attrIdx].v[valueIdx];
 		
-		$scope.dataQuery[srcIdx].attrs[attrIdx].v.splice(valueIdx , 1);
+	// 	$scope.dataQuery[srcIdx].attrs[attrIdx].v.splice(valueIdx , 1);
 
-		var valInUserQuery = false;
-		var userValIdx;
-		for(userValIdx = 0; userValIdx < $scope.userQuery[srcIdx].attrs[attrIdx].v.length; userValIdx++) {
-			if($scope.userQuery[srcIdx].attrs[attrIdx].v[userValIdx] == valClicked) {
-				valInUserQuery = true;
+	// 	var valInUserQuery = false;
+	// 	var userValIdx;
+	// 	for(userValIdx = 0; userValIdx < $scope.inputQuery[srcIdx].attrs[attrIdx].v.length; userValIdx++) {
+	// 		if($scope.inputQuery[srcIdx].attrs[attrIdx].v[userValIdx] == valClicked) {
+	// 			valInUserQuery = true;
+	// 			break;
+	// 		}
+	// 	}
+	// 	if(valInUserQuery == false) {
+	// 		$scope.inputQuery[srcIdx].attrs[attrIdx].v.push(valClicked);
+	// 	}
+	// }
+
+
+	$scope.updateDataQuery = function(srcIdx, attrIdx, valueIdx, clickedValue) {
+		$scope.lastSelectVal = clickedValue;
+		console.log("Button click for src" + srcIdx + ", attr" + attrIdx + ", value" + valueIdx);
+		if(typeof $scope.dataQuery[srcIdx].attrs[attrIdx].v === 'undefined') {
+			$scope.dataQuery[srcIdx].attrs[attrIdx].v = [];
+		}
+		var valueInQuery = false;
+		var valIdx;
+		for(valIdx = 0; valIdx < $scope.dataQuery[srcIdx].attrs[attrIdx].v.length; valIdx++) {
+			if($scope.dataQuery[srcIdx].attrs[attrIdx].v[valIdx] === clickedValue) {
+				valueInQuery = true;
 				break;
 			}
 		}
-		if(valInUserQuery == false) {
-			$scope.userQuery[srcIdx].attrs[attrIdx].v.push(valClicked);
+		if(valueInQuery === false) {
+			$scope.dataQuery[srcIdx].attrs[attrIdx].v.push(clickedValue);
+		} else if(valueInQuery === true) {
+			$scope.dataQuery[srcIdx].attrs[attrIdx].v.splice(valIdx , 1);
 		}
-	}
-
-
-	$scope.updateDataQuery = function(srcIdx, attrIdx, valueIdx) {
-		console.log("Button click for src" + srcIdx + ", attr" + attrIdx + ", value" + valueIdx);
 	}
 
 

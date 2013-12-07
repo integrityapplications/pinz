@@ -70,32 +70,32 @@
 
             <div class="pull-right" ng-if="(attr.type == 'string' && attr.values)">
 
-              <!-- <div class="btn-group" data-toggle="buttons"}>
-                <label class="btn btn-info" ng-repeat="(valueIdx, value) in userQuery[srcIdx].attrs[attrIdx].v" ng-click="updateDataQuery(srcIdx, attrIdx, valueIdx)">
+              <!-- Back to basics... the controller is managing data, and Boostrap is doing the toggling - shall we skip a directive? -->
+              <div class="btn-group" data-toggle="buttons"}>
+                <label class="btn btn-success" ng-repeat="(valueIdx, value) in inputQuery[srcIdx].attrs[attrIdx].v" ng-click="updateDataQuery(srcIdx, attrIdx, valueIdx , value)">
                   <input type="checkbox">{{value}}</input>
                 </label>
-              </div> -->
+              </div>
 
-              <checkbox-buttons
+              <!-- <checkbox-buttons
                 class="btn-group"
                 data-toggle="buttons-radio"
-                model="dataQuery[srcIdx].attrs[attrIdx].v"
+                dataModel="dataQuery[srcIdx].attrs[attrIdx].v"
                 options="attr.values">
-              </checkbox-buttons>
-
+              </checkbox-buttons> -->
 
             </div>
 
             <!-- <div class="col-md-4 pull-right" ng-model="attr" ng-if="attr.type =='string' && Array.isArray(attr.values)"> -->
-              <!-- <input type="text" ng-model="userQuery[srcIdx].attrs[attrIdx].v"> -->
+              <!-- <input type="text" ng-model="inputQuery[srcIdx].attrs[attrIdx].v"> -->
             <!-- </div> -->
 
             <div class="col-md-4 pull-right" ng-model="attr" ng-if="attr.type=='number'">
               <div style="margin-bottom: 1em;">
-                <span class="col-md-2">Min</span><input type="text" ng-model="userQuery[srcIdx].attrs[attrIdx].low" placeholder={{dataSources[srcIdx].attrs[attrIdx].low}}><br>
+                <span class="col-md-2">Min</span><input type="text" ng-model="inputQuery[srcIdx].attrs[attrIdx].low" placeholder="{{dataSources[srcIdx].attrs[attrIdx].low}}"><br>
               </div>
               <div style="margin-top: 1em;">
-                <span class="col-md-2">Max</span><input type="text" ng-model="userQuery[srcIdx].attrs[attrIdx].high" placeholder={{dataSources[srcIdx].attrs[attrIdx].high}}><br>
+                <span class="col-md-2">Max</span><input type="text" ng-model="inputQuery[srcIdx].attrs[attrIdx].high" placeholder="{{dataSources[srcIdx].attrs[attrIdx].high}}"><br>
               </div>
             </div>
           </div>
@@ -109,7 +109,7 @@
   </div><!-- End content-tab div -->
   
 <div class=well col-md-6>
-  <pre>{{userQuery}}</pre>
+  <pre>{{inputQuery}}</pre>
 </div>
 
 <div class=well col-md-6>
