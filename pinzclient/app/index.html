@@ -36,6 +36,11 @@
             fill-opacity: .125;
             shape-rendering: crispEdges;
           }
+
+          .modal-header {
+            border-bottom: none;
+            padding: 1em;
+          }
         </style>
 </head>
   
@@ -61,9 +66,11 @@
 
       <div class="row">
           <!-- Button trigger modal -->
-        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-          Launch demo modal
-        </button>
+        <div class="col-md-2 col-md-offset-5 col-lg-2 col-lg-offset-5">
+          <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+            Query for Data
+          </button>
+        </div>
 
       </div>
 
@@ -74,7 +81,6 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                 </div>
 
                 <div class="modal-body">

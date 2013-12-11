@@ -8,7 +8,7 @@ angular.module('modalApp').directive('pinzTimeline' , function() {
         },
 		link: function (scope, elem, attrs) {
 			scope.$watch('pinz', function(latestPinz, prevPinz) {
-				if (typeof latestPinz !== 'undefined') {
+				if (typeof latestPinz !== 'undefined' && latestPinz.length > 0) {
 					var allPinz = latestPinz;
 					if (typeof prevPinz !== 'undefined') allPinz = allPinz.concat(prevPinz);
 					generateTimeline('#'+elem[0].id, allPinz);
