@@ -1,0 +1,14 @@
+<div>
+  <div class="col-xs-2">
+  	<div class="form-group" ng-class="{'has-error': !validLat}">
+  		<label class="control-label" for="inputLatitude">Input Latitude</label>
+    	<input id="inputLatitude" type="text" class="form-control" placeholder="DD.dd or DD MM SS H" ng-model="inputLatitude">
+	</div>
+  </div>
+  <div class="col-xs-3">
+    <input type="text" class="form-control" placeholder=".col-xs-3" ng-model="inputLongitude">
+  </div>
+  <div class="col-xs-1">
+  	<button type="button" class="btn btn-default" ng-click="printLatLon()">Submit</button>
+  </div>
+</div>

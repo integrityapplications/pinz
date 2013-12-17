@@ -41,8 +41,18 @@
             <div class="row">
               <div class="panel-heading">
                 <h3>Set your geographic area of interest</h3>
-                <p>TBC</p>
               </div>
+              <div class="panel-body">
+                <!-- <div class="geo-input-controller" ng-controller="GeoInputController"> -->
+                  <button type="button" class="btn btn-info" ng-click="printCtrlLatLon()">Debug</button>
+                  <div data-pinz-text-input-geo-query input-latitude="latitude" input-longitude="longitude"></div>
+                  
+
+               <!--  </div>    -->            
+                
+              </div>
+              <hr>
+              <p> end of geo row
             </div>
         </div>
 
@@ -93,23 +103,20 @@
               </div>
             </div>
           </div>
+        </div>
 
     </div>
 
   </div>
-
-  </div> <!-- End column-->
-
-  </div><!-- End content-tab div -->
   
-<div class=well col-md-6>
-  <pre>{{inputQuery}}</pre>
-</div>
+  <div class=well col-md-6>
+    <pre>{{inputQuery}}</pre>
+  </div>
 
-<div class=well col-md-6>
-  <pre>{{dataQuery}}</pre>
-</div>
+  <div class=well col-md-6>
+    <pre>{{dataQuery}}</pre>
+  </div>
 
-<div class=well col-md-6>
-  <pre>{{serverQuery}}</pre>
-</div>
+  <div class=well col-md-6>
+    <pre>{{serverQuery}}</pre>
+  </div>
