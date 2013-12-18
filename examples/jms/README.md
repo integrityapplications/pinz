@@ -19,4 +19,8 @@ The messages were then consumed by a Complex Event Processor (CEP) to alert on s
 This application lacked a good way of viewing the data feeds before sending them into the CEP.
 The idea for Pinz materialized as an applicaton to provide situational awareness about the data feeds.
 
+STOMP
+----------------
+Non-Java processes communicate on JMS via the Stomp protocol. Stomp must be explicity turned on for Apache ActiveMQ, see http://activemq.apache.org/stomp.html for details. Mileage with other JMS brokers may vary.
+
 
