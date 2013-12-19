@@ -23,4 +23,10 @@ STOMP
 ----------------
 Non-Java processes communicate on JMS via the Stomp protocol. Stomp must be explicity turned on for Apache ActiveMQ, see http://activemq.apache.org/stomp.html for details. Mileage with other JMS brokers may vary.
 
+Publishing Metadata documents
+----------------
+```
+    node loadMetadata.js --files=doc1.json,doc2.json,doc3.json
+```
+
 
