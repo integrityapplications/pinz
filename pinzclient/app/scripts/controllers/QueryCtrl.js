@@ -10,6 +10,8 @@ angular.module('modalApp')
 	// a 'validated' object that is sent to the server.  Only contains properties that have been edited/set by user.
 	$scope.dataQuery = {};
 
+	$scope.serverQuery = {};
+
 
     Metadataservice.getMetadata(function(dataSources) {
     	$scope.dataSources = dataSources;
@@ -26,7 +28,7 @@ angular.module('modalApp')
     }
     
     $scope.$watch(function() {
-    	return $scope.dataQuery }
+    	return $scope.serverQuery }
     	, function(newVal, oldVal) {
     		dataService.setQuery(newVal);
 		}, 
@@ -85,8 +87,9 @@ angular.module('modalApp')
 		$scope.dataQuery = tempDataQuery;
 	}
 
-	// run grunt tests for QueryCtrl
+	
 	$scope.saveUserQuery = function() {
+
 		var tempDataQuery = [];
 		var srcIdx;
 		for(srcIdx = 0; srcIdx < $scope.inputQuery.length;srcIdx++) {
@@ -102,7 +105,7 @@ angular.module('modalApp')
 			if(("time_within" in srcQuery) && (srcQuery.time_within != null)) {
 				if(("start" in srcQuery.time_within) && ("end" in srcQuery.time_within)) {
 					// we can have validation on the values in here, for now just leave
-					tempSrcQuery.time_within = { start : srcQuery.time_within.start}
+					tempSrcQuery.time_within = { start : srcQuery.time_within.start }
 				}
 			}
 
@@ -119,48 +122,81 @@ angular.module('modalApp')
 				
 				var attribute = srcQuery.attrs[attrIdx];
 
-				if(attribute != null && attribute) {
+				if(attribute != null) {
 
-					if(("v" in attribute) && (attribute.v != null)) {
+					if(("v" in attribute) == true) {
 
 						// if an array with fixed values, assume set by pillbox
 						if((attribute.v instanceof Array) == true && ("values" in $scope.dataSources[srcIdx].attrs[attrIdx])) {
-							// we have a preset dealt with by a pillbox
 							// if the dataQuery value isn't blank, add to tempQuery.  If it is blank, just ignore it
 							if(($scope.dataQuery[srcIdx].attrs[attrIdx].v instanceof Array)
 								&& ($scope.dataQuery[srcIdx].attrs[attrIdx].v.length > 0)
 								&& ($scope.dataQuery[srcIdx].attrs[attrIdx].v.length != $scope.dataSources[srcIdx].attrs[attrIdx].values.length)
 								) {
-
+								// accumulate legit values
 								tempAttrs.push({
 									"k" : attribute.k,
 									"v" : $scope.dataQuery[srcIdx].attrs[attrIdx].v
 								});
-							}
-						} else {
-							tempAttrs.push({
-								"k" : attribute.k,
-								"v" : attribute.v
-							});
-						}
-					// if we have just a string, add to array value list
-					} else if(typeof attribute.v == 'string') {
-						tempAttrs.push({
-								"k" : attribute.k,
-								"v" : attribute.v
-						});
 
-					} else if(("low" in attribute) && (attribute.low != null) && ("high" in attribute) && (attribute.high != null)) {
-						// ref values from metadata
-						var attrRefLow = $scope.dataSources[srcIdx].attrs[attrIdx].low;
-						var attrRefHigh = $scope.dataSources[srcIdx].attrs[attrIdx].high;
-						console.log(attribute.low + " versus " + attrRefLow + " and " + attribute.high + " versus " + attrRefHigh);
-						if( (attribute.low == attrRefLow && attribute.high == attrRefHigh) == false) {
+								// append to skeleton dataQuery
+								$scope.dataQuery[srcIdx].attrs[attrIdx] = { "k" :  attribute.k  , "v" : attribute.v };
+							}
+
+						// if we have just a string, add to array value list
+						} else if(typeof attribute.v === 'string' && attribute.v.length > 0) {
+							// accumulate legit values
 							tempAttrs.push({
-								"k" : attribute.k ,
-								"low" : attribute.low ,
-								"high" : attribute.high
+									"k" : attribute.k,
+									"v" : attribute.v
 							});
+
+							// append to skeleton dataQuery
+							$scope.dataQuery[srcIdx].attrs[attrIdx] = { "k" :  attribute.k  , "v" : attribute.v };
+
+						
+						}
+
+					// guess we have a number...
+					} else if( ("low" in attribute) && ("high" in attribute) ) {
+
+							console.log("\tProcessing number attr: " + JSON.stringify(attribute));
+
+							//  with high low, check range
+							if(("low" in attribute) && (attribute.low != null) && ("high" in attribute) && (attribute.high != null)) {
+								// ref values from metadata
+								var attrRefLow = $scope.dataSources[srcIdx].attrs[attrIdx].low;
+								var attrRefHigh = $scope.dataSources[srcIdx].attrs[attrIdx].high;
+								console.log(attribute.low + " versus " + attrRefLow + " and " + attribute.high + " versus " + attrRefHigh);
+								if( (attribute.low == attrRefLow && attribute.high == attrRefHigh) == false) {
+									tempAttrs.push({
+										"k" : attribute.k ,
+										"low" : attribute.low ,
+										"high" : attribute.high
+									});
+
+									// append
+									$scope.dataQuery[srcIdx].attrs[attrIdx] = {
+																				"k" : attribute.k ,
+																				"low" : attribute.low ,
+																				"high" : attribute.high
+																			  };
+								}
+							
+							} else {
+									// if there arent any ref values, just add the min/max values
+									tempAttrs.push({
+											"k" : attribute.k ,
+											"low" : attribute.low ,
+											"high" : attribute.high
+										});
+
+									// append
+									$scope.dataQuery[srcIdx].attrs[attrIdx] = {
+																					"k" : attribute.k ,
+																					"low" : attribute.low ,
+																					"high" : attribute.high
+																				};
 						}
 					}
 				}
@@ -174,68 +210,14 @@ angular.module('modalApp')
 			tempDataQuery.push(tempSrcQuery);
 		}
 
-		$scope.dataQuery = tempDataQuery;
+		$scope.serverQuery = tempDataQuery;
 
 		tempDataQuery = null;
 
 		console.log("dataQuery = " + JSON.stringify($scope.dataQuery));
+		console.log("serverQuery = " + JSON.stringify($scope.serverQuery));
 	}
 
-
-	// $scope.selectboxUpdate = function(srcIdx, attrIdx) {
-		
-	// 	var lastSelectVal = $scope.inputQuery[srcIdx].attrs[attrIdx].lastSelectedValue;
-	// 	console.log("The last value selected:: " + lastSelectVal);
-
-	// 	var valueInDataQuery = false;
-	// 	var dataAttrIdx;
-
-	// 	if("v" in $scope.dataQuery[srcIdx].attrs[attrIdx]) {
-	// 		for(dataAttrIdx = 0; dataAttrIdx < $scope.dataQuery[srcIdx].attrs[attrIdx].v.length; dataAttrIdx++) {
-	// 			if($scope.dataQuery[srcIdx].attrs[attrIdx].v[dataAttrIdx] == lastSelectVal) {
-	// 				valueInDataQuery = true;
-	// 				break;
-	// 			}
-	// 		}
-	// 	} else {
-	// 		$scope.dataQuery[srcIdx].attrs[attrIdx] = {
-	// 			k : $scope.inputQuery[srcIdx].attrs[attrIdx].k ,
-	// 			v : [lastSelectVal]
-	// 		};
-	// 		valueInDataQuery = true;
-	// 	}
-
-	// 	if(valueInDataQuery == false) {
-	// 		// remove value from userQuery AND add to data query
-	// 		var valIdxInUserQuery = $scope.inputQuery[srcIdx].attrs[attrIdx].v.indexOf(lastSelectVal);
-	// 		$scope.inputQuery[srcIdx].attrs[attrIdx].v.splice(valIdxInUserQuery, 1); // should reduce the userQuery attr by that value
-	// 		$scope.dataQuery[srcIdx].attrs[attrIdx].v.push(lastSelectVal); // add to dataQuery
-
-	// 	} else {
-	// 		// just remove from userQuery
-	// 		var valIdxInUserQuery = $scope.inputQuery[srcIdx].attrs[attrIdx].v.indexOf(lastSelectVal);
-	// 		$scope.inputQuery[srcIdx].attrs[attrIdx].v.splice(valIdxInUserQuery, 1); // should reduce the userQuery attr by that value
-	// 	}
-	// }
-
-	// $scope.pillboxClickUpdate = function(srcIdx, attrIdx, valueIdx) {
-	// 	console.log("pillbox <<" + $scope.dataQuery[srcIdx].attrs[attrIdx].v[valueIdx]+ ">> clicked.  Remove value from dataQuery, add to userQuery");
-	// 	var valClicked = $scope.dataQuery[srcIdx].attrs[attrIdx].v[valueIdx];
-		
-	// 	$scope.dataQuery[srcIdx].attrs[attrIdx].v.splice(valueIdx , 1);
-
-	// 	var valInUserQuery = false;
-	// 	var userValIdx;
-	// 	for(userValIdx = 0; userValIdx < $scope.inputQuery[srcIdx].attrs[attrIdx].v.length; userValIdx++) {
-	// 		if($scope.inputQuery[srcIdx].attrs[attrIdx].v[userValIdx] == valClicked) {
-	// 			valInUserQuery = true;
-	// 			break;
-	// 		}
-	// 	}
-	// 	if(valInUserQuery == false) {
-	// 		$scope.inputQuery[srcIdx].attrs[attrIdx].v.push(valClicked);
-	// 	}
-	// }
 
 
 	$scope.updateDataQuery = function(srcIdx, attrIdx, valueIdx, clickedValue) {

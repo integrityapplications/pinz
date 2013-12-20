@@ -24,7 +24,6 @@ angular.module('modalApp')
 	        // clear the error messages
 	        $rootScope.statusMessage = 'success (' + data.length + ' pinz received)!';
 	        $rootScope.pinzData = data;
-	        //console.debug("Data received: ", data);
 	        
 	    }).error(function (data, status) {
 	    	if (status === 404) {
@@ -32,18 +31,19 @@ angular.module('modalApp')
 	    		$log.error('Could not find that place');
 	    	} else {
 	    		$rootScope.error = 'Error: ' + status;
-	    		$log.error('Some other error...');
+	    		$log.error('Some other error...\nWhat is the query? ' + JSON.stringify(query));
 	    	}
 	    });
 
 	}
 
 	ds.setQuery = function(query) {
+
+		console.log("\tdataService setting query:: "  , JSON.stringify(query));
+
 		ds.dataQuery = query;
 	}
 
     return ds;
     
 });
-
-	
