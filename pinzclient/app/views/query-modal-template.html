@@ -1,4 +1,4 @@
-<div class="query-modal-template">
+<div id="query-modal-template" class="query-modal-template">
   
 <!--   <div class="row">
     <div class="col-md-2 col-md-offset-4">
@@ -41,19 +41,57 @@
             <div class="row">
               <div class="panel-heading">
                 <h3>Set your geographic area of interest</h3>
-              </div>
+              </div> <!-- end panel-heading -->
               <div class="panel-body">
-                <!-- <div class="geo-input-controller" ng-controller="GeoInputController"> -->
+                <div class="geo-input-controller" ng-controller="GeoInputController">
+                  <h4>Input a Bounding Box</h4>
                   <button type="button" class="btn btn-info" ng-click="printCtrlLatLon()">Debug</button>
-                  <div data-pinz-text-input-geo-query input-latitude="latitude" input-longitude="longitude"></div>
-                  
-
-               <!--  </div>    -->            
-                
-              </div>
-              <hr>
-              <p> end of geo row
-            </div>
+                  <div class="row">
+                    <form id="upper-left" class="upper-left">
+                      <div class="form-group col-sm-3" ng-class="{'has-error': bbox.ulValidLat}">  
+                        <label class="control-label" for="ulLatitude">Upper Left Latitude: </label>
+                        <input type="text" ng-model="bbox.ulLatitude" name="ulLatitude" class="form-control input-sm" required/>
+                      </div>
+                      <div class="form-group col-sm-3" ng-class="{'has-error': bbox.ulValidLat}">  
+                        <label class="control-label" for="ulLongitude">Upper Left Longitude: </label>
+                        <input type="" ng-model="bbox.ulLongitude" name="ulLongitude" class="form-control input-sm" required/>
+                      </div>
+                      <small class="error"
+                          ng-show="bbox.ulError">
+                          {{bbox.ulErrorMessage}}
+                      </small>
+                    </form>
+                  </div> <!-- end ul row -->
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <form id="lower-right" class="lower-right">
+                      <div class="form-group col-sm-3" ng-class="{'has-error': bbox.lrValidLat}">  
+                        <label class="control-label" for="lrLatitude">Lower Right Latitude: </label>
+                        <input type="text" ng-model="bbox.lrLatitude" name="lrLatitude" class="form-control input-sm" required/>
+                      </div>
+                      <div class="form-group col-sm-3" ng-class="{'has-error': bbox.lrValidLon}">  
+                        <label class="control-label" for="lrLongitude">Lower Right Longitude: </label>
+                        <input type="text" ng-model="bbox.lrLongitude" name="lrLongitude" class="form-control input-sm" required/>
+                      </div>
+                      <!--small class="error"
+                          ng-show="bbox.lrError">
+                          {{bbox.lrErrorMessage}}
+                      </small -->
+                    </form>
+                  </div> <!-- end lr row -->
+                  <div class="row">
+                    <div class="col-sm-6">
+                       <h4>Or, draw a polygon</h4>
+                      <div custom-geo="customShape" data-pinz-leaflet-draw></div>
+                    </div>
+                  </div>
+                </div> <!-- end input controller -->
+              </div> <!-- end panel body -->
+            </div> <!--end row within geo tab -->
         </div>
 
         <!-- angular repeated stuff -->
