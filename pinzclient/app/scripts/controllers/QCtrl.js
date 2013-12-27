@@ -15,11 +15,12 @@ angular.module('modalApp')
 
     Metadataservice.getMetadata(function(dataSources) {
     	$scope.dataSources = dataSources;
-    	$log.log('dataSources: ', dataSources);
-    	if($scope.inputQuery === null || typeof $scope.inputQuery === "undefined") {
-    		createDefaultQuery();
-    		createEmptyDataQuery();
-    	}
+    	$log.log('dataSources: ', JSON.stringify(dataSources, undefined, 2));
+
+    	// if($scope.inputQuery === null || typeof $scope.inputQuery === "undefined") {
+    	// 	createDefaultQuery();
+    	// 	createEmptyDataQuery();
+    	// }
 
     });
     

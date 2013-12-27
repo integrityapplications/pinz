@@ -6,9 +6,7 @@
           <li class="active">
             <a href="#guide" data-toggle="tab" target="_self">Guide</a>
           </li>
-          
-          <li><a href="#geo" data-toggle="tab" target="_self">Geospatial</a></li>
-          
+                    
           <li ng-model="dataSource" ng-repeat="src in dataSources">
             <a href="#{{src._id}}" data-toggle="tab" target="_self">{{src._id}}</a>
           </li>
@@ -30,16 +28,6 @@
             </div>
         </div>
 
-        <!-- Geo view -->
-        <div id="geo" class="tab-pane">
-            <div class="row">
-              <div class="panel-heading">
-                <h3>Set your geographic area of interest</h3>
-                <p>TBC</p>
-              </div>
-            </div>
-        </div>
-
         <!-- angular repeated stuff -->
         <div class="tab-pane fade" ng-repeat="(srcIdx , source) in dataSources" id="{{source._id}}">
 
@@ -48,10 +36,14 @@
               <!-- add an info box -->
               <p class="lead"><strong>{{source._id}}:</strong> {{source.desc}}</p>
               <p>Oldest:{{source.oldest}}, Newest:{{source.newest}}, Count:{{source.count}}</p>
+              <p>index: {{srcIdx}}
             </div>
           </div>
 
           <div class="row well panel-body" ng-repeat="(attrIdx, attr) in source.attrs" id="{{source._id + "_" + attr.name}}">
+            <div class="col-md-1">
+              Attr metadata: index - {{attrIdx}}
+            </div>
 
             <div class="col-md-2">
               <strong>{{attr.name}}</strong>
@@ -97,7 +89,7 @@
   </div><!-- End content-tab div -->
   
 <div class=well col-md-6>
-  <pre>{{inputQuery}}</pre>
+  <pre>{{dataSources | json }}</pre>
 </div>
 
 <div class=well col-md-6>

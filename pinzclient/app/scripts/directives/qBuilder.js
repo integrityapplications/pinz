@@ -1,8 +1,10 @@
 //Query tab directive
 'use strict';
 
+console.log('qBuilder');
+
 angular.module('modalApp')
-	.directive("qBuilder" , function(){
+	.directive("queryBuilder" , function(){
 
 		console.log('insert query template ');
 
