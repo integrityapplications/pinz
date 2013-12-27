@@ -121,11 +121,10 @@ angular.module('modalApp')
 				}
 			}
 
-			// note server-side validation strips empty time_within array
-			if(("geo_within" in srcQuery) && (srcQuery.geo_within != null) && (srcQuery.geo_within.length > 0)) {
-				tempSrcQuery.geo_within = srcQuery.geo_within;	
+			// If geo input exists, set it on each src - hence 'global' name of geo param
+			if(("globalGeo" in $scope.inputQuery) && ($scope.inputQuery.globalGeo != null)) {
+				tempSrcQuery.geo_within = $scope.inputQuery.globalGeo;	
 			}
-
 
 			// now deal with attributes
 			var attrIdx;

@@ -22,7 +22,14 @@ angular.module('modalApp')
     	}
     }
 
-    /*$scope.$watch("customShape", function(newShape, oldShape) {
+    $scope.$watch("customShape", function(newShape, oldShape) {
     	console.log("GeoCtrl $watch - shape they just drew: ", newShape);
-    })*/
+        // Set global geo (applies to all sources) to a single shape.
+        // TODO: Fix directive to report an array of arrays (points representing a polygon)
+        //       or whatever is consistent with server api.
+        if (newShape !== null && typeof newShape !== "undefined" && $.isEmptyObject(newShape) !== true) {
+            $scope.$parent.inputQuery.globalGeo = newShape;
+
+        }
+    })
   });

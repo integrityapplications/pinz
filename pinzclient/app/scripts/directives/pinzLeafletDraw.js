@@ -25,7 +25,7 @@ angular.module('modalApp')
               rectangle: {
                   shapeOptions: {
                       color: '#377eb8',
-                      weight: 10,
+                      weight: 5,
                   }
               },
               marker: false
