@@ -12,18 +12,19 @@ angular.module('modalApp')
 
 	$scope.serverQuery = {};
 
+	$scope.activeSources = [];
 
     Metadataservice.getMetadata(function(dataSources) {
     	$scope.dataSources = dataSources;
     	if($scope.inputQuery === null || typeof $scope.inputQuery === "undefined") {
     		createDefaultQuery();
     		createEmptyDataQuery();
+    		setDefaultActiveSources();
     	}
 
     });
 
     $scope.dismiss = function() {
-    	console.log("I'm trying to dismiss the modal!");
     	$("#myModal").modal("toggle");
     }
     
@@ -34,6 +35,16 @@ angular.module('modalApp')
 		}, 
 		true);
     
+    function setDefaultActiveSources() {
+    	var srcIdx;
+    	var tempActiveSources = [];
+    	for(srcIdx = 0; srcIdx < $scope.dataSources.length ; srcIdx++) {
+    		// default to false values
+    		tempActiveSources.push("active");
+    	}
+    	$scope.activeSources = tempActiveSources;
+    }
+
 	function createDefaultQuery() {
 		var defaultQuery = [];
     	var sources = $scope.dataSources;
@@ -92,6 +103,7 @@ angular.module('modalApp')
 
 		var tempDataQuery = [];
 		var srcIdx;
+
 		for(srcIdx = 0; srcIdx < $scope.inputQuery.length;srcIdx++) {
 			
 			var tempSrcQuery = {};
@@ -113,6 +125,7 @@ angular.module('modalApp')
 			if(("geo_within" in srcQuery) && (srcQuery.geo_within != null) && (srcQuery.geo_within.length > 0)) {
 				tempSrcQuery.geo_within = srcQuery.geo_within;	
 			}
+
 
 			// now deal with attributes
 			var attrIdx;
@@ -157,65 +170,69 @@ angular.module('modalApp')
 						
 						}
 
-					// guess we have a number...
+					// no v, but we might have a number...
 					} else if( ("low" in attribute) && ("high" in attribute) ) {
 
-							console.log("\tProcessing number attr: " + JSON.stringify(attribute));
+						if(attribute.low != null && attribute.high != null) {
+							
+							console.log("\tProcessing non-null number attr: " + JSON.stringify(attribute));
 
-							//  with high low, check range
-							if(("low" in attribute) && (attribute.low != null) && ("high" in attribute) && (attribute.high != null)) {
-								// ref values from metadata
-								var attrRefLow = $scope.dataSources[srcIdx].attrs[attrIdx].low;
-								var attrRefHigh = $scope.dataSources[srcIdx].attrs[attrIdx].high;
-								console.log(attribute.low + " versus " + attrRefLow + " and " + attribute.high + " versus " + attrRefHigh);
+							var attrRefLow = $scope.dataSources[srcIdx].attrs[attrIdx].low;
+							var attrRefHigh = $scope.dataSources[srcIdx].attrs[attrIdx].high;
+
+							if ((attrRefLow == null || typeof attrRefLow == 'undefined') && (attrRefHigh == null || typeof attrRefHigh == 'undefined')) {
+
+								tempAttrs.push({
+										"k" : attribute.k ,
+										"low" : attribute.low ,
+										"high" : attribute.high
+								});
+
+								// update dataQuery
+								$scope.dataQuery[srcIdx].attrs[attrIdx] = {
+											"k" : attribute.k ,
+											"low" : attribute.low ,
+											"high" : attribute.high
+										};
+
+							} else {
+
 								if( (attribute.low == attrRefLow && attribute.high == attrRefHigh) == false) {
+									// include in serverQuery temp object
 									tempAttrs.push({
 										"k" : attribute.k ,
 										"low" : attribute.low ,
 										"high" : attribute.high
 									});
 
-									// append
-									$scope.dataQuery[srcIdx].attrs[attrIdx] = {
-																				"k" : attribute.k ,
-																				"low" : attribute.low ,
-																				"high" : attribute.high
-																			  };
-								}
-							
-							} else {
-									// if there arent any ref values, just add the min/max values
-									tempAttrs.push({
+									// update dataQuery
+									$scope.dataQuery[srcIdx].attrs[attrIdx] = 
+										{
 											"k" : attribute.k ,
 											"low" : attribute.low ,
 											"high" : attribute.high
-										});
+										};
+								}
 
-									// append
-									$scope.dataQuery[srcIdx].attrs[attrIdx] = {
-																					"k" : attribute.k ,
-																					"low" : attribute.low ,
-																					"high" : attribute.high
-																				};
+							}
 						}
 					}
-				}
-			}
 
-			// only add attrs if we actually have some values
-			if(tempAttrs.length > 0) {
-				tempSrcQuery.attrs = tempAttrs;
+				}
+
+				// only add attrs if we actually have some values
+				if(tempAttrs.length > 0) {
+					tempSrcQuery.attrs = tempAttrs;
+				}
+
 			}
 
 			tempDataQuery.push(tempSrcQuery);
 		}
 
 		$scope.serverQuery = tempDataQuery;
-
 		tempDataQuery = null;
 
-		console.log("dataQuery = " + JSON.stringify($scope.dataQuery));
-		console.log("serverQuery = " + JSON.stringify($scope.serverQuery));
 	}
 
 
@@ -241,6 +258,35 @@ angular.module('modalApp')
 		}
 	}
 
+
+	$scope.updateActiveSources = function(sourceIdx , sourceID) {
+		var tab = $("tab" + sourceIdx);
+
+		console.log("Button clicked for source " + sourceIdx + " for tab with classes " + tab.attr('class'));
+
+		if($scope.activeSources[sourceIdx] == 'active') {
+			console.log("\tStart state = " + $scope.activeSources[sourceIdx]);
+			$scope.activeSources[sourceIdx] = 'disabled';
+			console.log("\tNew state = " + $scope.activeSources[sourceIdx]);
+			tab.addClass('disabled');
+
+			console.log("\tNew tab class = " + tab.attr('class'));
+
+		} else if($scope.activeSources[sourceIdx] == 'disabled') {
+			console.log("\tStart state = " + $scope.activeSources[sourceIdx]);
+			$scope.activeSources[sourceIdx] = 'active';
+			console.log("\tNew state: " + $scope.activeSources[sourceIdx]);
+
+			tab.removeClass('disabled');
+			$scope.apply();
+			
+			console.log("\tNew tab class = " + tab.attr('class'));
+
+		} else {
+			console.log("\tCheck the state value::" + $scope.activeSources[sourceIdx] + " from " + $scope.activeSources);
+		}
+
+	}
 
 });
 
