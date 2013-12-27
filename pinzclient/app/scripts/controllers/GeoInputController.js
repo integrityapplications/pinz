@@ -31,5 +31,6 @@ angular.module('modalApp')
             $scope.$parent.inputQuery.globalGeo = newShape;
 
         }
-    })
+    });
+
   });
