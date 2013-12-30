@@ -15,7 +15,7 @@
           
           <li><a href="#geo" data-toggle="tab" target="_self">Geospatial</a></li>
           
-          <li ng-model="dataSource" ng-repeat="src in dataSources">
+          <li ng-model="dataSource" ng-repeat="(srcIdx, src) in dataSources" id="{{'tab_'+srcIdx}}" ng-class="activeSources[srcIdx]">
             <a href="#{{src._id}}" data-toggle="tab" target="_self">{{src._id}}</a>
           </li>
       </ul>
@@ -100,15 +100,19 @@
           <div class="row">
             <div class="panel-heading">
               <!-- add an info box -->
-              <p class="lead"><strong>{{source._id}}:</strong> {{source.desc}}</p>
-              <p>Oldest:{{source.oldest}}, Newest:{{source.newest}}, Count:{{source.count}}</p>
+              
+              <p>
+                <button type="button" class="btn btn-info btn-lg" data-toggle="button" ng-click="updateActiveSources(srcIdx)">
+                  <strong>{{source._id}}</strong>
+                </button>
+                <strong>{{source.desc}}</strong>  Oldest:{{source.oldest}}, Newest:{{source.newest}}, Count:{{source.count}}</p>
             </div>
           </div>
 
           <div class="row well panel-body" ng-repeat="(attrIdx, attr) in source.attrs" id="{{source._id + "_" + attr.name}}">
 
             <div class="col-md-2">
-              <strong>{{attr.name}}</strong>
+                <strong>{{attr.name}}</strong>
             </div>
 
             <div class="col-md-6">

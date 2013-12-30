@@ -1,21 +1,23 @@
 'use strict';
 
 angular.module('modalApp')
-  .controller('QueryCtrl', function($scope, Metadataservice, dataService) {
+  .controller('QueryCtrl', function($scope, Metadataservice, QueryService, dataService) {
   	console.log("QueryCtrl (Modal) is active");
     
   	// a data object to store user input
 	$scope.inputQuery = null;
 
-	// a 'validated' object that is sent to the server.  Only contains properties that have been edited/set by user.
+	// transient object to help track indices for sources and attrs
 	$scope.dataQuery = {};
 
+	// a 'validated' object that is sent to the server.  Only contains properties that have been edited/set by user.
 	$scope.serverQuery = {};
 
 	$scope.activeSources = [];
 
     Metadataservice.getMetadata(function(dataSources) {
     	$scope.dataSources = dataSources;
+ 	
     	if($scope.inputQuery === null || typeof $scope.inputQuery === "undefined") {
     		createDefaultQuery();
     		createEmptyDataQuery();
@@ -40,7 +42,7 @@ angular.module('modalApp')
     	var tempActiveSources = [];
     	for(srcIdx = 0; srcIdx < $scope.dataSources.length ; srcIdx++) {
     		// default to false values
-    		tempActiveSources.push("active");
+    		tempActiveSources.push("");
     	}
     	$scope.activeSources = tempActiveSources;
     }
@@ -100,137 +102,8 @@ angular.module('modalApp')
 
 	
 	$scope.saveUserQuery = function() {
-
-		var tempDataQuery = [];
-		var srcIdx;
-
-		for(srcIdx = 0; srcIdx < $scope.inputQuery.length;srcIdx++) {
-			
-			var tempSrcQuery = {};
-
-			var srcQuery = $scope.inputQuery[srcIdx];
-		
-			// gotta have a source name
-			tempSrcQuery.src = srcQuery.src;
-
-			// note server-side validation strips a empty array for time_within
-			if(("time_within" in srcQuery) && (srcQuery.time_within != null)) {
-				if(("start" in srcQuery.time_within) && ("end" in srcQuery.time_within)) {
-					// we can have validation on the values in here, for now just leave
-					tempSrcQuery.time_within = { start : srcQuery.time_within.start }
-				}
-			}
-
-			// If geo input exists, set it on each src - hence 'global' name of geo param
-			if(("globalGeo" in $scope.inputQuery) && ($scope.inputQuery.globalGeo != null)) {
-				tempSrcQuery.geo_within = $scope.inputQuery.globalGeo;	
-			}
-
-			// now deal with attributes
-			var attrIdx;
-			var tempAttrs = [];
-
-			for(attrIdx = 0; attrIdx < srcQuery.attrs.length; attrIdx++) {
-				
-				var attribute = srcQuery.attrs[attrIdx];
-
-				if(attribute != null) {
-
-					if(("v" in attribute) == true) {
-
-						// if an array with fixed values, assume set by pillbox
-						if((attribute.v instanceof Array) == true && ("values" in $scope.dataSources[srcIdx].attrs[attrIdx])) {
-							// if the dataQuery value isn't blank, add to tempQuery.  If it is blank, just ignore it
-							if(($scope.dataQuery[srcIdx].attrs[attrIdx].v instanceof Array)
-								&& ($scope.dataQuery[srcIdx].attrs[attrIdx].v.length > 0)
-								&& ($scope.dataQuery[srcIdx].attrs[attrIdx].v.length != $scope.dataSources[srcIdx].attrs[attrIdx].values.length)
-								) {
-								// accumulate legit values
-								tempAttrs.push({
-									"k" : attribute.k,
-									"v" : $scope.dataQuery[srcIdx].attrs[attrIdx].v
-								});
-
-								// append to skeleton dataQuery
-								$scope.dataQuery[srcIdx].attrs[attrIdx] = { "k" :  attribute.k  , "v" : attribute.v };
-							}
-
-						// if we have just a string, add to array value list
-						} else if(typeof attribute.v === 'string' && attribute.v.length > 0) {
-							// accumulate legit values
-							tempAttrs.push({
-									"k" : attribute.k,
-									"v" : attribute.v
-							});
-
-							// append to skeleton dataQuery
-							$scope.dataQuery[srcIdx].attrs[attrIdx] = { "k" :  attribute.k  , "v" : attribute.v };
-
-						
-						}
-
-					// no v, but we might have a number...
-					} else if( ("low" in attribute) && ("high" in attribute) ) {
-
-						if(attribute.low != null && attribute.high != null) {
-							
-							console.log("\tProcessing non-null number attr: " + JSON.stringify(attribute));
-
-							var attrRefLow = $scope.dataSources[srcIdx].attrs[attrIdx].low;
-							var attrRefHigh = $scope.dataSources[srcIdx].attrs[attrIdx].high;
-
-							if ((attrRefLow == null || typeof attrRefLow == 'undefined') && (attrRefHigh == null || typeof attrRefHigh == 'undefined')) {
-
-								tempAttrs.push({
-										"k" : attribute.k ,
-										"low" : attribute.low ,
-										"high" : attribute.high
-								});
-
-								// update dataQuery
-								$scope.dataQuery[srcIdx].attrs[attrIdx] = {
-											"k" : attribute.k ,
-											"low" : attribute.low ,
-											"high" : attribute.high
-										};
-
-							} else {
-
-								if( (attribute.low == attrRefLow && attribute.high == attrRefHigh) == false) {
-									// include in serverQuery temp object
-									tempAttrs.push({
-										"k" : attribute.k ,
-										"low" : attribute.low ,
-										"high" : attribute.high
-									});
-
-									// update dataQuery
-									$scope.dataQuery[srcIdx].attrs[attrIdx] = 
-										{
-											"k" : attribute.k ,
-											"low" : attribute.low ,
-											"high" : attribute.high
-										};
-								}
-
-							}
-						}
-					}
-
-				}
-
-				// only add attrs if we actually have some values
-				if(tempAttrs.length > 0) {
-					tempSrcQuery.attrs = tempAttrs;
-				}
-
-			}
-
-			tempDataQuery.push(tempSrcQuery);
-		}
-
-		$scope.serverQuery = tempDataQuery;
-		tempDataQuery = null;
+		// use query service to produce server validated query
+		$scope.serverQuery = QueryService.validateQueryForServer($scope.inputQuery, $scope.inputQuery, $scope.dataSources);
 
 	}
 
@@ -258,28 +131,13 @@ angular.module('modalApp')
 	}
 
 
-	$scope.updateActiveSources = function(sourceIdx , sourceID) {
-		var tab = $("tab" + sourceIdx);
+	$scope.updateActiveSources = function(sourceIdx) {
 
-		console.log("Button clicked for source " + sourceIdx + " for tab with classes " + tab.attr('class'));
-
-		if($scope.activeSources[sourceIdx] == 'active') {
-			console.log("\tStart state = " + $scope.activeSources[sourceIdx]);
+		if($scope.activeSources[sourceIdx] === '') {
 			$scope.activeSources[sourceIdx] = 'disabled';
-			console.log("\tNew state = " + $scope.activeSources[sourceIdx]);
-			tab.addClass('disabled');
 
-			console.log("\tNew tab class = " + tab.attr('class'));
-
-		} else if($scope.activeSources[sourceIdx] == 'disabled') {
-			console.log("\tStart state = " + $scope.activeSources[sourceIdx]);
-			$scope.activeSources[sourceIdx] = 'active';
-			console.log("\tNew state: " + $scope.activeSources[sourceIdx]);
-
-			tab.removeClass('disabled');
-			$scope.apply();
-			
-			console.log("\tNew tab class = " + tab.attr('class'));
+		} else if($scope.activeSources[sourceIdx].indexOf('disabled') !== -1) {
+			$scope.activeSources[sourceIdx] = '';
 
 		} else {
 			console.log("\tCheck the state value::" + $scope.activeSources[sourceIdx] + " from " + $scope.activeSources);
