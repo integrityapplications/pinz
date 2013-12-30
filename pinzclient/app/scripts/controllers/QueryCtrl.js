@@ -103,7 +103,7 @@ angular.module('modalApp')
 	
 	$scope.saveUserQuery = function() {
 		// use query service to produce server validated query
-		$scope.serverQuery = QueryService.validateQueryForServer($scope.inputQuery, $scope.inputQuery, $scope.dataSources);
+		$scope.serverQuery = QueryService.validateQueryForServer($scope.inputQuery, $scope.inputQuery, $scope.dataSources, $scope.activeSources);
 
 	}
 
