@@ -41,7 +41,7 @@ angular.module('modalApp')
 
 				// If geo input exists, set it on each src - hence 'global' name of geo param
 				if(("globalGeo" in inputQuery) && (inputQuery.globalGeo != null)) {
-					tempSrcQuery.geo_within = inputInfo.globalGeo;	
+					tempSrcQuery.geo_within = inputQuery.globalGeo;	
 				}
 
 				// now deal with attributes
@@ -125,7 +125,7 @@ angular.module('modalApp')
 				}
 
 				tempDataQuery.push(tempSrcQuery);
-				
+
 			} else {
 				console.log("\tSkipping src_" + srcIdx + " from server query because it is not active according to activeSources[srcIdx] : " + activeSources[srcIdx]);
 			}
