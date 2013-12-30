@@ -27,10 +27,23 @@ angular.module('modalApp')
         // Set global geo (applies to all sources) to a single shape.
         // TODO: Fix directive to report an array of arrays (points representing a polygon)
         //       or whatever is consistent with server api.
+
+        var queryCoords = []; // Seems our query API just wants a single polygon as a simple list of lat lon pairs
         if (newShape !== null && typeof newShape !== "undefined" && $.isEmptyObject(newShape) !== true) {
-            $scope.$parent.inputQuery.globalGeo = newShape;
+
+            console.log("How many polys? " + newShape.geometry.coordinates.length);
+            console.log("How many points in first poly? " + newShape.geometry.coordinates[0].length);
+            console.log("How many coords in first point of first poly? " + newShape.geometry.coordinates[0][0].length);
+
+            for(var coordIdx = 0; coordIdx < newShape.geometry.coordinates[0].length; coordIdx++) {
+                queryCoords.push(newShape.geometry.coordinates[0][coordIdx][0]);
+                queryCoords.push(newShape.geometry.coordinates[0][coordIdx][1]);
+            }
+
+            $scope.$parent.inputQuery.globalGeo = queryCoords;
 
         }
+        console.log("\tQuery coords = " , queryCoords);
     });
 
   });
