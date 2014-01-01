@@ -6,7 +6,7 @@ angular.module('modalApp')
     $scope.ulLongitude="130.44";
     $scope.lrLatitude="30.33";
     $scope.lrLongitude="131.44";
-    $scope.customShape={};
+    $scope.customShapes=[];
     $scope.bbox = {};
     $scope.bbox.ulError = false;
     $scope.bbox.lrError = false;
@@ -18,17 +18,17 @@ angular.module('modalApp')
     	if ($scope.bbox.ulLatitude || $scope.bbox.initalized) {
     		console.log("bbox: ", $scope.bbox);
     	} else {
-    		console.log("custom shape: ", $scope.customShape);
+    		console.log("custom shape: ", $scope.customShapes);
     	}
     }
 
-    $scope.$watch("customShape", function(newShape, oldShape) {
-    	console.log("GeoCtrl $watch - shape they just drew: ", newShape);
+    $scope.$watchCollection("customShapes", function(newShapes, oldShapes) {
+    	console.log("GeoCtrl $watch - shapes they just drew: ", newShapes);
         // Set global geo (applies to all sources) to a single shape.
         // TODO: Fix directive to report an array of arrays (points representing a polygon)
         //       or whatever is consistent with server api.
-        if (newShape !== null && typeof newShape !== "undefined" && $.isEmptyObject(newShape) !== true) {
-            $scope.$parent.inputQuery.globalGeo = newShape;
+        if (newShapes !== null && typeof newShapes !== "undefined" && newShapes.length > 0) {
+            $scope.$parent.inputQuery.globalGeo = newShapes;
 
         }
     });
