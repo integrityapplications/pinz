@@ -31,12 +31,12 @@ angular.module('modalApp')
         if (newShapes !== null && typeof newShapes !== "undefined" && newShapes.length > 0) {
             $scope.$parent.inputQuery.globalGeo = newShapes;
             console.log("How many polys? " + newShapes.length);
-            console.log("How many points in first poly? " + newShapes[0].geometry.coordinates[0].length);
-            console.log("How many coords in first point of first poly? " + newShapes[0].geometry.coordinates[0][0].length);
+            console.log("How many points in first poly? " + newShapes[0].geojson.geometry.coordinates[0].length);
+            console.log("How many coords in first point of first poly? " + newShapes[0].geojson.geometry.coordinates[0][0].length);
 
-            for(var coordIdx = 0; coordIdx < newShapes[0].geometry.coordinates[0].length; coordIdx++) {
-                queryCoords.push(newShapes[0].geometry.coordinates[0][coordIdx][0]);
-                queryCoords.push(newShapes[0].geometry.coordinates[0][coordIdx][1]);
+            for(var coordIdx = 0; coordIdx < newShapes[0].geojson.geometry.coordinates[0].length; coordIdx++) {
+                queryCoords.push(newShapes[0].geojson.geometry.coordinates[0][coordIdx][0]);
+                queryCoords.push(newShapes[0].geojson.geometry.coordinates[0][coordIdx][1]);
             }
 
             $scope.$parent.inputQuery.globalGeo = queryCoords;

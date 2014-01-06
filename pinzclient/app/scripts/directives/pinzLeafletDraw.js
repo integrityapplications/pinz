@@ -55,6 +55,7 @@ angular.module('modalApp')
         maxBounds: L.LatLngBounds( L.LatLng(-90,-180), L.LatLng(90,180) ) // sw, ne
       }).addTo(mapDraw);
       var shapes = [];
+
       mapDraw.on('draw:created', function (e) {
           var type = e.layerType,
               layer = e.layer; 
@@ -68,38 +69,46 @@ angular.module('modalApp')
           } else {
             layer.bindPopup(type + " popup");
           }
-          shapes.push(layer.toGeoJSON());
+          console.log('layer keys ', Object.keys(layer));
+          console.debug('debug layer ', layer);
+          var layerId = layer._leaflet_id.toString();
+          console.log('layer id ', layerId);
+          shapes.push({ "layerId" : layerId, "geojson" : layer.toGeoJSON()});
           setCustomShapes(shapes);
           drawnItems.addLayer(layer);
       });
 
       mapDraw.on('draw:edited', function (e) {
           var layers = e.layers;
-          shapes = [];
-          console.log("typeof layers: ", typeof layers, " plus ", Object.keys(layers._layers));
-
-          console.log("edited. Now have ", layers._layers.length, " features ");
           layers.eachLayer(function (layer) {
-              console.log("edited layer geojson ", layer.toGeoJSON());
-              shapes.push(layer.toGeoJSON());
+              var layerId = layer._leaflet_id.toString();
+              console.log('edited layer ', layerId);
+              var numShapes = shapes.length;
+              for (var i = 0; i < numShapes; i++) {
+                console.log('looking for shape ', shapes[i].layerId);
+                if (shapes[i].layerId === layerId) {
+                  shapes[i].geojson = layer.toGeoJSON();
+                  console.log("edited and saved layer ", layerId);
+                }
+              }
           });
           setCustomShapes(shapes);
       });
 
       mapDraw.on('draw:deleted', function (e) {
-
           var layers = e.layers;
-          shapes = [];
-          console.log("typeof layers: ", typeof layers, " plus ", Object.keys(layers));
-          console.log("deleted a feature. Now have layers ", Object.keys(layers._layers));
           layers.eachLayer(function (layer) {
-              console.log("deleted layer geojson ", layer.toGeoJSON());
-              shapes.push(layer.toGeoJSON());
+              var layerId = layer._leaflet_id.toString();
+              var numShapes = shapes.length;
+              for (var i = numShapes-1; i > -1; i--) {
+                if (shapes[i].layerId === layerId) {
+                  var removed = shapes.splice(i, 1); 
+                  console.log("removed layer ", layerId);
+                }
+              }
           });
           setCustomShapes(shapes);
       });
-
-      console.log('finished initing leaflet draw');
 
       $('#myModal').on('show.bs.modal', function(){
         console.log('redraw the map?');
