@@ -64,7 +64,7 @@
               <!-- add an info box -->
               
               <p>
-                <button type="button" class="btn btn-danger btn-lg" data-toggle="button" ng-click="updateActiveSources(srcIdx)">
+                <button type="button" ng-class="sourceClasses[srcIdx]" data-toggle="button" ng-click="updateActiveSources(srcIdx)">
                   <strong>{{source._id}}</strong>
                 </button>
                 <strong>{{source.desc}}</strong>  Oldest:{{source.oldest}}, Newest:{{source.newest}}, Count:{{source.count}}</p>

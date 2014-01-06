@@ -14,14 +14,15 @@ angular.module('modalApp')
 	$scope.serverQuery = {};
 
 	$scope.activeSources = [];
+	$scope.sourceClasses = [];
 
     Metadataservice.getMetadata(function(dataSources) {
     	$scope.dataSources = dataSources;
  	
     	if($scope.inputQuery === null || typeof $scope.inputQuery === "undefined") {
+    		setDefaultActiveSources();
     		createDefaultQuery();
     		createEmptyDataQuery();
-    		setDefaultActiveSources();
     	}
 
     });
@@ -40,11 +41,15 @@ angular.module('modalApp')
     function setDefaultActiveSources() {
     	var srcIdx;
     	var tempActiveSources = [];
+    	var tempSourceClasses = [];
     	for(srcIdx = 0; srcIdx < $scope.dataSources.length ; srcIdx++) {
     		// default to false values
     		tempActiveSources.push("");
+    		tempSourceClasses.push("btn btn-success btn-lg");
+
     	}
     	$scope.activeSources = tempActiveSources;
+    	$scope.sourceClasses = tempSourceClasses;
     }
 
 	function createDefaultQuery() {
@@ -135,10 +140,11 @@ angular.module('modalApp')
 
 		if($scope.activeSources[sourceIdx] === '') {
 			$scope.activeSources[sourceIdx] = 'disabled';
+			$scope.sourceClasses[sourceIdx] = "btn btn-danger btn-lg";
 
 		} else if($scope.activeSources[sourceIdx].indexOf('disabled') !== -1) {
 			$scope.activeSources[sourceIdx] = '';
-
+			$scope.sourceClasses[sourceIdx] = "btn btn-success btn-lg";
 		} else {
 			console.log("\tCheck the state value::" + $scope.activeSources[sourceIdx] + " from " + $scope.activeSources);
 		}
