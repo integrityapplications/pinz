@@ -5,17 +5,20 @@
       <h3>{{mapversion}}</h3>
     </div>
     <div class="col-md-6">
-        <div ng-leaflet pinz="pinzData"></div> <!-- gets replaced by ngLeaflet directive -->
+        <div ng-leaflet pinz="pinzData" style="height: 800px; width: 1200px"></div> <!-- gets replaced by ngLeaflet directive -->
     </div> 
   </div>
 
-  <div class="row">
+  <!-- <div class="row">
     
-    <div id="map" style="height: 480px;" class="col-md-12"></div>
-    <!-- Use a custom directive here?
-    <map data="pinzData"></map> -->
+    <div id="map" style="height: 700px;" class="col-md-12"></div>
 
-  </div>
+    Use a custom directive here?
+    <map data="pinzData"></map>
+
+  </div> -->
+
+
   <div class="row">
     <div class="btn-group" style="margin-top: 1em;">
     <button type="button" ng-click="startDataFeed()" class="btn btn-lg btn-success">Start</button>

@@ -10,8 +10,9 @@ angular.module('modalApp')
 
   	function initLeaflet() {
 	    var cLat = -37.81, cLon = 144.93;
-	    map = L.map('map',{  fullscreenControl: true }).setView([cLat, cLon], 2 ); 
-
+	    
+		map = L.map('map' , { "crs" : L.CRS.EPSG4326 , "fullscreenControl" : true , "center": [cLat, cLon], "zoom": 4} );
+	    
 	    L.control.coordinates({
 		    position:"bottomleft", //optional default "bootomright"
 		    decimals:2, //optional default 4
@@ -22,14 +23,16 @@ angular.module('modalApp')
 		    useDMS:false, //optional default false
 		    useLatLngOrder: true //ordering of labels, default false-> lng-lat
 		}).addTo(map);
-	    var tileLayer = 
-	    L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
-	      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-	      maxZoom: 18,
-	      minZoom: 1,
-	      maxBounds: L.LatLngBounds( L.LatLng(-90,-180), L.LatLng(90,180) ) // sw, ne
-	    });
-	    map.addLayer( tileLayer );
+
+	    var bluemarble = L.tileLayer.wms('http://localhost:8085/wms', {
+        	layers : 'bmng200401' ,
+        	attribution: "Data &copy; NASA Blue Marble",
+        	minZoom: 3,
+        	maxZoom: 11,
+        	maxBounds: L.LatLngBounds( L.LatLng(-90,-180), L.LatLng(90,180) ) // sw, ne
+      	});
+
+      	map.addLayer(bluemarble);
 
 	    var overlays = {};
 	    //var baseLayers = {

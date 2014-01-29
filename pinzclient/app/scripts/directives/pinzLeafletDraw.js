@@ -37,23 +37,25 @@ angular.module('modalApp')
           }
       };
 
-      var mapDraw = L.map('mapdraw', {"center": [51.505, -0.09], "zoom": 10});
+      var mapDraw = L.map('mapdraw', {"crs" : L.CRS.EPSG4326 , "center": [51.505, -0.09], "zoom": 5});
 
       var drawControl = new L.Control.Draw(options);
       mapDraw.addControl(drawControl);  	
       
       
       mapDraw.addLayer(drawnItems);
-  		// add an OpenStreetMap tile layer
-  		//L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-  	  //  	attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-  		//}).addTo(mapDraw);
-      L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
-        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-        maxZoom: 18,
-        minZoom: 1,
+
+      var bluemarble = L.tileLayer.wms('http://localhost:8085/wms', {
+        layers : 'bmng200401' ,
+        attribution: "Data &copy; NASA Blue Marble",
+        minZoom: 3,
+        maxZoom: 11,
         maxBounds: L.LatLngBounds( L.LatLng(-90,-180), L.LatLng(90,180) ) // sw, ne
-      }).addTo(mapDraw);
+      });
+
+      mapDraw.addLayer(bluemarble);
+
+
       var shapes = [];
 
       mapDraw.on('draw:created', function (e) {
@@ -119,7 +121,7 @@ angular.module('modalApp')
   	}
 
     return {
-      template: '<div id="mapdraw" style="height: 300px;"></div>',
+      template: '<div id="mapdraw" style="height: 600px; width: 1000px"></div>',
       restrict: 'A',
       scope: {
         customGeos : "="
