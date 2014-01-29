@@ -30,11 +30,11 @@ var animalDef = {
 }
 
 var tempDef = {
-	_id : "tempature_reading" ,
+	_id : "temperature_reading" ,
 	desc : "The tempature_reading data source defines global tempature readings. Data is randomly gnerated by a seperate node.js process.",
 	attrs : [
 		{
-			name : "tempature" ,
+			name : "temperature" ,
 			type : "number" ,
 			desc : "Property to describe the tempature of the observable",
 			low : 0,
@@ -45,7 +45,7 @@ var tempDef = {
 
 var sources = [animalDef, tempDef];
 
-var samplesPerUpdate = 100;
+var samplesPerUpdate = 1000;
 var updateSec = 10;
 var mongoUrl = "mongodb://localhost:27017/pinz";
 
