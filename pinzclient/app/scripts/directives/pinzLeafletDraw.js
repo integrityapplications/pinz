@@ -37,11 +37,15 @@ angular.module('modalApp')
           }
       };
 
-      var mapDraw = L.map('mapdraw', {"crs" : L.CRS.EPSG4326 , "center": [51.505, -0.09], "zoom": 5});
+      var mapDraw = L.map('mapdraw', {
+                              "crs" : L.CRS.EPSG4326 ,
+                              "maxBounds" : L.LatLngBounds( L.LatLng(-90,-180), L.LatLng(90,180) ),
+                              "center": [51.505, -0.09],
+                              "zoom": 5 }
+                    );
 
       var drawControl = new L.Control.Draw(options);
       mapDraw.addControl(drawControl);  	
-      
       
       mapDraw.addLayer(drawnItems);
 

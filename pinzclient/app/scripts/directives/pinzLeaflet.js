@@ -11,7 +11,13 @@ angular.module('modalApp')
   	function initLeaflet() {
 	    var cLat = -37.81, cLon = 144.93;
 	    
-		map = L.map('map' , { "crs" : L.CRS.EPSG4326 , "fullscreenControl" : true , "center": [cLat, cLon], "zoom": 4} );
+		map = L.map('map' , {
+							 "crs" : L.CRS.EPSG4326 ,
+							 "maxBounds" : L.LatLngBounds( L.LatLng(-90,-180), L.LatLng(90,180) ),
+							 // "fullscreenControl" : true ,
+							 "center": [cLat, cLon],
+							 "zoom": 4}
+						);
 	    
 	    L.control.coordinates({
 		    position:"bottomleft", //optional default "bootomright"
