@@ -158,7 +158,7 @@ Running a demo
 6. Use the web client:
 
   ```
-    http://localhost:3000/ngapp/
+    http://localhost:3000
   ```
 
 Indexing
