@@ -35,8 +35,8 @@ angular.module('modalApp')
             console.log("How many coords in first point of first poly? " + newShapes[0].geojson.geometry.coordinates[0][0].length);
 
             for(var coordIdx = 0; coordIdx < newShapes[0].geojson.geometry.coordinates[0].length; coordIdx++) {
-                queryCoords.push(newShapes[0].geojson.geometry.coordinates[0][coordIdx][0]);
                 queryCoords.push(newShapes[0].geojson.geometry.coordinates[0][coordIdx][1]);
+                queryCoords.push(newShapes[0].geojson.geometry.coordinates[0][coordIdx][0]);
             }
 
             $scope.$parent.inputQuery.globalGeo = queryCoords;
