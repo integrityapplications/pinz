@@ -139,7 +139,8 @@ angular.module('modalApp')
          		// Clear existing layers TODO: make this better
 	         	Object.keys(sources).forEach(function(item, index) {
 	         		if(pinzLayerGroup[index] !== null && typeof pinzLayerGroup[index] !== "undefined") {
-	         			pinzLayerGroup[index].clearLayers();
+	         			// points will just accumulate if we leave this commented out
+	         			// pinzLayerGroup[index].clearLayers();
 	         		}
 	         	});
 
